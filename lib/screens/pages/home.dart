@@ -109,7 +109,6 @@ class _HomePageState extends State<HomePage> {
         minute: int.parse(startClock.split(":")[1])
         
         );
-    print("UPDATE");
     print("Jam Sekarang = ${mulai}");
     NetworkCheck().checkConnection(context);
     setCustomMapPin();
