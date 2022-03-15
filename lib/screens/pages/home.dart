@@ -110,7 +110,7 @@ class _HomePageState extends State<HomePage> {
         
         );
     print("Boris");
-    print("Jam Sekarang jj= ${mulai}");
+    print("Jam Sekarang jj1= ${mulai}");
     NetworkCheck().checkConnection(context);
     setCustomMapPin();
     if (Platform.isAndroid) {
