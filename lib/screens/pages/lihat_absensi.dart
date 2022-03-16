@@ -1,9 +1,13 @@
+import 'dart:math';
+
 import 'package:face_id_plus/model/last_absen.dart';
 import 'package:face_id_plus/model/list_absen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'detail_absensi_masuk.dart';
 
 class LihatAbsen extends StatefulWidget {
   const LihatAbsen({Key? key}) : super(key: key);
@@ -160,7 +164,13 @@ class _LihatAbsenState extends State<LihatAbsen> {
         elevation: 10,
         shadowColor: Colors.black87,
         color: (_absen.status == "Masuk") ? Colors.green : Colors.red,
-        child: Row(
+        child: InkWell(
+          onTap: (){
+            Navigator.push(context, MaterialPageRoute(builder: ( (context) => DetailMasuk(
+              absensi: _absen,
+            ))));
+          },
+          child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             imageResolve(_absen.gambar!),
@@ -168,7 +178,7 @@ class _LihatAbsenState extends State<LihatAbsen> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Text(nama, style: _style),
+                //Text(nama, style: _style),
                 Text("${_absen.status}", style: _style),
                 Text(fmt.format(tgl), style: _style),
                 Text("${_absen.jam}", style: _style),
@@ -178,6 +188,7 @@ class _LihatAbsenState extends State<LihatAbsen> {
             )
           ],
         ),
+      ),
       ),
     );
   }

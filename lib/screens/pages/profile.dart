@@ -1,10 +1,13 @@
 import 'package:face_id_plus/model/face_login_model.dart';
 import 'package:face_id_plus/model/tigahariabsen.dart';
+import 'package:face_id_plus/screens/pages/absen_lokal.dart';
+import 'package:face_id_plus/screens/pages/detail_absen_profile.dart';
 import 'package:face_id_plus/screens/pages/lihat_absensi.dart';
 import 'package:face_id_plus/splash.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 
 import 'admin_absen.dart';
 
@@ -167,7 +170,16 @@ class _ProfileState extends State<Profile> {
       elevation: 10,
       shadowColor: Colors.black87,
       color: (_absen.status == "Masuk") ? Colors.green : Colors.red,
-      child: Row(
+      child: InkWell(
+        onTap: (){
+          Navigator.push(context, MaterialPageRoute(builder: ( (context) => AbsenLokal(
+              
+            ))));
+          //  Navigator.push(context, MaterialPageRoute(builder: ( (context) => DetailProfile(
+          //     absenTigaHariModel: _absen,
+          //   ))));
+        },
+        child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           imageResolve(_absen.gambar!),
@@ -184,6 +196,7 @@ class _ProfileState extends State<Profile> {
             ],
           )
         ],
+      ),
       ),
     );
   }
