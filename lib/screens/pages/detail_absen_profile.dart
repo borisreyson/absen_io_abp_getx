@@ -51,73 +51,78 @@ class _DetailProfileState extends State<DetailProfile> {
         style: TextStyle(color: Colors.black),
       ),
       ),
-       body: Column(
-         children: <Widget> [
-           Card(
-             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-             child: Image.network(dataAbsen.gambar!),
-           ),
+       body:ListView(
+        children: <Widget> [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: SizedBox(
+              height: 550,
+              child: Card(
+                elevation: 8,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Image.network(dataAbsen.gambar!,fit: BoxFit.fill,)),
+              ),
+            ),
+          ),
+          
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Stack(
+              children: <Widget> [
+                SizedBox(
+                  width: double.infinity,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Card(
+                      elevation: 8,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 10, left: 20),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(dataAbsen.nik!, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                            Text(fmt.format(tgl), style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                            Text(dataAbsen.jam!, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                            Text(dataAbsen.lupa_absen!, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                        ]),
+                      ),
+                    ),
+                  ),
+                ),
 
-           SizedBox(
-             width: 400,
-             child: Card(
-               child: Padding(
-                 padding: const EdgeInsets.only(top: 4),
-                 child: Column(
-                   mainAxisAlignment: MainAxisAlignment.center,
-                   crossAxisAlignment: CrossAxisAlignment.center,
-                   children: <Widget> [
-                   Text(dataAbsen.nik!, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
-                   Text(dataAbsen.status!, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
-                   Text(fmt.format(tgl), style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
-                   Text(dataAbsen.jam!, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
-                   Text(dataAbsen.lupa_absen!, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
-                 ]),
-               ),
-             ),
-           )
-         ],
-       ) 
-      // SizedBox(
-      //   child: Column(
-      //     children:<Widget> [
-      //       Container(
-      //         height: 650,
-      //         child: Image.network(dataAbsen.gambar!),
-      //       ),
-      //       Positioned(
-      //         top: 500,
-      //         left: 15,
-      //         child: SizedBox(
-      //           width: 400,
-      //           height: 117,
-      //           child: Card(
-      //             elevation: 8,
-      //             color: Color.fromARGB(132, 255, 255, 255),
-      //             semanticContainer: true,
-      //             clipBehavior: Clip.antiAliasWithSaveLayer,
-      //             shape: RoundedRectangleBorder(
-      //               borderRadius: BorderRadius.circular(10),
-      //             ),
-      //                child: Padding(
-      //                  padding: const EdgeInsets.only(top: 13),
-      //                  child: Column(
-      //                    children: [
-      //                       Text(dataAbsen.nik!, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-      //                       Text(dataAbsen.status!, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-      //                       Text(fmt.format(tgl), style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-      //                       Text(dataAbsen.jam!, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-      //                       Text(dataAbsen.lupa_absen!, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-      //         ]),
-      //                ),
-      //       ),
-      //           )
-                  
-      //         )
-             
-      //     ],
-      //   ),
-      // ),
+                Positioned(
+                  left: 330,
+                  child: SizedBox(
+                    width: 87,
+                    height: 36,
+                    child: (dataAbsen.status == "Masuk") 
+                           ? Card(
+                             elevation: 8, 
+                             color: Colors.green,
+                             child: Center(
+                               child: Text(dataAbsen.status!, 
+                                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.white)),
+                             )
+                             ) 
+                           : Card(
+                             elevation: 8,
+                             color: Colors.red,
+                             child: Center(
+                               child: Text(dataAbsen.status!, 
+                                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.white)),
+                             ))
+                               
+                    ),
+                  ),
+              ],
+            ),
+          )
+        ],
+      )
     );
   }
 }
