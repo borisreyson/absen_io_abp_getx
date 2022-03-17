@@ -34,8 +34,10 @@ class _AbsenLokalState extends State<AbsenLokal> {
   bool _enMasuk = false;
   bool _enPulang = false;
   bool permanenDitolak = false;
+  int? isLogin = 0;
   double _masuk = 0.0;
   double _pulang = 0.0;
+  String startClock = "20:00";
 
   String? _jam;
   String? _menit;
@@ -46,6 +48,8 @@ class _AbsenLokalState extends State<AbsenLokal> {
   String? id_roster;
   String? connStat;
   String? kode_roster;
+  late DateTime now;
+  late Timer timerss;
 
   late String nama;
   late String nik;
@@ -53,6 +57,12 @@ class _AbsenLokalState extends State<AbsenLokal> {
   Widget loader = const Center(child: CircularProgressIndicator());
 
   void initState() {
+
+     TimeOfDay mulai = TimeOfDay(
+        hour: int.parse(startClock.split(":")[0]),
+        minute: int.parse(startClock.split(":")[1])
+     );   
+
     _nama = "";
     _nik = "";
     _jam = "";
@@ -61,24 +71,26 @@ class _AbsenLokalState extends State<AbsenLokal> {
     jamMasuk = "";
     jamPulang = "";
     kode_roster = "";
-    
+
     getPref(context);
     _getPref();
-    nik = "";
-    _showAbsen = 0;
+      nik = "";
+      _showAbsen = 0;
+    setState(() {
+      
+      DateFormat fmt = DateFormat("dd MMMM yyyy");
+      DateTime old = DateTime.now();
+      now = DateTime(old.year, old.month, old.day, mulai.hour, mulai.minute,10);
+      print("Jam Sekarang = ${now}");
+
+      _tanggal = fmt.format(now);
+      timerss =
+          Timer.periodic(const Duration(seconds: 1), (Timer t) => _getTime());
+    });
 
     super.initState();
   }
 
-  String getTgl() {
-      var tgl = DateTime.now();
-      return DateFormat("dd MMMM yyyy").format(tgl);
-  }
-  
-  String getSystemTime() {
-      var now = DateTime.now();
-      return DateFormat("HH:mm:ss").format(now);
-  }
   @override
   Widget build(BuildContext context) {
     return _mainContent();
@@ -115,10 +127,10 @@ Widget _mainContent() {
               ),
             ],
           ),
-          Container(
-            width: 450,
-            height: 473,
-            child: _topContent()),
+          // Container(
+          //   width: 450,
+          //   height: 473,
+          //   child: _topContent()),
         ],
       ),
     );
@@ -265,13 +277,13 @@ Widget _mainContent() {
               ),
             ],
           ),
-          Text("${getTgl()}"),
+          Text("$_tanggal"),
         ],
       ),
     );
   }
 
-  Widget _jamWidget() {
+ Widget _jamWidget() {
     return Column(
       children: [
         Padding(
@@ -279,22 +291,47 @@ Widget _mainContent() {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              TimerBuilder.periodic(Duration(seconds: 1), builder: (context) {
-                         return  Text("${getSystemTime()}", 
-                                 style: 
-                                 TextStyle(
-                                   fontWeight: FontWeight.bold, 
-                                   fontSize: 25,
-                                   color: Color(0xFF8C6A03),));
-                }
-              ),       
+              Text(
+                "$_jam",
+                style: const TextStyle(
+                    color: Color(0xFF8C6A03),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 25.0),
+              ),
+              const Text(
+                ":",
+                style: TextStyle(
+                    color: Color(0xFF8C6A03),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 25.0),
+              ),
+              Text(
+                "$_menit",
+                style: const TextStyle(
+                    color: Color(0xFF8C6A03),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 25.0),
+              ),
+              const Text(
+                ":",
+                style: TextStyle(
+                    color: Color(0xFF8C6A03),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 25.0),
+              ),
+              Text(
+                "$_detik",
+                style: const TextStyle(
+                    color: Color(0xFF8C6A03),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 25.0),
+              ),
             ],
           ),
         ),
         Center(
           child: Text(
-            (_jam_kerja != null) ? "$_jam_kerja" : 
-            "Jam Kerja",
+            (_jam_kerja != null) ? "$_jam_kerja" : "",
             style: const TextStyle(color: Colors.black87),
           ),
         ),
@@ -310,15 +347,41 @@ Widget _mainContent() {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              TimerBuilder.periodic(Duration(seconds: 1), builder: (context) {
-                         return  Text("${getSystemTime()}", 
-                                 style: 
-                                 TextStyle(
-                                   fontWeight: FontWeight.bold, 
-                                   fontSize: 25,
-                                   color: Color(0xFF8C6A03),));
-                }
-              ),       
+              Text(
+                "$_jam",
+                style: const TextStyle(
+                    color: Color(0xFF8C6A03),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20.0),
+              ),
+              const Text(
+                ":",
+                style: TextStyle(
+                    color: Color(0xFF8C6A03),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20.0),
+              ),
+              Text(
+                "$_menit",
+                style: const TextStyle(
+                    color: Color(0xFF8C6A03),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20.0),
+              ),
+              const Text(
+                ":",
+                style: TextStyle(
+                    color: Color(0xFF8C6A03),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20.0),
+              ),
+              Text(
+                "$_detik",
+                style: const TextStyle(
+                    color: Color(0xFF8C6A03),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20.0),
+              ),
             ],
           ),
         ),
@@ -330,6 +393,12 @@ Widget _mainContent() {
         ),
       ],
     );
+  }
+
+  @override
+  void dispose() {
+    timerss.cancel();
+    super.dispose();
   }
 
   Widget _btnAbsen() {
@@ -557,6 +626,14 @@ Widget _mainContent() {
           ),
           color: Colors.white),
     );
+  }
+
+   void _getTime() {
+    setState(() {
+      _jam = "${now.hour}".padLeft(2, "0");
+      _menit = "${now.minute}".padLeft(2, "0");
+      _detik = "${now.second}".padLeft(2, "0");
+    });
   }
 
   getPref(BuildContext context) async {

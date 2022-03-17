@@ -51,48 +51,73 @@ class _DetailProfileState extends State<DetailProfile> {
         style: TextStyle(color: Colors.black),
       ),
       ),
-      body: ListView(
-        children:<Widget> [
-          Stack(
-            children:<Widget> [
-              Container(
-                height: 700,
-                child: Image.network(dataAbsen.gambar!),
-              ),
-              Positioned(
-                top: 500,
-                left: 15,
-                child: SizedBox(
-                  width: 400,
-                  height: 117,
-                  child: Card(
-                    elevation: 8,
-                    color: Color.fromARGB(132, 255, 255, 255),
-                    semanticContainer: true,
-                    clipBehavior: Clip.antiAliasWithSaveLayer,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                       child: Padding(
-                         padding: const EdgeInsets.only(top: 13),
-                         child: Column(
-                           children: [
-                              Text(dataAbsen.nik!, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                              Text(dataAbsen.status!, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                              Text(fmt.format(tgl), style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                              Text(dataAbsen.jam!, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                              Text(dataAbsen.lupa_absen!, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                ]),
-                       ),
-              ),
-                  )
-                    
-                )
-               
-            ],
-          )
-        ],
-      ),
+       body: Column(
+         children: <Widget> [
+           Card(
+             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+             child: Image.network(dataAbsen.gambar!),
+           ),
+
+           SizedBox(
+             width: 400,
+             child: Card(
+               child: Padding(
+                 padding: const EdgeInsets.only(top: 4),
+                 child: Column(
+                   mainAxisAlignment: MainAxisAlignment.center,
+                   crossAxisAlignment: CrossAxisAlignment.center,
+                   children: <Widget> [
+                   Text(dataAbsen.nik!, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                   Text(dataAbsen.status!, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                   Text(fmt.format(tgl), style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                   Text(dataAbsen.jam!, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                   Text(dataAbsen.lupa_absen!, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                 ]),
+               ),
+             ),
+           )
+         ],
+       ) 
+      // SizedBox(
+      //   child: Column(
+      //     children:<Widget> [
+      //       Container(
+      //         height: 650,
+      //         child: Image.network(dataAbsen.gambar!),
+      //       ),
+      //       Positioned(
+      //         top: 500,
+      //         left: 15,
+      //         child: SizedBox(
+      //           width: 400,
+      //           height: 117,
+      //           child: Card(
+      //             elevation: 8,
+      //             color: Color.fromARGB(132, 255, 255, 255),
+      //             semanticContainer: true,
+      //             clipBehavior: Clip.antiAliasWithSaveLayer,
+      //             shape: RoundedRectangleBorder(
+      //               borderRadius: BorderRadius.circular(10),
+      //             ),
+      //                child: Padding(
+      //                  padding: const EdgeInsets.only(top: 13),
+      //                  child: Column(
+      //                    children: [
+      //                       Text(dataAbsen.nik!, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+      //                       Text(dataAbsen.status!, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+      //                       Text(fmt.format(tgl), style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+      //                       Text(dataAbsen.jam!, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+      //                       Text(dataAbsen.lupa_absen!, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+      //         ]),
+      //                ),
+      //       ),
+      //           )
+                  
+      //         )
+             
+      //     ],
+      //   ),
+      // ),
     );
   }
 }

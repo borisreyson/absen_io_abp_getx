@@ -47,48 +47,33 @@ class _DetailMasukState extends State<DetailMasuk> {
       ),
       ),
 
-      body: ListView(
-        children:<Widget> [
-          Stack(
-            children:<Widget> [
-              Container(
-                height: 700,
-                child: Image.network(masukData.gambar!),
-              ),
-              Positioned(
-                top: 500,
-                left: 15,
-                child: SizedBox(
-                  width: 400,
-                  height: 112,
-                  child: Card(
-                    elevation: 8,
-                    color: Color.fromARGB(132, 255, 255, 255),
-                    semanticContainer: true,
-                    clipBehavior: Clip.antiAliasWithSaveLayer,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                       child: Padding(
-                         padding: const EdgeInsets.only(top: 9),
-                         child: Column(
-                           children: [
-                              Text(masukData.nik!, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                              Text(masukData.status!, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                              Text(fmt.format(tgl), style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                              Text(masukData.jam!, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                              Text(masukData.lupaAbsen!, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                ]),
-                       ),
-              ),
-                  )
-                    
-                )
-               
-            ],
-          )
-        ],
-      ),
+      body: Column(
+         children: <Widget> [
+           Card(
+             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+             child: Image.network(masukData.gambar!),
+           ),
+
+           SizedBox(
+             width: 400,
+             child: Card(
+               child: Padding(
+                 padding: const EdgeInsets.only(top: 4),
+                 child: Column(
+                   mainAxisAlignment: MainAxisAlignment.center,
+                   crossAxisAlignment: CrossAxisAlignment.center,
+                   children: <Widget> [
+                   Text(masukData.nik!, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                   Text(masukData.status!, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                   Text(fmt.format(tgl), style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                   Text(masukData.jam!, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                   Text(masukData.lupaAbsen!, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                 ]),
+               ),
+             ),
+           )
+         ],
+       ) 
     );
   }
 }
