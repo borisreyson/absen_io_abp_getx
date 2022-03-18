@@ -24,14 +24,6 @@ class _DetailProfileState extends State<DetailProfile> {
     DateFormat fmt = DateFormat("dd MMMM yyyy");
     var tgl = DateTime.parse("${dataAbsen!.tanggal}");
 
-    if(dataAbsen.status == "Masuk"){
-      Text(dataAbsen.status!, style: TextStyle(color: Colors.green));
-    }else if(dataAbsen.status == "Pulang"){
-      Text(dataAbsen.status!, style: TextStyle(color: Colors.red));
-    }else{
-
-    }
-
     return Scaffold(
       appBar: AppBar(
          backgroundColor: const Color(0xffffffff),
@@ -56,7 +48,7 @@ class _DetailProfileState extends State<DetailProfile> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: SizedBox(
-              height: 550,
+              height: 570,
               child: Card(
                 elevation: 8,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),

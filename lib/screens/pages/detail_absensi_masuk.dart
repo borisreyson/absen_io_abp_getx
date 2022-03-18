@@ -46,6 +46,7 @@ class _DetailMasukState extends State<DetailMasuk> {
           Navigator.maybePop(context);
         },
       ),
+     
       title: const Text(
         "Detail Profile",
         style: TextStyle(color: Colors.black),
@@ -57,7 +58,7 @@ class _DetailMasukState extends State<DetailMasuk> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: SizedBox(
-              height: 550,
+              height: 570,
               child: Card(
                 elevation: 8,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
