@@ -34,14 +34,15 @@ class _MenuPageState extends State<MenuPage> {
       ),
       ),
 
-      bottomNavigationBar: BottomAppBar(
-        color: Colors.white,
-                    child: ElevatedButton(
-                      onPressed: (){
-                      
-                      }, child: Text("Keluar"),
-                    )
-                  ),          
+      bottomNavigationBar: SizedBox(
+        height: 50,
+        width: double.infinity,
+        child: ElevatedButton(
+          onPressed: (){
+                    
+          }, child: Text("Keluar"),
+        ),
+      ),          
 
       body: Container(
         color: Colors.white,
@@ -53,17 +54,29 @@ class _MenuPageState extends State<MenuPage> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget> [
-                  TextButton(
-                    style: TextButton.styleFrom(
-                      textStyle: const TextStyle(fontSize: 20),
+                  Row(
+                    children: [
+                      TextButton(
+                        style: TextButton.styleFrom(
+                          textStyle: const TextStyle(fontSize: 20),
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (BuildContext context) => const ProfilePage()));
+                        },
+                        child: const Text('Profile'),
+                      ),
+                    ],
+                  ),
+
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8, right: 8),
+                    child: Divider(
+                      color: Colors.grey,
+                      height: 10,
                     ),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (BuildContext context) => const ProfilePage()));
-                    },
-                    child: const Text('Profile'),
                   ),
 
                   TextButton(
@@ -79,6 +92,14 @@ class _MenuPageState extends State<MenuPage> {
                     child: const Text('List Karyawan'),
                   ),
 
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8, right: 8),
+                    child: Divider(
+                      color: Colors.grey,
+                      height: 25,
+                    ),
+                  ),
+
                   TextButton(
                     style: TextButton.styleFrom(
                       textStyle: const TextStyle(fontSize: 20),
@@ -90,6 +111,14 @@ class _MenuPageState extends State<MenuPage> {
                           builder: (BuildContext context) => const ListDepartemen()));
                     },
                     child: const Text('List Department'),
+                  ),
+
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8, right: 8),
+                    child: Divider(
+                      color: Colors.grey,
+                      height: 10,
+                    ),
                   ),
 
                   TextButton(
@@ -105,6 +134,14 @@ class _MenuPageState extends State<MenuPage> {
                     child: const Text('List Divisi'),
                   ),
 
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8, right: 8),
+                    child: Divider(
+                      color: Colors.grey,
+                      height: 25,
+                    ),
+                  ),
+
                   TextButton(
                     style: TextButton.styleFrom(
                       textStyle: const TextStyle(fontSize: 20),
@@ -116,6 +153,14 @@ class _MenuPageState extends State<MenuPage> {
                           builder: (BuildContext context) => const LihatAbsen()));
                     },
                     child: const Text('List Absen'),
+                  ),
+
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8, right: 8),
+                    child: Divider(
+                      color: Colors.grey,
+                      height: 10,
+                    ),
                   ),
 
                   TextButton(
@@ -131,6 +176,14 @@ class _MenuPageState extends State<MenuPage> {
                     child: const Text('List Jam Kerja'),
                   ),
 
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8, right: 8),
+                    child: Divider(
+                      color: Colors.grey,
+                      height: 20,
+                    ),
+                  ),
+
                   TextButton(
                     style: TextButton.styleFrom(
                       textStyle: const TextStyle(fontSize: 20),
@@ -139,6 +192,14 @@ class _MenuPageState extends State<MenuPage> {
                       
                     },
                     child: const Text('Admin Absen'),
+                  ),
+
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8, right: 8),
+                    child: Divider(
+                      color: Colors.grey,
+                      height: 20,
+                    ),
                   ),
 
                   TextButton(
@@ -154,6 +215,14 @@ class _MenuPageState extends State<MenuPage> {
                     child: const Text('Roster Kerja'),
                   ),
 
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8, right: 8),
+                    child: Divider(
+                      color: Colors.grey,
+                      height: 20,
+                    ),
+                  ),
+
                   TextButton(
                     style: TextButton.styleFrom(
                       textStyle: const TextStyle(fontSize: 20),
@@ -167,6 +236,14 @@ class _MenuPageState extends State<MenuPage> {
                     child: const Text('Roster Cuti'),
                   ),
 
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8, right: 8),
+                    child: Divider(
+                      color: Colors.grey,
+                      height: 20,
+                    ),
+                  ),
+
                   TextButton(
                     style: TextButton.styleFrom(
                       textStyle: const TextStyle(fontSize: 20),
@@ -178,6 +255,14 @@ class _MenuPageState extends State<MenuPage> {
                           builder: (BuildContext context) => const Buletin()));
                     },
                     child: const Text('Buletin'),
+                  ),
+
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8, right: 8),
+                    child: Divider(
+                      color: Colors.grey,
+                      height: 20,
+                    ),
                   ),
 
                   TextButton(
