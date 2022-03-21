@@ -68,17 +68,17 @@ class _HomePageState extends State<HomePageAndroid> {
     return Scaffold(
       appBar: AppBar(
         actions: <Widget>[
-              IconButton(
-            onPressed: () async{
-              await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (BuildContext context) =>
-                      const AreaAbp()));
-            },
-            icon: const Icon(Icons.map_sharp),
-            color: Colors.white,
-          ),
+              (showAbsen==1)?IconButton(
+                onPressed: () async{
+                  await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                          const AreaAbp()));
+                },
+                icon: const Icon(Icons.map_sharp),
+                color: Colors.white,
+              ):Container(),
           IconButton(
             onPressed: () async{
               await Navigator.push(
@@ -201,7 +201,7 @@ class _HomePageState extends State<HomePageAndroid> {
           ),
         ),
         Center(
-          child: Text((kode_roster!="OFF")?"$_jam_kerja":"",
+          child: Text((_jam_kerja!=null)?(kode_roster!="OFF")?"$_jam_kerja":"":"",
             style: const TextStyle(color: Colors.black87),
           ),
         ),
