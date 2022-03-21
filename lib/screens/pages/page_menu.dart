@@ -40,7 +40,7 @@ class _MenuPageState extends State<MenuPage> {
         width: double.infinity,
         child: ElevatedButton(
           onPressed: (){
-                    
+            _askLogout();
           }, child: Text("Keluar"),
         ),
       ),          
@@ -282,5 +282,37 @@ class _MenuPageState extends State<MenuPage> {
         ),
       )
     );
+  }
+  void _askLogout() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Log Out'),
+            content: const Text('Apakah Anda Ingin Keluar?'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  _doLogOut();
+                },
+                child: const Text('Ya, Keluar!'),
+              ),
+              TextButton(
+                  onPressed: () {
+                    Navigator.maybePop(context);
+                  },
+                  child: const Text('Tidak')),
+            ],
+          );
+        });
+  }
+  _doLogOut() async {
+    var _pref = await SharedPreferences.getInstance();
+    var isLogin = _pref.getInt("isLogin");
+    if (isLogin == 1) {
+      await _pref.clear();
+      Navigator.pop(context);
+      Navigator.pop(context);
+    }
   }
 }

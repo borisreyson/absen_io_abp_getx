@@ -52,7 +52,7 @@ class _HomePageState extends State<HomePageAndroid> {
   StreamController<bool> _getLokasi= StreamController.broadcast();
   Timer? _timer ;
   String startClock = "00:00:00";
-  int jamS=00,menitS=00,detikS=00;
+  int jamS=0,menitS=0,detikS=0;
   @override
   void initState() {
     getPref(context);
