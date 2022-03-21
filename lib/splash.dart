@@ -34,7 +34,7 @@ class _SplashState extends State<Splash> {
   int isLogin=0;
   @override
   void initState() {
-    _initNetworkInfo();
+    // _initNetworkInfo();
     pingServer();
     serverStream();
     getPref(context);
@@ -94,12 +94,11 @@ class _SplashState extends State<Splash> {
                 (isLogin==1 && isLogin!=null)?
                 (serverOnline)?
                 _lanjutOnline():
-                _lanjutOffline()
+                offlineCheck()
                 :Container()
-                :
-                    Container(),
+                :offlineCheck(),
                 (isOnline)?
-                (isLogin==0 && isLogin!=null )?_submitButton():Container():Container(),
+                Container():(isLogin==0 && isLogin!=null )?_submitButton():Container(),
                 const SizedBox(
                   height: 20,
                 ),
@@ -107,11 +106,17 @@ class _SplashState extends State<Splash> {
                 const SizedBox(
                   height: 20,
                 ),
-            (!lokalOnline)?
+            Card(
+              elevation: 10,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: (!lokalOnline)?
                 (serverOnline)?
                 Text("Server : Online",style: TextStyle(color: Colors.green,fontWeight: FontWeight.bold),):
                 Text("Server : Offline",style: TextStyle(color: Colors.red,fontWeight: FontWeight.bold),):
                 Text("Server : Online",style: TextStyle(color: Colors.green,fontWeight: FontWeight.bold),),
+              ),
+            ),
                 SizedBox(height: 10,),
                 (!serverOnline)?Center(child:
                   CircularProgressIndicator(),):Center()
@@ -123,7 +128,9 @@ class _SplashState extends State<Splash> {
       ),
     );
   }
-
+  Widget offlineCheck(){
+    return (lokalOnline)?_lanjutOffline():Container();
+  }
   Widget _logo() {
     return Padding(
         padding: const EdgeInsets.only(top: 10.0, bottom: 5.0),
@@ -152,11 +159,11 @@ class _SplashState extends State<Splash> {
         alignment: Alignment.center,
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.all(Radius.circular(5)),
-          border: Border.all(color: Colors.white, width: 2),
+          border: Border.all(color: Colors.blue, width: 2),
         ),
         child: const Text(
-          'Lanjut1',
-          style: TextStyle(fontSize: 20, color: Colors.white),
+          'Lanjut',
+          style: TextStyle(fontSize: 20, color: Colors.blue),
         ),
       ),
     );
@@ -175,11 +182,11 @@ class _SplashState extends State<Splash> {
         alignment: Alignment.center,
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.all(Radius.circular(5)),
-          border: Border.all(color: Colors.white, width: 2),
+          border: Border.all(color: Colors.purple, width: 2),
         ),
         child: const Text(
-          'Lanjut2',
-          style: TextStyle(fontSize: 20, color: Colors.white),
+          'Lanjut',
+          style: TextStyle(fontSize: 20, color: Colors.purple),
         ),
       ),
     );
