@@ -48,7 +48,7 @@ class _DetailProfileState extends State<DetailProfile> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: SizedBox(
-              height: 570,
+              height: 575,
               child: Card(
                 elevation: 8,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),

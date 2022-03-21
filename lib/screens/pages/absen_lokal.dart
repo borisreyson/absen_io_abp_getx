@@ -72,7 +72,7 @@ class _AbsenLokalState extends State<AbsenLokal> {
     jamPulang = "";
     kode_roster = "";
 
-    getPref(context);
+    //getPref(context);
     _getPref();
       nik = "";
       _showAbsen = 0;
@@ -127,10 +127,10 @@ Widget _mainContent() {
               ),
             ],
           ),
-          // Container(
-          //   width: 450,
-          //   height: 473,
-          //   child: _topContent()),
+          Container(
+            width: 450,
+            height: 473,
+            child: _topContent()),
         ],
       ),
     );
