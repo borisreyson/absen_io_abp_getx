@@ -60,7 +60,7 @@ class _HomePageState extends State<HomePage> {
   double _masuk = 0.0;
   double _pulang = 0.0;
   double _diluarAbp = 0.0;
-  String startClock = "20:00";
+  String startClock = "20:00:01";
   bool outside = false;
   late Position currentPosition;
   LatLng? myLocation;
@@ -84,7 +84,6 @@ class _HomePageState extends State<HomePage> {
       position = await Geolocator.getCurrentPosition(
           desiredAccuracy: LocationAccuracy.high);
       currentPosition = position!;
-
       myLocation = LatLng(currentPosition.latitude, currentPosition.longitude);
       lokasiPalsu = position!.isMocked;
       if (myLocation != null) {
@@ -93,8 +92,8 @@ class _HomePageState extends State<HomePage> {
         }
         CameraPosition cameraPosition =
             CameraPosition(target: myLocation!, zoom: 17.5756);
-        return await _googleMapController
-            .animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
+        // return await _googleMapController
+        //     .animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
       }
     } else {
       outside = false;
@@ -107,7 +106,6 @@ class _HomePageState extends State<HomePage> {
     TimeOfDay mulai = TimeOfDay(
         hour: int.parse(startClock.split(":")[0]),
         minute: int.parse(startClock.split(":")[1])
-        
         );
     print("Jam Sekarang = ${mulai}");
     NetworkCheck().checkConnection(context);
@@ -132,7 +130,7 @@ class _HomePageState extends State<HomePage> {
       getPref(context);
       DateFormat fmt = DateFormat("dd MMMM yyyy");
       DateTime old = DateTime.now();
-      now = DateTime(old.year, old.month, old.day, mulai.hour, mulai.minute,10);
+      now = DateTime(old.year, old.month, old.day, mulai.hour, mulai.minute,00);
       print("Jam Sekarang = ${now}");
 
       _tanggal = fmt.format(now);
@@ -197,7 +195,7 @@ class _HomePageState extends State<HomePage> {
       backgroundColor: const Color(0xFFFFFFFF),
       body: Column(
         children: <Widget>[
-          (Platform.isAndroid) ? _headerContent() : _headerIos(),
+          _headerContent(),
           const SizedBox(height: 8),
           Expanded(
             child: IntrinsicHeight(child: _futureBuilder()),
@@ -251,11 +249,9 @@ class _HomePageState extends State<HomePage> {
             }
             if (_permissionStatus.isGranted) {
               locatePosition();
-              print("4");
 
               return _loadMaps(_polygons, pointAbp);
             } else {
-              print("5");
 
               _requestLocation();
               _googleMaps = false;
@@ -264,7 +260,6 @@ class _HomePageState extends State<HomePage> {
             }
           } else if (Platform.isIOS) {
             if (!serviceEnable) {
-              print("6");
 
               outside = false;
               _diluarAbp = 1.0;
@@ -273,8 +268,6 @@ class _HomePageState extends State<HomePage> {
             if (myLocation == null) {
               iosGetLocation();
               if (iosMapLocation) {
-                print("8");
-
                 locatePosition();
                 return _loadMaps(_polygons, pointAbp);
               } else {
@@ -285,8 +278,6 @@ class _HomePageState extends State<HomePage> {
                 }
               }
             } else {
-              print("10");
-
               locatePosition();
               return _loadMaps(_polygons, pointAbp);
             }
@@ -295,7 +286,6 @@ class _HomePageState extends State<HomePage> {
           return const Center(child: CircularProgressIndicator());
         } else {
           if (!serviceEnable) {
-            print("11");
             outside = false;
             _diluarAbp = 1.0;
             return enableGPS();
@@ -395,7 +385,6 @@ class _HomePageState extends State<HomePage> {
         _map_controller.complete(controller);
         _googleMapController = await controller;
         _googleMaps = true;
-        setState(() {
           marker = Marker(
             markerId: const MarkerId('abpenergy'),
             position: const LatLng(-0.5634222, 117.0139606),
@@ -407,7 +396,6 @@ class _HomePageState extends State<HomePage> {
           markers.add(marker);
           _googleMapController
               .showMarkerInfoWindow(const MarkerId("abpenergy"));
-        });
       },
       polygons: Set<Polygon>.of(_shape),
       markers: markers,
@@ -813,11 +801,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _getTime() {
-    setState(() {
       _jam = "${now.hour}".padLeft(2, "0");
       _menit = "${now.minute}".padLeft(2, "0");
       _detik = "${now.second}".padLeft(2, "0");
-    });
   }
 
   Future<List<MapAreModel>> _loadArea() async {
@@ -941,6 +927,9 @@ class _HomePageState extends State<HomePage> {
         _enPulang = false;
         _masuk = 1.0;
         _pulang = 0.0;
+      }
+      if(lastAbsen.jamServer!=null){
+
       }
     }
   }

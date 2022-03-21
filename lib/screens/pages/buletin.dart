@@ -2,7 +2,6 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:face_id_plus/screens/pages/add_buletin.dart';
 import 'package:face_id_plus/screens/pages/detail_buletin.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 import 'package:intl/intl.dart'; 
 
 class Buletin extends StatefulWidget {

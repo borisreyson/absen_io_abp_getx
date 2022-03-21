@@ -117,7 +117,7 @@ class _IosMasukState extends State<IosMasuk> {
   }
 
   Future _stopLiveFeed() async {
-    await _cameraController?.stopImageStream();
+    // await _cameraController?.stopImageStream();
     await _cameraController?.dispose();
     await faceDetector.close();
     _cameraController = null;

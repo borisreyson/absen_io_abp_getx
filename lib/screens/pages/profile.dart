@@ -148,7 +148,6 @@ class _ProfileState extends State<Profile> {
           switch (snapshot.connectionState) {
             case ConnectionState.done:
               List<AbsenTigaHariModel> _absensi = snapshot.data;
-              print("NIK $nik");
               if (_absensi.isNotEmpty) {
                 return Column(
                     children: _absensi.map((ab) => _cardAbsen(ab)).toList());
@@ -298,12 +297,8 @@ class _ProfileState extends State<Profile> {
     var isLogin = _pref.getInt("isLogin");
     if (isLogin == 1) {
       await _pref.clear();
-      Navigator.maybePop(context);
-      Navigator.maybePop(context);
-      Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (BuildContext context) => const Splash()),
-          (context) => false);
+      Navigator.pop(context);
+      Navigator.pop(context);
     }
   }
 

@@ -7,6 +7,7 @@ import 'package:face_id_plus/screens/pages/profile_page.dart';
 import 'package:face_id_plus/screens/pages/roster_cuti.dart';
 import 'package:face_id_plus/screens/pages/roster_kerja.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MenuPage extends StatefulWidget {
   const MenuPage({ Key? key }) : super(key: key);

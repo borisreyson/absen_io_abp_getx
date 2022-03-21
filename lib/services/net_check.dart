@@ -7,6 +7,7 @@ class NetworkCheck {
   late StreamSubscription<InternetConnectionStatus> listener;
   var InternetStatus = "Unknown";
   var contentmessage = "Unknown";
+
   late InternetConnectionStatus net;
 
   void _showDialog(String title, String content, BuildContext context) {
@@ -49,4 +50,5 @@ class NetworkCheck {
     );
     return await InternetConnectionChecker().connectionStatus;
   }
+
 }

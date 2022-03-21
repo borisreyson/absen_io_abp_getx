@@ -5,6 +5,7 @@ import 'package:face_id_plus/screens/pages/cek_lokasi.dart';
 import 'package:face_id_plus/screens/pages/home.dart';
 import 'package:face_id_plus/screens/permission/lokasi.dart';
 import 'package:face_id_plus/splash.dart';
+import 'package:face_id_plus/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:intro_slider/intro_slider.dart';
@@ -339,20 +340,20 @@ class _SliderIntroState extends State<SliderIntro> {
   }
 
   getPref(BuildContext context) async {
+    Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (context) => const Splash()));
     enableGPS = await Geolocator.isLocationServiceEnabled();
     
     var sharedPref = await SharedPreferences.getInstance();
     isLogin = sharedPref.getInt("isLogin") ?? 0;
     // print("LoginStatus $isLogin");
     if (isLogin == 1) {
-      Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (BuildContext context) => 
-              (enableGPS)? const HomePage() : const LokasiCek() ));
+      // Navigator.pushReplacement(
+      //     context,
+      //     Utils().createRoute(() => (enableGPS)? const HomePage() : const LokasiCek()));
     } else {
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => const Splash()));
+      // Navigator.pushReplacement(
+      //     context, MaterialPageRoute(builder: (context) => const Splash()));
     }
   }
 }

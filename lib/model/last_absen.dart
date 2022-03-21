@@ -13,6 +13,7 @@ class LastAbsen {
   String? pulang;
   Presensi? presensiMasuk;
   Presensi? presensiPulang;
+  JamServer? jamServer;
   LastAbsen(
       {
       this.idRoster,
@@ -25,7 +26,8 @@ class LastAbsen {
       this.masuk,
       this.pulang,
       this.presensiMasuk,
-      this.presensiPulang
+      this.presensiPulang,
+      this.jamServer
       });
 
   factory LastAbsen.fromJson(Map<String, dynamic> object) {
@@ -45,6 +47,7 @@ class LastAbsen {
       presensiPulang: (object['presensiPulang'] != null)
           ? Presensi.fromJson(object['presensiPulang'])
           : null,
+      jamServer: (object["jam_server"]!=null)? JamServer.fromJson(object['jam_server']) :null
     );
   }
 
@@ -95,6 +98,19 @@ class Presensi {
       lupaAbsen: object['lupa_absen'],
       timeIn: object['time_in'],
       tanggalJam: object['tanggal_jam'],
+    );
+  }
+}
+class JamServer{
+  String? jam;
+  String? menit;
+  String? detik;
+  JamServer({this.jam,this.menit,this.detik});
+  factory JamServer.fromJson(Map<String , dynamic> object){
+    return JamServer(
+      jam: object['jam'],
+      menit: object['menit'],
+      detik: object['detik'],
     );
   }
 }

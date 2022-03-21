@@ -1,8 +1,16 @@
+import 'dart:async';
+
 import 'package:face_id_plus/screens/auth/login.dart';
 import 'package:face_id_plus/screens/auth/register.dart';
+import 'package:face_id_plus/screens/pages/absen_lokal.dart';
 import 'package:face_id_plus/screens/pages/home.dart';
+import 'package:face_id_plus/screens/pages/mainpage/home.dart';
+import 'package:face_id_plus/utils/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:network_info_plus/network_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:io';
 
 int isLogin = 0;
 
@@ -13,13 +21,36 @@ class Splash extends StatefulWidget {
 }
 
 class _SplashState extends State<Splash> {
+  final NetworkInfo _networkInfo = NetworkInfo();
+  StreamController<bool> _pingServer = StreamController.broadcast();
+  StreamController<bool> _pingLokal = StreamController.broadcast();
+  StreamController<bool> _pingServerOnline = StreamController.broadcast();
+  bool isOnline=false;
+  bool lokalOnline=false;
+  bool serverOnline=false;
+  Timer? _timer ;
+  Duration _duration = Duration(seconds: 2);
+  String? wifiBSSID;
+  int isLogin=0;
   @override
   void initState() {
+    _initNetworkInfo();
+    pingServer();
+    serverStream();
     getPref(context);
     super.initState();
   }
+  _initNetworkInfo()async{
+    try{
 
-  
+    }on PlatformException catch(e){
+      if(Platform.isIOS){
+        wifiBSSID = await _networkInfo.getWifiBSSID();
+      }else{
+        wifiBSSID = await _networkInfo.getWifiBSSID();
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +61,7 @@ class _SplashState extends State<Splash> {
     return Scaffold(
       body: SingleChildScrollView(
         child: Opacity(
-          opacity: (isLogin == 1) ? 0.0 : 1.0,
+          opacity:  1.0,
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             height: MediaQuery.of(context).size.height,
@@ -53,13 +84,22 @@ class _SplashState extends State<Splash> {
               children: <Widget>[
                 _logo(),
                 const SizedBox(
-                  height: 80,
+                  height: 30,
                 ),
                 _title(),
                 SizedBox(
-                  height: 90,
+                  height: 40,
                 ),
-                _submitButton(),
+                (isOnline)?
+                (isLogin==1 && isLogin!=null)?
+                (serverOnline)?
+                _lanjutOnline():
+                _lanjutOffline()
+                :Container()
+                :
+                    Container(),
+                (isOnline)?
+                (isLogin==0 && isLogin!=null )?_submitButton():Container():Container(),
                 const SizedBox(
                   height: 20,
                 ),
@@ -67,6 +107,14 @@ class _SplashState extends State<Splash> {
                 const SizedBox(
                   height: 20,
                 ),
+            (!lokalOnline)?
+                (serverOnline)?
+                Text("Server : Online",style: TextStyle(color: Colors.green,fontWeight: FontWeight.bold),):
+                Text("Server : Offline",style: TextStyle(color: Colors.red,fontWeight: FontWeight.bold),):
+                Text("Server : Online",style: TextStyle(color: Colors.green,fontWeight: FontWeight.bold),),
+                SizedBox(height: 10,),
+                (!serverOnline)?Center(child:
+                  CircularProgressIndicator(),):Center()
                 // _label()
               ],
             ),
@@ -81,19 +129,22 @@ class _SplashState extends State<Splash> {
         padding: const EdgeInsets.only(top: 10.0, bottom: 5.0),
         child: Container(
           height: 100,
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
               image: DecorationImage(
-            image: NetworkImage("https://abpjobsite.com/abp_prof.png"),
+            image: NetworkImage((!lokalOnline)?"https://abpjobsite.com/abp_prof.png":"http://10.10.3.13/abp_prof.png"),
             fit: BoxFit.contain,
           )),
         ));
   }
 
-  Widget _signUpButton() {
+  Widget _lanjutOnline() {
     return InkWell(
       onTap: () {
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => const FormRegister()));
+        closePing();
+        Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (BuildContext context) => const HomePageAndroid())).then((value) => reloadCekServer());
       },
       child: Container(
         width: MediaQuery.of(context).size.width,
@@ -104,8 +155,61 @@ class _SplashState extends State<Splash> {
           border: Border.all(color: Colors.white, width: 2),
         ),
         child: const Text(
-          'Register now',
+          'Lanjut1',
           style: TextStyle(fontSize: 20, color: Colors.white),
+        ),
+      ),
+    );
+  }
+
+  Widget _lanjutOffline() {
+    return InkWell(
+      onTap: () {
+        closePing();
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => AbsenLokal())).then((value) => reloadCekServer());
+      },
+      child: Container(
+        width: MediaQuery.of(context).size.width,
+        padding: const EdgeInsets.symmetric(vertical: 13),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.all(Radius.circular(5)),
+          border: Border.all(color: Colors.white, width: 2),
+        ),
+        child: const Text(
+          'Lanjut2',
+          style: TextStyle(fontSize: 20, color: Colors.white),
+        ),
+      ),
+    );
+  }
+
+  Widget _absenDenganJariganLokal() {
+    return InkWell(
+      hoverColor: Colors.white60,
+      onTap: () {
+        closePing();
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) => const FormLogin()));
+      },
+      child: Container(
+        width: MediaQuery.of(context).size.width,
+        padding: const EdgeInsets.symmetric(vertical: 13),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+            borderRadius: const BorderRadius.all(Radius.circular(5)),
+            boxShadow: <BoxShadow>[
+              BoxShadow(
+                  color: const Color(0xffdf8e33).withAlpha(100),
+                  offset: const Offset(2, 4),
+                  blurRadius: 8,
+                  spreadRadius: 2)
+            ],
+            color: Colors.white),
+        child: const Text(
+          "Absen Dengan Jaringan Lokal",
+          style: TextStyle(fontSize: 20, color: Color(0xfff7892b)),
         ),
       ),
     );
@@ -115,6 +219,7 @@ class _SplashState extends State<Splash> {
     return InkWell(
       hoverColor: Colors.white60,
       onTap: () {
+        closePing();
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (context) => const FormLogin()));
       },
@@ -141,29 +246,100 @@ class _SplashState extends State<Splash> {
   }
 
   Widget _title() {
-    return const Padding(
+    return Padding(
       padding: EdgeInsets.only(left: 30, right: 30),
-      child: Text(
-        "ABSENSI IO ABP",
-        style: TextStyle(
-            color: Color(0xFF003F63),
-            fontSize: 30,
-            fontWeight: FontWeight.bold,
-            fontFamily: "RaleWay"),
-      ),
+      child: Column(children: [
+        Text(
+          "ABSENSI IO",
+          style: TextStyle(
+              color: Color(0xFF003F63),
+              fontSize: 30,
+              fontWeight: FontWeight.bold,
+              fontFamily: "RaleWay"),
+        ),
+        Text(
+          "PT Alamjaya Bara Pratama",
+          style: TextStyle(
+              color: Color(0xFF003F63),
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              fontFamily: "RaleWay"),
+        )
+      ],),
     );
   }
 
   getPref(BuildContext context) async {
     var sharedPref = await SharedPreferences.getInstance();
     if (sharedPref.getInt("isLogin") != null) {
-      isLogin = sharedPref.getInt("isLogin")!;
-      if (isLogin == 1) {
-        Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-                builder: (BuildContext context) => const HomePage()));
-      }
+      isLogin = await sharedPref.getInt("isLogin")!;
+      // if (isLogin == 1) {
+        // Navigator.pushReplacement(
+        //     context,
+        //     MaterialPageRoute(
+        //         builder: (BuildContext context) => const HomePage()));
+      // }
+    }else{
+      isLogin=0;
     }
+  }
+  serverStream(){
+    _pingServer.stream.listen((bool isConnected) {
+      if(mounted){
+        setState(() {
+          isOnline = isConnected;
+          print("isConnected ${isConnected}");
+        });
+      }
+    });
+    _pingLokal.stream.listen((bool localConnected) {
+      if(mounted){
+        setState(() {
+          lokalOnline = localConnected;
+          print("lokalOnline ${lokalOnline}");
+
+        });
+      }
+    });
+    _pingServerOnline.stream.listen((bool onlineServer) {
+      if(mounted){
+        setState(() {
+          serverOnline = onlineServer;
+          print("onlineServer ${onlineServer}");
+
+        });
+      }
+
+    });
+  }
+  pingServer()async{
+    _pingServer.add(await Utils().pingServer());
+    _pingLokal.add(await Utils().pingServerLokal());
+    _pingServerOnline.add(await Utils().pingServerOnline());
+    timerAddnew();
+  }
+  timerAddnew()async{
+    _timer = Timer.periodic(_duration, (timer)async {
+      _pingServer.add(await Utils().pingServer());
+      _pingLokal.add(await Utils().pingServerLokal());
+      _pingServerOnline.add(await Utils().pingServerOnline());
+
+    });
+  }
+  reloadCekServer(){
+    getPref(context);
+    print("Login $isLogin");
+    closePing();
+    timerAddnew();
+  }
+  closePing(){
+    isOnline=false;
+    serverOnline=false;
+    lokalOnline=false;
+    _timer?.cancel();
+
+    setState(() {
+
+    });
   }
 }

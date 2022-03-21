@@ -1,5 +1,4 @@
-import 'package:animated_splash_screen/animated_splash_screen.dart';
-import 'package:face_id_plus/intro.dart';
+import 'package:face_id_plus/animated_loading.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import "package:flutter/services.dart";
@@ -41,15 +40,6 @@ class MyApp extends StatelessWidget {
   }
 
   _mainPage() {
-    if (Platform.isAndroid) {
-          return const SliderIntro();
-    } else if (Platform.isIOS) {
-      return AnimatedSplashScreen(
-          splash: Image.asset('assets/images/ic_abp.png'),
-          duration: 1500,
-          splashTransition: SplashTransition.scaleTransition,
-          nextScreen: const SliderIntro());
-    }
-    
+          return const AnimatedLoading();
   }
 }
