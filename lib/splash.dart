@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:face_id_plus/screens/auth/login.dart';
 import 'package:face_id_plus/screens/auth/register.dart';
-import 'package:face_id_plus/screens/pages/absen_lokal.dart';
+import 'package:face_id_plus/screens/pages/mainpage/absen_lokal.dart';
 import 'package:face_id_plus/screens/pages/home.dart';
 import 'package:face_id_plus/screens/pages/mainpage/home.dart';
 import 'package:face_id_plus/utils/utils.dart';
@@ -29,7 +29,7 @@ class _SplashState extends State<Splash> {
   bool lokalOnline=false;
   bool serverOnline=false;
   Timer? _timer ;
-  Duration _duration = Duration(seconds: 2);
+  Duration _duration = Duration(seconds: 5);
   String? wifiBSSID;
   int isLogin=0;
   @override
@@ -98,7 +98,11 @@ class _SplashState extends State<Splash> {
                 :Container()
                 :offlineCheck(),
                 (isOnline)?
-                Container():(isLogin==0 && isLogin!=null )?_submitButton():Container(),
+                  (isLogin==0 && isLogin!=null )?
+                    (serverOnline)?
+                      _submitButton():offlineCheck()
+                  :Container()
+                :Container(),
                 const SizedBox(
                   height: 20,
                 ),
@@ -118,8 +122,9 @@ class _SplashState extends State<Splash> {
               ),
             ),
                 SizedBox(height: 10,),
+                (!lokalOnline)?
                 (!serverOnline)?Center(child:
-                  CircularProgressIndicator(),):Center()
+                  CircularProgressIndicator(),):Center():Center()
                 // _label()
               ],
             ),
@@ -129,7 +134,7 @@ class _SplashState extends State<Splash> {
     );
   }
   Widget offlineCheck(){
-    return (lokalOnline)?_lanjutOffline():Container();
+    return (lokalOnline)?(isLogin==1 && isLogin!=null)?_lanjutOffline():_submitButton():Container();
   }
   Widget _logo() {
     return Padding(
@@ -171,9 +176,9 @@ class _SplashState extends State<Splash> {
 
   Widget _lanjutOffline() {
     return InkWell(
-      onTap: () {
+      onTap: () async{
         closePing();
-        Navigator.push(context,
+        await Navigator.push(context,
             MaterialPageRoute(builder: (context) => AbsenLokal())).then((value) => reloadCekServer());
       },
       child: Container(
@@ -262,7 +267,8 @@ class _SplashState extends State<Splash> {
               color: Color(0xFF003F63),
               fontSize: 30,
               fontWeight: FontWeight.bold,
-              fontFamily: "RaleWay"),
+              fontFamily: "RaleWay"
+          ),
         ),
         Text(
           "PT Alamjaya Bara Pratama",

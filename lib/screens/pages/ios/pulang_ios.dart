@@ -121,7 +121,7 @@ class _IosPulangState extends State<IosPulang> {
   }
 
   Future _stopLiveFeed() async {
-    await _cameraController?.stopImageStream();
+    // await _cameraController?.stopImageStream();
     await _cameraController?.dispose();
     await faceDetector.close();
     _cameraController = null;

@@ -1,6 +1,6 @@
 import 'package:face_id_plus/model/face_login_model.dart';
 import 'package:face_id_plus/model/tigahariabsen.dart';
-import 'package:face_id_plus/screens/pages/absen_lokal.dart';
+import 'package:face_id_plus/screens/pages/mainpage/absen_lokal.dart';
 import 'package:face_id_plus/screens/pages/detail_absen_profile.dart';
 import 'package:face_id_plus/screens/pages/lihat_absensi.dart';
 import 'package:face_id_plus/splash.dart';

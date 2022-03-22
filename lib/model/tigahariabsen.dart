@@ -51,4 +51,14 @@ class AbsenTigaHariModel {
         .toList();
     return absensi;
   }
+  static Future<List<AbsenTigaHariModel>> apiAbsenTigaHariOffline(String _nik) async {
+    String apiUrl =
+        "http://10.10.3.13/absen/get/AbsenTigaHari?nik=" + _nik;
+    var apiResult = await http.get(Uri.parse(apiUrl));
+    var jsonObject = json.decode(apiResult.body);
+    var absensi = (jsonObject['AbsenTigaHari'] as List)
+        .map((e) => AbsenTigaHariModel.fromJson(e))
+        .toList();
+    return absensi;
+  }
 }

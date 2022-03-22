@@ -1,63 +1,43 @@
-import 'dart:async';
 import 'dart:io' show Platform;
-import 'dart:typed_data';
-import 'package:face_id_plus/model/last_absen.dart';
-import 'package:face_id_plus/model/map_area.dart';
-import 'package:face_id_plus/screens/pages/area.dart';
-import 'package:face_id_plus/screens/pages/ios/masuk_ios.dart';
-import 'package:face_id_plus/screens/pages/ios/pulang_ios.dart';
-import 'package:face_id_plus/screens/pages/page_menu.dart';
-import 'package:face_id_plus/screens/pages/profile.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:location/location.dart' as iosLocation;
 import 'dart:ui' as ui;
-import 'package:permission_handler/permission_handler.dart' as handler;
+import 'dart:async';
+import 'package:face_id_plus/model/tigahariabsen.dart';
+import 'package:face_id_plus/screens/pages/area.dart';
+import 'package:face_id_plus/screens/pages/detail_absen_profile.dart';
+import 'package:face_id_plus/screens/pages/page_menu.dart';
+import 'package:flutter/material.dart';
+import 'package:face_id_plus/model/last_absen.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../ios/masuk_ios.dart';
+import '../ios/pulang_ios.dart';
 
-class HomePageAndroid extends StatefulWidget {
-  const HomePageAndroid({Key? key}) : super(key: key);
+class AbsenLokal extends StatefulWidget {
+  const AbsenLokal({ Key? key }) : super(key: key);
 
   @override
-  _HomePageState createState() => _HomePageState();
+  State<AbsenLokal> createState() => _AbsenLokalState();
 }
 
-class _HomePageState extends State<HomePageAndroid> {
-  static const CameraPosition _kGooglePlex =
-  CameraPosition(target: LatLng(-0.5634222, 117.0139606), zoom: 14.2746);
-  final _map_controller = Completer();
-  late GoogleMapController _googleMapController;
+class _AbsenLokalState extends State<AbsenLokal> {
   bool serviceEnable=false,_enMasuk=false,_enPulang = false;
-  Position? position;
-  late Position currentPosition;
-  LatLng? myLocation;
   bool outside = false;
   bool iosMapLocation = false;
   bool lokasiPalsu = false;
-  double _diluarAbp = 0.0;
   int? isLogin = 0,showAbsen=0;
   String? nama, nik,_jam_kerja,kode_roster,jamPulang,jamMasuk,id_roster;
   double? _masuk=0.0,_pulang=0.0;
-  late handler.PermissionStatus _permissionStatus;
-  late final handler.Permission _permission = handler.Permission.location;
-  late BitmapDescriptor customIcon;
-  ui.Codec? codec;
-  late Set<Marker> markers = {};
-  late Marker marker;
-  final markerID = MarkerId("abpenergy");
-  Uint8List? markerIcon;
   StreamController<bool> _getLokasi= StreamController.broadcast();
   StreamController<String> _streamClock= StreamController.broadcast();
+  Widget loader = const Center(child: CircularProgressIndicator());
+
   Timer? _timer,_timerClock ;
   String startClock = "00:00:00";
   int jamS=0,menitS=0,detikS=0;
   @override
   void initState() {
     getPref(context);
-    setCustomMapPin();
     super.initState();
   }
   @override
@@ -79,17 +59,17 @@ class _HomePageState extends State<HomePageAndroid> {
           },
         ),
         actions: <Widget>[
-              (showAbsen==1)?IconButton(
-                onPressed: () async{
-                  await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (BuildContext context) =>
-                          const AreaAbp()));
-                },
-                icon: const Icon(Icons.map_sharp),
-                color: Colors.white,
-              ):Container(),
+          (showAbsen==1)?IconButton(
+            onPressed: () async{
+              await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) =>
+                      const AreaAbp()));
+            },
+            icon: const Icon(Icons.map_sharp),
+            color: Colors.white,
+          ):Container(),
           IconButton(
             onPressed: () async{
               await Navigator.push(
@@ -105,39 +85,12 @@ class _HomePageState extends State<HomePageAndroid> {
         elevation: 0,
       ),
       backgroundColor: const Color(0xFFFFFFFF),
-      body: FutureBuilder<List<MapAreModel>>(
-        future: _loadArea(),
-        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-          if(snapshot.hasData){
-            List<LatLng> pointAbp = [];
-            List<MapAreModel> data = snapshot.data;
-            for (var p in data) {
-              pointAbp.add(LatLng(p.lat!, p.lng!));
-            }
-            if (myLocation != null) {
-              bool _insideAbp =  _checkIfValidMarker(myLocation!, pointAbp);
-              if (_insideAbp) {
-                _diluarAbp = 0.0;
-                outside = true;
-              } else {
-                outside = false;
-                _diluarAbp = 1.0;
-              }
-            }
-            return _headerContent(pointAbp);
-
-          }
-          else{
-            return Center(child: CircularProgressIndicator(),);
-          }
-
-      },),
-    );
+      body: _headerContent());
   }
 
-  Widget _headerContent(List<LatLng> pointABP) {
+  Widget _headerContent() {
     return Stack(children: [
-      googleMaps(pointABP),
+      _listAbsen(),
       topContent(),
       _contents()
     ]);
@@ -216,84 +169,18 @@ class _HomePageState extends State<HomePageAndroid> {
             style: const TextStyle(color: Colors.black87),
           ),
         ),
-        (outside)?_btnAbsen():diluarArea(),
+        _btnAbsen(),
       ],
     );
   }
 
-  Widget diluarArea() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Expanded(
-            child: Opacity(
-                opacity: _diluarAbp,
-                child: Container(
-                  margin: const EdgeInsets.only(top: 8),
-                  color: Colors.white,
-                  child: Padding(
-                      padding: const EdgeInsets.all(4),
-                      child: Center(
-                          child: Column(
-                            children: const [
-                              Text(
-                                "Anda Diluar Area",
-                                style: TextStyle(color: Colors.red),
-                              ),
-                              Text(
-                                "PT Alamjaya Bara Pratama",
-                                style: TextStyle(color: Colors.red),
-                              ),
-                            ],
-                          ))),
-                )))
-      ],
-    );
-  }
   @override
   void dispose(){
-    codec?.dispose();
-    markers.clear();
-    _googleMapController.dispose();
     closeStream();
     super.dispose();
   }
 
-  Widget googleMaps(List<LatLng> pointABP){
-    List<Polygon> _polygons = [];
-    _polygons.add(Polygon(
-        polygonId: const PolygonId("ABP"),
-        points: pointABP,
-        strokeWidth: 2,
-        strokeColor: Colors.red,
-        fillColor: Colors.green.withOpacity(0.25)));
-    return Container(
-        margin: EdgeInsets.only(top: 215),
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height-200,
-        child: GoogleMap(
-          initialCameraPosition: _kGooglePlex,
-          mapType: MapType.normal,
-          onMapCreated: (GoogleMapController controller) async {
-            _map_controller.complete(controller);
-            _googleMapController = await controller;
-            if(_googleMapController!=null){
-              if(markerID!=null){
-                _googleMapController
-                    .showMarkerInfoWindow(markerID);
-              }
-              streamLokasi();
-            }
 
-          },
-          polygons: Set<Polygon>.of(_polygons),
-          markers: markers,
-          myLocationEnabled: true,
-          zoomControlsEnabled: true,
-          zoomGesturesEnabled: true,
-        ),
-      );
-    }
   Widget _btnAbsen() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -321,18 +208,18 @@ class _HomePageState extends State<HomePageAndroid> {
                             nik: nik!,
                             status: "Masuk",
                             lat:
-                            "${myLocation?.latitude}",
+                            "0.0",
                             lng:
-                            "${myLocation?.longitude}",
+                            "0.0",
                             id_roster: id_roster!,
                           )
                               : IosMasuk(
                             nik: nik!,
                             status: "Masuk",
                             lat:
-                            "${myLocation?.latitude}",
+                            "0.0",
                             lng:
-                            "${myLocation?.longitude}",
+                            "0.0",
                             id_roster: id_roster!,
                           )))
                       .then((value) => getPref(context));
@@ -368,15 +255,15 @@ class _HomePageState extends State<HomePageAndroid> {
                               ? IosPulang(
                             nik: nik!,
                             status: "Pulang",
-                            lat: "${myLocation?.latitude}",
-                            lng: "${myLocation?.longitude}",
+                            lat: "0.0",
+                            lng: "0.0",
                             id_roster: id_roster!,
                           )
                               : IosPulang(
                             nik: nik!,
                             status: "Pulang",
-                            lat: "${myLocation?.latitude}",
-                            lng: "${myLocation?.longitude}",
+                            lat: "0.0",
+                            lng: "0.0",
                             id_roster: id_roster!,
                           ))).then(
                           (value) => getPref(context));
@@ -392,30 +279,78 @@ class _HomePageState extends State<HomePageAndroid> {
       ],
     );
   }
-
-  Future<bool> locatePosition() async {
-    serviceEnable = await Geolocator.isLocationServiceEnabled();
-    if (serviceEnable) {
-      position = await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.high);
-      currentPosition = position!;
-      myLocation = LatLng(currentPosition.latitude, currentPosition.longitude);
-      lokasiPalsu = position!.isMocked;
-      if (myLocation != null) {
-        if (!iosMapLocation) {
-          iosMapLocation = true;
-        }
-
-        return true;
-      }else{
-        return false;
-      }
-    } else {
-      outside = false;
-      _diluarAbp = 1.0;
-      return false;
-    }
+  Widget _listAbsen(){
+    return Container(
+        margin: EdgeInsets.only(top: 215),
+    width: MediaQuery.of(context).size.width,
+    height: MediaQuery.of(context).size.height-200, 
+        child: FutureBuilder(
+        future: _loadTigaHari(nik!),
+        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+          if(snapshot.hasData){
+            List<AbsenTigaHariModel> _absensi = snapshot.data;
+            return ListView(
+                children: _absensi.map((ab) => _cardAbsen(ab)).toList());
+          }else{
+            return loader;
+          }
+        })
+    );
   }
+
+  Widget _cardAbsen(AbsenTigaHariModel _absen) {
+    DateFormat fmt = DateFormat("dd MMMM yyyy");
+    var tgl = DateTime.parse("${_absen.tanggal}");
+    TextStyle _style = const TextStyle(fontSize: 12, color: Colors.white);
+    return Card(
+      elevation: 10,
+      shadowColor: Colors.black87,
+      color: (_absen.status == "Masuk") ? Colors.green : Colors.red,
+      child: InkWell(
+        onTap: ()async{
+          await Navigator.push(context, MaterialPageRoute(builder: ( (context) => DetailProfile(
+            absenTigaHariModel: _absen,
+          )))).then((value) => _loadTigaHari(nik!));
+        },
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            imageResolve(_absen.gambar!),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(nama!, style: _style),
+                Text("${_absen.status}", style: _style),
+                Text(fmt.format(tgl), style: _style),
+                Text("${_absen.jam}", style: _style),
+                Text("${_absen.nik}", style: _style),
+                Text("${_absen.lupa_absen}", style: _style),
+              ],
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget imageResolve(String gambar) {
+    NetworkImage image = NetworkImage(gambar);
+    return Container(
+      margin: const EdgeInsets.only(right: 10),
+      width: 100,
+      height: 100,
+      decoration: BoxDecoration(
+          borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(5), bottomLeft: Radius.circular(5)),
+          image: DecorationImage(
+            image: image,
+            fit: BoxFit.fitWidth,
+          ),
+          color: Colors.white),
+    );
+  }
+
   getPref(BuildContext context) async {
     var sharedPref = await SharedPreferences.getInstance();
     isLogin = sharedPref.getInt("isLogin");
@@ -430,14 +365,15 @@ class _HomePageState extends State<HomePageAndroid> {
         nik = "";
         Navigator.pop(context);
       }
+      setState(() {
+
+      });
     }else{
       Navigator.pop(context);
     }
   }
   loadLastAbsen(String _nik) async {
-    _diluarAbp = 1.0;
-    // outside = false;
-    var lastAbsen = await LastAbsen.apiAbsenTigaHari(_nik);
+    var lastAbsen = await LastAbsen.apiAbsenTigaHariOffline(_nik);
     if (lastAbsen != null) {
       _jam_kerja = lastAbsen.jamKerja;
       kode_roster = lastAbsen.kodeRoster;
@@ -482,16 +418,23 @@ class _HomePageState extends State<HomePageAndroid> {
         _pulang = 0.0;
       }
       if(lastAbsen.jamServer!=null){
-          var jam_server = lastAbsen.jamServer;
-          print("JamServer ${jam_server?.menit}");
-          jamS= int.parse("${jam_server?.jam}") ;
-          menitS= int.parse("${jam_server?.menit}") ;
-          detikS= int.parse("${jam_server?.detik}") ;
-          // startClock = "${jamS.toString().padLeft(2,"0")}:${menitS.toString().padLeft(2,"0")}:${detikS.toString().padLeft(2,"0")}";
-          streamJam();
+        var jam_server = lastAbsen.jamServer;
+        print("JamServer ${jam_server?.menit}");
+        jamS= int.parse("${jam_server?.jam}") ;
+        menitS= int.parse("${jam_server?.menit}") ;
+        detikS= int.parse("${jam_server?.detik}") ;
+        streamJam();
       }
     }
+    setState(() {
+
+    });
   }
+  Future<List<AbsenTigaHariModel>> _loadTigaHari(String nik) async {
+    var absensi = await AbsenTigaHariModel.apiAbsenTigaHariOffline(nik);
+    return absensi;
+  }
+
   String doJam(){
     if(detikS >= 59){
       if(menitS >= 59){
@@ -522,105 +465,18 @@ class _HomePageState extends State<HomePageAndroid> {
   }
   createJamStream (){
     _streamClock.stream.listen((String jam) {
-      if(jam!=null){
-        if(mounted) {
-          setState(() {
+        if (jam != null) {
+          if(mounted) {
+            setState(() {
             startClock = jam;
           });
         }
       }
     });
   }
-  Future<List<MapAreModel>> _loadArea() async {
-    await cekGps();
-    _permissionStatus = await _permission.status;
-    var area = await MapAreModel.mapAreaApi("0");
-    return area;
-  }
-
-  bool _checkIfValidMarker(LatLng tap, List<LatLng> vertices) {
-    int intersectCount = 0;
-    for (int j = 0; j < vertices.length - 1; j++) {
-      if (rayCastIntersect(tap, vertices[j], vertices[j + 1])) {
-        intersectCount++;
-      }
-    }
-
-    return ((intersectCount % 2) == 1); // odd = inside, even = outside;
-  }
-
-  bool rayCastIntersect(LatLng tap, LatLng vertA, LatLng vertB) {
-    double aY = vertA.latitude;
-    double bY = vertB.latitude;
-    double aX = vertA.longitude;
-    double bX = vertB.longitude;
-    double pY = tap.latitude;
-    double pX = tap.longitude;
-
-    if ((aY > pY && bY > pY) || (aY < pY && bY < pY) || (aX < pX && bX < pX)) {
-      return false; // a and b can't both be above or below pt.y, and a or
-      // b must be east of pt.x
-    }
-
-    double m = (aY - bY) / (aX - bX); // Rise over run
-    double bee = (-aX) * m + aY; // y = mx + b
-    double x = (pY - bee) / m; // algebra is neat!
-
-    return x > pX;
-  }
-  cekGps() async {
-    serviceEnable = await Geolocator.isLocationServiceEnabled();
-  }
-  void setCustomMapPin() async {
-    markerIcon =
-    await getBytesFromAsset('assets/images/abp_60x60.png', 60);
-    customIcon = await BitmapDescriptor.fromBytes(markerIcon!);
-    marker = Marker(
-      markerId: markerID,
-      position: const LatLng(-0.5634222, 117.0139606),
-      icon: customIcon,
-      infoWindow: const InfoWindow(
-        title: 'PT Alamjaya Bara Pratama',
-      ),
-    );
-    markers.add(marker);
-  }
-  Future<Uint8List> getBytesFromAsset(String path, int width) async {
-    ByteData data = await rootBundle.load(path);
-    codec = await ui.instantiateImageCodec(data.buffer.asUint8List(),
-        targetWidth: width);
-    ui.FrameInfo fi = await codec!.getNextFrame();
-    return (await fi.image.toByteData(format: ui.ImageByteFormat.png))!
-        .buffer
-        .asUint8List();
-  }
-  streamLokasi() async{
-    createStream();
-    _getLokasi.add(await locatePosition());
-    _timer = Timer.periodic(Duration(seconds: 2), (timer) async{
-      _getLokasi.add(await locatePosition());
-    });
-  }
-  createStream(){
-    _getLokasi.stream.listen((bool e)async {
-      if(e){
-        if(mounted){
-          setState(() {
-
-          });
-          CameraPosition cameraPosition =
-          CameraPosition(target: myLocation!, zoom: 17.5756);
-          await _googleMapController
-              .animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
-
-        }
-      }
-    });
-  }
   closeStream(){
-    _timer?.cancel();
     _timerClock?.cancel();
-    // _getLokasi.close();
+    _timer?.cancel();
   }
 
 }
