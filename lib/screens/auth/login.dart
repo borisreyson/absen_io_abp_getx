@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:face_id_plus/intro.dart';
 import 'package:face_id_plus/model/face_login_model.dart';
-import 'package:face_id_plus/services/net_check.dart';
 import 'package:flutter/material.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -28,7 +27,6 @@ class _FormLoginState extends State<FormLogin> {
       RoundedLoadingButtonController();
   @override
   void initState() {
-    NetworkCheck().checkConnection(context);
     _passwordVisible = true;
     getPref(context);
     _usernameFocus = FocusNode();
@@ -38,8 +36,6 @@ class _FormLoginState extends State<FormLogin> {
 
   @override
   void dispose() {
-    NetworkCheck().listener.cancel();
-    print("network status ${NetworkCheck().net}");
     _usernameFocus.dispose();
     _passwordFocus.dispose();
     _formKey.currentState?.dispose();
@@ -82,8 +78,8 @@ class _FormLoginState extends State<FormLogin> {
                 datalogin.perusahaan.toString());
             Future.delayed(const Duration(milliseconds: 1000), () {
               _roundedController.success();
-              Future.delayed(const Duration(milliseconds: 1000), () {
-                Navigator.pushReplacement(
+              Future.delayed(const Duration(milliseconds: 1000), () async {
+              await Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
                         builder: (BuildContext context) => const SliderIntro()),

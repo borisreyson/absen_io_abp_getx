@@ -1,11 +1,6 @@
 import 'dart:io';
-import 'dart:math';
-
-import 'package:face_id_plus/screens/pages/cek_lokasi.dart';
-import 'package:face_id_plus/screens/pages/home.dart';
 import 'package:face_id_plus/screens/permission/lokasi.dart';
 import 'package:face_id_plus/splash.dart';
-import 'package:face_id_plus/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:intro_slider/intro_slider.dart';
@@ -93,7 +88,7 @@ class _SliderIntroState extends State<SliderIntro> {
           fontWeight: FontWeight.bold,
           fontFamily: 'RobotoMono'),
       description:
-          "Aplikasi ini mempunyai server sendiri, data - data dan privasi anda akan tetap terjaga aman " +
+          "Aplikasi ini mempunyai server sendiri, data - data dan privasi anda akan tetap terjaga aman "
               "Foto dan lokasi anda tidak akan tersebar luas karna foto anda telah di enkripsi di dalam server",
       styleDescription: const TextStyle(
           color: Color.fromRGBO(96, 55, 30, 1.0),
@@ -295,10 +290,8 @@ class _SliderIntroState extends State<SliderIntro> {
       }
     });
     if (z == _statuses.length) {
-      print("OK");
       saveIntro(context);
     } else {
-      print("OK1");
       doneVisible = false;
       _statuses.clear();
       _statuses.forEach((key, value) {

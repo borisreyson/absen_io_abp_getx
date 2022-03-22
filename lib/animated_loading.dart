@@ -1,7 +1,5 @@
 import 'dart:async';
-
 import 'package:face_id_plus/intro.dart';
-import 'package:face_id_plus/utils/utils.dart';
 import 'package:flutter/material.dart';
 class AnimatedLoading extends StatefulWidget {
   const AnimatedLoading({Key? key}) : super(key: key);
@@ -11,12 +9,12 @@ class AnimatedLoading extends StatefulWidget {
 }
 
 class _AnimatedLoadingState extends State<AnimatedLoading> with TickerProviderStateMixin {
-  late final AnimationController _controller = AnimationController(duration: Duration(seconds: 1), vsync: this)..repeat(reverse: true);
+  late final AnimationController _controller = AnimationController(duration: const Duration(seconds: 1), vsync: this)..repeat(reverse: true);
   late final Animation<double> _animation = CurvedAnimation(parent: _controller, curve: Curves.fastOutSlowIn);
   @override
   void initState() {
-    Future.delayed(Duration(seconds: 2),()=>Navigator.pushReplacement(context, MaterialPageRoute(builder: (builder)=>
-      SliderIntro()
+    Future.delayed(const Duration(seconds: 2),()=>Navigator.pushReplacement(context, MaterialPageRoute(builder: (builder)=>
+      const SliderIntro()
     )));
     super.initState();
   }

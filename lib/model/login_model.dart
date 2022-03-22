@@ -19,7 +19,6 @@ class LoginValidate {
     var apiResult = await http.post(Uri.parse(apiUrl),
         body: {"username": username, "password": password});
     var jsonObject = json.decode(apiResult.body);
-    print("UserLogin = $jsonObject");
     return LoginValidate.fromJson(jsonObject);
   }
 }
