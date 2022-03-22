@@ -34,7 +34,6 @@ class _SplashState extends State<Splash> {
   int isLogin=0;
   @override
   void initState() {
-    // _initNetworkInfo();
     pingServer();
     serverStream();
     getPref(context);
@@ -102,7 +101,7 @@ class _SplashState extends State<Splash> {
                     (serverOnline)?
                       _submitButton():offlineCheck()
                   :Container()
-                :Container(),
+                :serverIsOffline(),
                 const SizedBox(
                   height: 20,
                 ),
@@ -148,7 +147,20 @@ class _SplashState extends State<Splash> {
           )),
         ));
   }
-
+  Widget serverIsOffline(){
+    var style = TextStyle(color: Colors.red);
+    return Card(
+      elevation: 15,
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Column(
+            children: [
+              Text("Jika Server Offline",style: style,),
+              Text("Coba Untuk Menggunakan Jaringan Wifi PT ABP",style: style,)
+                      ],
+    ),
+        ));
+  }
   Widget _lanjutOnline() {
     return InkWell(
       onTap: () {
@@ -197,35 +209,6 @@ class _SplashState extends State<Splash> {
     );
   }
 
-  Widget _absenDenganJariganLokal() {
-    return InkWell(
-      hoverColor: Colors.white60,
-      onTap: () {
-        closePing();
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => const FormLogin()));
-      },
-      child: Container(
-        width: MediaQuery.of(context).size.width,
-        padding: const EdgeInsets.symmetric(vertical: 13),
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-            borderRadius: const BorderRadius.all(Radius.circular(5)),
-            boxShadow: <BoxShadow>[
-              BoxShadow(
-                  color: const Color(0xffdf8e33).withAlpha(100),
-                  offset: const Offset(2, 4),
-                  blurRadius: 8,
-                  spreadRadius: 2)
-            ],
-            color: Colors.white),
-        child: const Text(
-          "Absen Dengan Jaringan Lokal",
-          style: TextStyle(fontSize: 20, color: Color(0xfff7892b)),
-        ),
-      ),
-    );
-  }
 
   Widget _submitButton() {
     return InkWell(
