@@ -56,18 +56,26 @@ class _MenuPageState extends State<MenuPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget> [
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      TextButton(
-                        style: TextButton.styleFrom(
-                          textStyle: const TextStyle(fontSize: 20),
+                      Expanded(
+                        child: TextButton(
+                          style: TextButton.styleFrom(
+                            textStyle: const TextStyle(fontSize: 20),
+                            
+                          ),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (BuildContext context) => const ProfilePage()));
+                          },
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: const Text('Profile')
+                          ),
                         ),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (BuildContext context) => const ProfilePage()));
-                        },
-                        child: const Text('Profile'),
                       ),
                     ],
                   ),
@@ -90,7 +98,9 @@ class _MenuPageState extends State<MenuPage> {
                         MaterialPageRoute(
                           builder: (BuildContext context) => const ListKaryawan()));
                     },
-                    child: const Text('List Karyawan'),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: const Text('List Karyawan')),
                   ),
 
                   Padding(
@@ -111,7 +121,9 @@ class _MenuPageState extends State<MenuPage> {
                         MaterialPageRoute(
                           builder: (BuildContext context) => const ListDepartemen()));
                     },
-                    child: const Text('List Department'),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: const Text('List Departemen')),
                   ),
 
                   Padding(
@@ -132,7 +144,9 @@ class _MenuPageState extends State<MenuPage> {
                         MaterialPageRoute(
                           builder: (BuildContext context) => const ListDivisi()));
                     },
-                    child: const Text('List Divisi'),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: const Text('List Divisi')),
                   ),
 
                   Padding(
@@ -153,7 +167,9 @@ class _MenuPageState extends State<MenuPage> {
                         MaterialPageRoute(
                           builder: (BuildContext context) => const LihatAbsen()));
                     },
-                    child: const Text('List Absen'),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: const Text('List Absen')),
                   ),
 
                   Padding(
@@ -174,7 +190,9 @@ class _MenuPageState extends State<MenuPage> {
                         MaterialPageRoute(
                           builder: (BuildContext context) => const LihatAbsen()));
                     },
-                    child: const Text('List Jam Kerja'),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: const Text('List Jam Kerja')),
                   ),
 
                   Padding(
@@ -192,7 +210,9 @@ class _MenuPageState extends State<MenuPage> {
                     onPressed: () {
                       
                     },
-                    child: const Text('Admin Absen'),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: const Text('Admin Absen')),
                   ),
 
                   Padding(
@@ -213,7 +233,9 @@ class _MenuPageState extends State<MenuPage> {
                         MaterialPageRoute(
                           builder: (BuildContext context) => const RosterKerja()));
                     },
-                    child: const Text('Roster Kerja'),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: const Text('Roster Kerja')),
                   ),
 
                   Padding(
@@ -234,7 +256,9 @@ class _MenuPageState extends State<MenuPage> {
                         MaterialPageRoute(
                           builder: (BuildContext context) => const RosterCuti()));
                     },
-                    child: const Text('Roster Cuti'),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: const Text('Roster Cuti')),
                   ),
 
                   Padding(
@@ -255,7 +279,9 @@ class _MenuPageState extends State<MenuPage> {
                         MaterialPageRoute(
                           builder: (BuildContext context) => const Buletin()));
                     },
-                    child: const Text('Buletin'),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: const Text('Buletin')),
                   ),
 
                   Padding(
@@ -273,7 +299,9 @@ class _MenuPageState extends State<MenuPage> {
                     onPressed: () {
                       
                     },
-                    child: const Text('Area ABP'),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: const Text('Area ABP')),
                   ),     
                 ],
               ),

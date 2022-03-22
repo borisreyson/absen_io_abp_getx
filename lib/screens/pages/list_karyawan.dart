@@ -44,53 +44,53 @@ class _ListKaryawanState extends State<ListKaryawan> {
     body: ListView(
       children: [
         Stack(
-              children: <Widget> [
-                Padding(
-                  padding: const EdgeInsets.only(top: 50),
-                  child: SizedBox(
-                    width: double.infinity,
+          children: <Widget> [
+            Padding(
+              padding: const EdgeInsets.only(top: 50),
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Card(
+                    elevation: 8,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                     child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Card(
-                        elevation: 8,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 10, left: 20, bottom: 10),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text("Hendra", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
-                              SizedBox(height: 5),
-                              Text("22020323", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
-                              SizedBox(height: 5),
-                              Text("HCGA", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
-                              SizedBox(height: 5),
-                              Text("IT Staff", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
-                          ]),
-                        ),
+                      padding: const EdgeInsets.only(top: 10, left: 20, bottom: 10),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Hendra", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                          SizedBox(height: 5),
+                          Text("22020323", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                          SizedBox(height: 5),
+                          Text("HCGA", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                          SizedBox(height: 5),
+                          Text("IT Staff", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),                          
+                        ]
                       ),
                     ),
                   ),
                 ),
-
-                Positioned(
-                  left: 345,
-                  bottom: 60,
-                  child: SizedBox(
-                    width: 87,
-                    height: 80,
-                    child: Card(
-                      elevation: 8,
-                      shape: CircleBorder(),
-                      color: Colors.amber,
-                      child: Icon(Icons.camera_alt), 
-                    )
-                               
-                    ),
-                  ),
-              ],
+              ),
             ),
+
+            Positioned(
+              right: MediaQuery.of(context).size.width / 85,
+              bottom: 60,
+              child: SizedBox(
+                width: 87,
+                height: 80,
+                child: Card(
+                  elevation: 8,
+                  shape: CircleBorder(),
+                  color: Colors.amber,
+                  child: Icon(Icons.camera_alt), 
+                )
+              ),
+            ),
+          ],
+        ),
       ]),  
     );
   }
