@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class FormKaryawan extends StatefulWidget {
   const FormKaryawan({ Key? key }) : super(key: key);
@@ -59,6 +60,7 @@ class _FormKaryawanState extends State<FormKaryawan> {
       ),
 
     body: Form( key: _formKey,
+    autovalidateMode: AutovalidateMode.always,
       child: ListView(
         children: [
           Padding(
@@ -68,6 +70,7 @@ class _FormKaryawanState extends State<FormKaryawan> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
+                    keyboardType: TextInputType.number,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(10))
