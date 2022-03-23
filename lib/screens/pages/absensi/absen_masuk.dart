@@ -8,7 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
-import 'painters/face_detector_painter.dart';
+import '../painters/face_detector_painter.dart';
 import 'dart:ui' as ui show Image;
 import 'dart:typed_data';
 import 'package:ffi/ffi.dart';

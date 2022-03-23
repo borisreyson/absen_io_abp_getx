@@ -1,11 +1,11 @@
-import 'package:face_id_plus/screens/pages/buletin.dart';
-import 'package:face_id_plus/screens/pages/lihat_absensi.dart';
-import 'package:face_id_plus/screens/pages/list_departemen.dart';
-import 'package:face_id_plus/screens/pages/list_divisi.dart';
-import 'package:face_id_plus/screens/pages/list_karyawan.dart';
+import 'package:face_id_plus/screens/pages/buletin/buletin.dart';
+import 'package:face_id_plus/screens/pages/absensi/lihat_absensi.dart';
+import 'package:face_id_plus/screens/pages/master/list_departemen.dart';
+import 'package:face_id_plus/screens/pages/master/list_divisi.dart';
+import 'package:face_id_plus/screens/pages/master/list_karyawan.dart';
 import 'package:face_id_plus/screens/pages/profile_page.dart';
-import 'package:face_id_plus/screens/pages/roster_cuti.dart';
-import 'package:face_id_plus/screens/pages/roster_kerja.dart';
+import 'package:face_id_plus/screens/pages/cuti/roster_cuti.dart';
+import 'package:face_id_plus/screens/pages/cuti/roster_kerja.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

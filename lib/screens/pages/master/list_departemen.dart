@@ -1,19 +1,20 @@
-import 'package:face_id_plus/screens/pages/add_divisi.dart';
+import 'package:face_id_plus/screens/pages/master/add_departemen.dart';
+import 'package:face_id_plus/screens/pages/buletin/buletin.dart';
 import 'package:flutter/material.dart';
 
-class ListDivisi extends StatefulWidget {
-  const ListDivisi({ Key? key }) : super(key: key);
+class ListDepartemen extends StatefulWidget {
+  const ListDepartemen({ Key? key }) : super(key: key);
 
   @override
-  State<ListDivisi> createState() => _ListDivisiState();
+  State<ListDepartemen> createState() => _ListDepartemenState();
 }
 
-class _ListDivisiState extends State<ListDivisi> {
+class _ListDepartemenState extends State<ListDepartemen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xffffffff),
+         backgroundColor: const Color(0xffffffff),
          elevation: 0,
          leading: InkWell(
          splashColor: const Color(0xff000000),
@@ -26,16 +27,17 @@ class _ListDivisiState extends State<ListDivisi> {
         },
       ),
       title: const Text(
-        "List Divisi",
+        "List Departemen",
         style: TextStyle(color: Colors.black),
       ),
       ),
-    floatingActionButton: FloatingActionButton(
+
+      floatingActionButton: FloatingActionButton(
       onPressed: (){
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (BuildContext context) => const AddDivisi()));
+            builder: (BuildContext context) => const AddDepartemen()));
       }, child: Icon(Icons.add),
     ),
 
@@ -53,7 +55,7 @@ class _ListDivisiState extends State<ListDivisi> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text("ID Divisi"),
+                      Text("ID Departemen"),
                       ElevatedButton(
                         onPressed: (){
 
@@ -64,7 +66,7 @@ class _ListDivisiState extends State<ListDivisi> {
                    Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text("Nama Divisi"),
+                      Text("Nama Departemen"),
                       ElevatedButton(
                         onPressed: (){
 
@@ -77,7 +79,7 @@ class _ListDivisiState extends State<ListDivisi> {
           ),
         )
       ],
-    ),    
+    ),  
     );
   }
 }

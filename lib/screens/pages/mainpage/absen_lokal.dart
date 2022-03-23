@@ -3,7 +3,7 @@ import 'dart:ui' as ui;
 import 'dart:async';
 import 'package:face_id_plus/model/tigahariabsen.dart';
 import 'package:face_id_plus/screens/pages/area.dart';
-import 'package:face_id_plus/screens/pages/detail_absen_profile.dart';
+import 'package:face_id_plus/screens/pages/absensi/detail_absen_profile.dart';
 import 'package:face_id_plus/screens/pages/page_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:face_id_plus/model/last_absen.dart';

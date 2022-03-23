@@ -2,8 +2,8 @@ import 'dart:ffi';
 
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:face_id_plus/model/buletin_model.dart';
-import 'package:face_id_plus/screens/pages/add_buletin.dart';
-import 'package:face_id_plus/screens/pages/detail_buletin.dart';
+import 'package:face_id_plus/screens/pages/buletin/add_buletin.dart';
+import 'package:face_id_plus/screens/pages/buletin/detail_buletin.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';

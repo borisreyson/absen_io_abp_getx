@@ -1,15 +1,15 @@
 import 'package:face_id_plus/model/face_login_model.dart';
 import 'package:face_id_plus/model/tigahariabsen.dart';
 import 'package:face_id_plus/screens/pages/mainpage/absen_lokal.dart';
-import 'package:face_id_plus/screens/pages/detail_absen_profile.dart';
-import 'package:face_id_plus/screens/pages/lihat_absensi.dart';
+import 'package:face_id_plus/screens/pages/absensi/detail_absen_profile.dart';
+import 'package:face_id_plus/screens/pages/absensi/lihat_absensi.dart';
 import 'package:face_id_plus/splash.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 
-import 'admin_absen.dart';
+import 'absensi/admin_absen.dart';
 
 class Profile extends StatefulWidget {
   const Profile({Key? key}) : super(key: key);
