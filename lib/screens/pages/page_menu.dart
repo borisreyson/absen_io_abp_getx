@@ -278,7 +278,7 @@ class _MenuPageState extends State<MenuPage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (BuildContext context) => const Buletin()));
+                          builder: (BuildContext context) => Buletin()));
                     },
                     child: Align(
                       alignment: Alignment.centerLeft,

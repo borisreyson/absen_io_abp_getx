@@ -73,7 +73,7 @@ class _RosterCutiState extends State<RosterCuti> {
                 ),
               ),
               TableCalendar(
-                firstDay: DateTime(2022, 3, 1),
+                firstDay: DateTime.utc(2022, 3, 1),
                 lastDay: DateTime.utc(2030, 3, 14),
                 focusedDay: _focusedDay,
                 calendarFormat: _calendarFormat,
@@ -93,8 +93,7 @@ class _RosterCutiState extends State<RosterCuti> {
                       const SnackBar(
                         backgroundColor: Colors.green,
                         content: Text("APA",style: TextStyle(color: Colors.white))));
-                  }
-                  
+                  } 
                 },
                 onFormatChanged: (format) {
                   if (_calendarFormat != format) {

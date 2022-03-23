@@ -1,7 +1,11 @@
+import 'package:face_id_plus/model/buletin_model.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class AddBuletin extends StatefulWidget {
-  const AddBuletin({ Key? key }) : super(key: key);
+
+  ListBuletin? listBuletin;
+    AddBuletin({ Key? key, this.listBuletin }) : super(key: key);
 
   @override
   State<AddBuletin> createState() => _AddBuletinState();
@@ -14,6 +18,19 @@ class _AddBuletinState extends State<AddBuletin> {
 
   final TextEditingController _judulBuletin = TextEditingController();
   final TextEditingController _kontenBuletin = TextEditingController();
+  final TextEditingController _tgl = TextEditingController();
+
+  @override
+  void initState() {
+    if(widget.listBuletin != null){
+      var buletinData = widget.listBuletin;
+      
+      _judulBuletin.text = buletinData!.judul!;
+      _kontenBuletin.text = buletinData.pesan!;
+      _tgl.text = buletinData.tgl!;
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,11 +66,6 @@ class _AddBuletinState extends State<AddBuletin> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget> [
                 Container(
-                padding: const EdgeInsets.only(left: 25, top: 20),
-                  child: const Text("Judul", style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
-               )
-               ),
-                Container(
                       width: double.infinity,
                       margin: EdgeInsets.only(left: 10, right: 10),
                       padding: EdgeInsets.all(10),
@@ -67,6 +79,8 @@ class _AddBuletinState extends State<AddBuletin> {
                                 width: 10,
                               )
                          ),
+                         labelText: "Judul",
+                         floatingLabelBehavior: FloatingLabelBehavior.always,
                          fillColor: Colors.green,
                          hintText: 'Masukkan Judul Buletin'
                        ),  
@@ -79,13 +93,50 @@ class _AddBuletinState extends State<AddBuletin> {
                      }
                      ),
                     ),
-              
-                    Container(
-                      padding: const EdgeInsets.only(left: 25),
-                      child: const Text("Konten", style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
-                      )
+                Container(
+                      width: double.infinity,
+                      margin: EdgeInsets.only(left: 10, right: 10),
+                      padding: EdgeInsets.all(10),
+                      child: TextFormField(
+                      controller: _tgl,
+                        onTap: () async {
+                          DateTime? date;
+                          FocusScope.of(context).requestFocus(FocusNode());
+                      date = await showDatePicker(
+                       context: context,
+                       initialDate: DateTime.now(), 
+                       firstDate: DateTime(1900), 
+                       lastDate: DateTime(2100)
+                      );
+
+                       var _tanggal = "${date!.day}-${date.month}-${date.year}";  
+                      _tgl.text = _tanggal;   
+
+                        },
+                        readOnly: true,
+                       cursorColor: Theme.of(context).cursorColor,
+                       decoration:const InputDecoration(
+                         border: OutlineInputBorder(
+                           borderRadius: BorderRadius.all(Radius.circular(10)),
+                            borderSide: BorderSide(
+                                color: Colors.blue,
+                                width: 10,
+                              )
+                         ),
+                         labelText: "Tanggal",
+                         floatingLabelBehavior: FloatingLabelBehavior.always,
+                         fillColor: Colors.green,
+                         hintText: 'Masukkan Tanggal Buletin'
+                       ),  
+                      validator: (value) {
+                        if(value!.isEmpty){
+                          return "Tanggal Tidak Boleh Kosong";
+                     }
+                        return null;
+                     }
+                     ),
                     ),
-              
+
                     Container(
                       width: double.infinity,
                       margin: EdgeInsets.only(left: 10, right: 10),
@@ -101,8 +152,10 @@ class _AddBuletinState extends State<AddBuletin> {
                               borderSide: BorderSide(
                                 color: Colors.blue,
                                 width: 10,
-                              )
+                              ),
                             ),
+                            labelText: "Konten",
+                            floatingLabelBehavior: FloatingLabelBehavior.always,
                             fillColor: Colors.white,
                             hintText: "Masukkan Isi Konten"
               

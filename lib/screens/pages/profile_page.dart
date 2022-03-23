@@ -108,7 +108,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                     ],
                                   );
                                 });  
-                              }, child: Icon(Icons.camera_alt, size: 50),
+                              }, child: Icon(Icons.add_a_photo, size: 50),
                             ),
                           ),
                         ),

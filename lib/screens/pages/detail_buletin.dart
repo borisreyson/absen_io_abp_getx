@@ -1,7 +1,10 @@
+import 'package:face_id_plus/model/buletin_model.dart';
 import 'package:flutter/material.dart';
 
 class DetailBuletin extends StatefulWidget {
-  const DetailBuletin({ Key? key }) : super(key: key);
+
+  ListBuletin? listBuletin;
+  DetailBuletin({ Key? key, this.listBuletin }) : super(key: key);
 
   @override
   State<DetailBuletin> createState() => _DetailBuletinState();
@@ -9,10 +12,9 @@ class DetailBuletin extends StatefulWidget {
 
 class _DetailBuletinState extends State<DetailBuletin> {
 
-  String buletin = ("Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.");
-
   @override
   Widget build(BuildContext context) {
+    var buletinData = widget.listBuletin;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xffffffff),
@@ -27,8 +29,8 @@ class _DetailBuletinState extends State<DetailBuletin> {
           Navigator.maybePop(context);
         },
       ),
-      title: const Text(
-        "Judul Buletin",
+      title: Text(
+        "${buletinData!.judul}",
         style: TextStyle(color: Colors.black),
       ),
       ),
@@ -48,7 +50,7 @@ class _DetailBuletinState extends State<DetailBuletin> {
                     children: [
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Text(buletin, style: TextStyle(fontSize: 16)),
+                        child: Text("${buletinData.pesan}", style: TextStyle(fontSize: 16)),
                       )
                     ],
                   ),

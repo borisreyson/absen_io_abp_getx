@@ -58,7 +58,6 @@ class _DetailMasukState extends State<DetailMasuk> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: SizedBox(
-              height: 570,
               child: Card(
                 elevation: 8,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
@@ -76,7 +75,7 @@ class _DetailMasukState extends State<DetailMasuk> {
                 SizedBox(
                   width: double.infinity,
                   child: Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.only(right: 20, left: 20, top: 10),
                     child: Card(
                       elevation: 8,
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -97,7 +96,7 @@ class _DetailMasukState extends State<DetailMasuk> {
                 ),
 
                 Positioned(
-                  left: 330,
+                  right: MediaQuery.of(context).size.width / 200,
                   child: SizedBox(
                     width: 87,
                     height: 36,

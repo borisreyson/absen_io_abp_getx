@@ -50,7 +50,7 @@ class _ListKaryawanState extends State<ListKaryawan> {
               child: SizedBox(
                 width: MediaQuery.of(context).size.width,
                 child: Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.only(right: 20, left: 20),
                   child: Card(
                     elevation: 8,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -76,7 +76,7 @@ class _ListKaryawanState extends State<ListKaryawan> {
             ),
 
             Positioned(
-              right: MediaQuery.of(context).size.width / 85,
+              right: MediaQuery.of(context).size.width / 90,
               bottom: 60,
               child: SizedBox(
                 width: 87,

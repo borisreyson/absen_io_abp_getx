@@ -1,11 +1,18 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:face_id_plus/model/buletin_model.dart';
 import 'package:face_id_plus/screens/pages/add_buletin.dart';
 import 'package:face_id_plus/screens/pages/detail_buletin.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart'; 
+import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+enum Options {edit, delete}
 
 class Buletin extends StatefulWidget {
-  const Buletin({ Key? key }) : super(key: key);
+
+  ListBuletin? listBuletin;
+
+  Buletin({ Key? key, this.listBuletin }) : super(key: key);
 
   @override
   State<Buletin> createState() => _BuletinState();
@@ -13,27 +20,18 @@ class Buletin extends StatefulWidget {
 
 class _BuletinState extends State<Buletin> {
 
-  String buletin = ("Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.");
-  //String? _tanggal;
-  //late DateTime now;
+  ApiBuletin? _buletin;
+  List<ListBuletin>? infoListBuletin;
+  var _popupMenuIndex = 0;
 
   @override
   void initState() {
-    // DateFormat fmt = DateFormat("dd MMMM yyyy");
-    // DateTime old = DateTime.now();
-    // now = DateTime(old.year, old.month, old.day);
-    // _tanggal = fmt.format(now);
-    getTgl();
     super.initState();
   }
 
-  String getTgl() {
-      var tgl = DateTime.now();
-      return DateFormat("EEEE, dd MMMM yyyy").format(tgl);
-  }
-  
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
          appBar: AppBar(
         backgroundColor: const Color(0xffffffff),
@@ -70,320 +68,155 @@ class _BuletinState extends State<Buletin> {
             tooltip: 'Tambah Buletin',
           ),
 
-      body: ListView(
-        children: <Widget> [
-          SizedBox(
-            width: double.infinity,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Card(
-                elevation: 8,
-                color: const Color(0xFFF2E638),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                child: InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (BuildContext context) => const DetailBuletin()));
-                  },
-                  child: Column(
-                    children: [
-                       Row(
-                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                         children: [
-                           Padding(
-                             padding: const EdgeInsets.only(left: 15),
-                             child: Text("${getTgl()}"),
-                           ),
-                           _dropMenu(),
-                         ]),
-                      Column(
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 10),
-                            child: ListTile(
-                              title: Text("Judul", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                              subtitle: Text("${buletin}"),
-                            ),
-                          ),
-
-                          Column(
-                            children:<Widget> [
-                             
-                            ],
-                          ) 
-                        ]
+      body: FutureBuilder(
+              future: loadBuletin(),
+              builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot){
+              return ListView(
+                children: (infoListBuletin != null) 
+                ? infoListBuletin!.map((b) =>    _content(b)).toList() 
+                : [ Padding(
+                      padding: const EdgeInsets.only(top: 250),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          CircularProgressIndicator(),
+                        ],
                       ),
-                    ],
-                  ),
-                ),
-              ),
+                    )
+                  ]       
+                );
+              }  
             ),
-          ),
-
-         SizedBox(
-            width: double.infinity,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Card(
-                elevation: 8,
-                color: const Color(0xFFF2E638),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                child: InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (BuildContext context) => const DetailBuletin()));
-                  },
-                  child: Column(
-                    children: [
-                       Row(
-                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                         children: [
-                           Padding(
-                             padding: const EdgeInsets.only(left: 15),
-                             child: Text("${getTgl()}"),
-                           ),
-                           _dropMenu(),
-                         ]),
-                      Column(
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 10),
-                            child: ListTile(
-                              title: Text("Judul", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                              subtitle: Text("${buletin}"),
-                            ),
-                          ),
-
-                          Column(
-                            children:<Widget> [
-                             
-                            ],
-                          ) 
-                        ]
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-
-          SizedBox(
-            width: double.infinity,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Card(
-                elevation: 8,
-                color: const Color(0xFFF2E638),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                child: InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (BuildContext context) => const DetailBuletin()));
-                  },
-                  child: Column(
-                    children: [
-                       Row(
-                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                         children: [
-                           Padding(
-                             padding: const EdgeInsets.only(left: 15),
-                             child: Text("${getTgl()}"),
-                           ),
-                           _dropMenu(),
-                         ]),
-                      Column(
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 10),
-                            child: ListTile(
-                              title: Text("Judul", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                              subtitle: Text("${buletin}"),
-                            ),
-                          ),
-
-                          Column(
-                            children:<Widget> [
-                             
-                            ],
-                          ) 
-                        ]
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-
-          SizedBox(
-            width: double.infinity,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Card(
-                elevation: 8,
-                color: const Color(0xFFF2E638),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                child: InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (BuildContext context) => const DetailBuletin()));
-                  },
-                  child: Column(
-                    children: [
-                       Row(
-                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                         children: [
-                           Padding(
-                             padding: const EdgeInsets.only(left: 15),
-                             child: Text("${getTgl()}"),
-                           ),
-                           _dropMenu(),
-                         ]),
-                      Column(
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 10),
-                            child: ListTile(
-                              title: Text("Judul", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                              subtitle: Text("${buletin}"),
-                            ),
-                          ),
-
-                          Column(
-                            children:<Widget> [
-                             
-                            ],
-                          ) 
-                        ]
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
-      )
-    );
+        );
   }
 
-  Widget _dropMenu(){
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: DropdownButtonHideUnderline(
-        child: DropdownButton2(
-          customButton: const Icon(Icons.more_horiz,size: 25),
-          customItemsIndexes: const [3],
-          customItemsHeight: 8,
-            items: [
-              ...MenuItems.firstItems.map(
-                  (item) => DropdownMenuItem<MenuItem>(
-                    value: item,
-                    child: MenuItems.buildItem(item),
-                  ),
-                ),
+  Widget _content(ListBuletin _list) {
+    DateFormat fmt = DateFormat("dd MMMM yyyy");
+    var tanggal = DateTime.parse("${_list.tgl}");
+    return SizedBox(
+            width: double.infinity,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Card(
+                elevation: 8,
+                color: const Color(0xFFF2E638),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                child: InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (BuildContext context) => DetailBuletin(
+                          listBuletin: _list
+                        )));
+                    },
+                    child: Column(
+                      children: [
+                         Row(
+                           mainAxisAlignment: MainAxisAlignment.start,
+                           children: [
+                             Padding(
+                               padding: const EdgeInsets.only(left: 17, top: 10, bottom: 10),
+                               child: 
+                               Text("${fmt.format(tanggal)}"),
+                             ),
+                           ]),
+
+                        Column(
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 10),
+                              child: ListTile(
+                                title: Text("${_list.judul}", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                                subtitle: Text("${_list.pesan}", maxLines: 6),
+                              ),
+                            )
+                          ]
+                        ),
+
+                        Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                IconButton(
+                                  icon: Icon(Icons.edit),
+                                  tooltip: 'Ubah',
+                                  onPressed: (){
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (BuildContext context) => AddBuletin(
+                                          listBuletin: _list
+                                        )));
+                                  },
+                                ),
+
+                                IconButton(
+                                  icon: Icon(Icons.delete),
+                                  tooltip: 'Hapus',
+                                  onPressed: (){
+                                    showDialog(context: context, builder: (context){
+                                      return AlertDialog(
+                                        title: Text("Konfirmasi"),
+                                        content: Text("Yakin ingin mengapus data ini: "),
+                                        actions: [
+                                          TextButton(
+                                            onPressed:() {
+                                              Navigator.of(context).pop();
+                                            }, 
+                                        child: Text("TIDAK", style: TextStyle(color: Colors.blue)), 
+                                      ),
+                                      TextButton(
+                                        onPressed:() {
+                                          Navigator.of(context).pop();
+                                          setState(() {
+                             
+                                          });
+                                        }, 
+                                        child: Text("IYA", style: TextStyle(color: Colors.blue),), 
+                                     ),
+                                ],
+                              );
+                            });
+                          },
+                        )
+                      ],
+                    )
+                  ],
+                )  
               ],
-            onChanged: (value) {
-              MenuItems.onChanged(context, value as MenuItem);
-            },
-          itemHeight: 48,
-          itemPadding: const EdgeInsets.only(left: 16, right: 16),
-          dropdownWidth: 160,
-          dropdownPadding: const EdgeInsets.symmetric(vertical: 10),
-          dropdownDecoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: const Color(0xFF21BFBD),
+            ),
           ),
-          dropdownElevation: 8,
-          offset: const Offset(0, 8),
         ),
       ),
     );
   }
+
+  loadBuletin() async {
+
+  var load = ApiBuletin.getBuletin();
+  await load.then((value) {
+  _buletin = value;
+    if(_buletin != null){
+        var infoBuletin = _buletin?.info; 
+          if(infoBuletin != null){
+              infoListBuletin = infoBuletin as List<ListBuletin>?;
+            
+          } else {
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                content: Text("Data Tidak Ada")
+              ));
+            
+            }
+            }
+          }).catchError((onError) {
+            print(onError.toString());
+
+             ScaffoldMessenger.of(context).showSnackBar( SnackBar(
+                content: Text("Error Jaringan ${onError.toString()}")));
+        }
+          ); 
+}
 }
 
-class MenuItem {
-  final String text;
-  final IconData icon;
-
-  const MenuItem({
-    required this.text,
-    required this.icon,
-  });
-}
-
-class MenuItems {
-  static const List<MenuItem> firstItems = [ubah, hapus];
-  static const ubah = MenuItem(text: 'Ubah', icon: Icons.edit);
-  static const hapus = MenuItem(text: 'Hapus', icon: Icons.delete);
-
-static Widget buildItem(MenuItem item) {
-  return Row(
-    children: [
-      Icon(
-        item.icon,
-          color: Colors.white,
-          size: 22
-      ),
-
-      const SizedBox(
-        width: 10,
-      ),
-
-      Text(
-        item.text,
-          style: const TextStyle(color: Colors.white)
-        ),
-      ],
-    );
-  }
-
-  static onChanged(BuildContext context, MenuItem item) {
-    switch (item) {
-      case MenuItems.ubah:
-        Navigator.push(context, MaterialPageRoute(builder: ( 
-          (context) => const AddBuletin())));
-      break;
-
-      case MenuItems.hapus:
-        showDialog(context: context, builder: (context){
-          return _dialogHapus(context);
-          
-        });
-      break;
-    }
-  }
-}
-
-Widget _dialogHapus(BuildContext context) {
-  return AlertDialog(
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-    elevation: 8,
-    title: Text("Konfirmasi"),
-    content: Text("Yakin ingin mengapus buletin dengan judul ini: Ini Judul"),
-    actions: [
-      TextButton(
-        onPressed:() {
-          Navigator.of(context).pop();
-        }, 
-        child: Text("TIDAK", style: TextStyle(color: Colors.blue)), 
-      ),
-      TextButton(
-        onPressed:() {
-          Navigator.of(context).pop();
-        }, 
-        child: Text("IYA", style: TextStyle(color: Colors.blue),), 
-      ),
-    ],
-  );
-}
-  
