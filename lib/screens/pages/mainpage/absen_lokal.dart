@@ -42,10 +42,10 @@ class _AbsenLokalState extends State<AbsenLokal> {
   }
   @override
   Widget build(BuildContext context) {
-    return _mainContent();
+    return (nik!=null)?_mainContent(nik!):Center(child: CircularProgressIndicator(),);
   }
 
-  Widget _mainContent() {
+  Widget _mainContent(String nik) {
     return Scaffold(
       appBar: AppBar(
         leading: InkWell(
@@ -85,12 +85,12 @@ class _AbsenLokalState extends State<AbsenLokal> {
         elevation: 0,
       ),
       backgroundColor: const Color(0xFFFFFFFF),
-      body: _headerContent());
+      body: _headerContent(nik));
   }
 
-  Widget _headerContent() {
+  Widget _headerContent(String nik) {
     return Stack(children: [
-      _listAbsen(),
+      _listAbsen(nik),
       topContent(),
       _contents()
     ]);
@@ -279,13 +279,13 @@ class _AbsenLokalState extends State<AbsenLokal> {
       ],
     );
   }
-  Widget _listAbsen(){
+  Widget _listAbsen(String nik){
     return Container(
         margin: EdgeInsets.only(top: 215),
     width: MediaQuery.of(context).size.width,
     height: MediaQuery.of(context).size.height-200, 
         child: FutureBuilder(
-        future: _loadTigaHari(nik!),
+        future: _loadTigaHari(nik),
         builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
           if(snapshot.hasData){
             List<AbsenTigaHariModel> _absensi = snapshot.data;

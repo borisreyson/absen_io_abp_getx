@@ -216,14 +216,11 @@ class _HomePageState extends State<HomePage> {
           outside = false;
           _diluarAbp = 1.0;
           return enableGPS();
-          print("1");
         }
         if (snapshot.hasData) {
           if (!serviceEnable) {
             outside = false;
             _diluarAbp = 1.0;
-            print("2");
-
             return enableGPS();
           }
           List<LatLng> pointAbp = [];
