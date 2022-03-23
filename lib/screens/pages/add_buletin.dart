@@ -20,12 +20,15 @@ class _AddBuletinState extends State<AddBuletin> {
   final TextEditingController _kontenBuletin = TextEditingController();
   final TextEditingController _tgl = TextEditingController();
 
+  int? id_info;
+
   @override
   void initState() {
     if(widget.listBuletin != null){
       var buletinData = widget.listBuletin;
+      id_info = buletinData!.id_info;
       
-      _judulBuletin.text = buletinData!.judul!;
+      _judulBuletin.text = buletinData.judul!;
       _kontenBuletin.text = buletinData.pesan!;
       _tgl.text = buletinData.tgl!;
     }
@@ -141,33 +144,37 @@ class _AddBuletinState extends State<AddBuletin> {
                       width: double.infinity,
                       margin: EdgeInsets.only(left: 10, right: 10),
                       padding: EdgeInsets.all(10),
-                      child: TextFormField(
-                        minLines: 20,
-                        keyboardType: TextInputType.multiline,
-                        maxLines: null,
-                        cursorColor: Theme.of(context).cursorColor,
-                        decoration:const InputDecoration(
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.all(Radius.circular(10)),
-                              borderSide: BorderSide(
-                                color: Colors.blue,
-                                width: 10,
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.vertical,
+                        reverse: true,
+                        child: TextFormField(
+                          minLines: 1,
+                          keyboardType: TextInputType.multiline,
+                          maxLines: 15,
+                          cursorColor: Theme.of(context).cursorColor,
+                          decoration:const InputDecoration(
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.all(Radius.circular(10)),
+                                borderSide: BorderSide(
+                                  color: Colors.blue,
+                                  width: 10,
+                                ),
                               ),
-                            ),
-                            labelText: "Konten",
-                            floatingLabelBehavior: FloatingLabelBehavior.always,
-                            fillColor: Colors.white,
-                            hintText: "Masukkan Isi Konten"
-              
-                       ),  
-                      controller: _kontenBuletin,
-                      validator: (value) {
-                        if(value!.isEmpty){
-                          return "Konten Tidak Boleh Kosong";
-                     }
-                        return null;
-                     }
-                     ),
+                              labelText: "Konten",
+                              floatingLabelBehavior: FloatingLabelBehavior.always,
+                              fillColor: Colors.white,
+                              hintText: "Masukkan Isi Konten"
+                                    
+                         ),  
+                        controller: _kontenBuletin,
+                        validator: (value) {
+                          if(value!.isEmpty){
+                            return "Konten Tidak Boleh Kosong";
+                                           }
+                          return null;
+                                           }
+                                           ),
+                      ),
                     ),
               
                     Center(
@@ -183,7 +190,20 @@ class _AddBuletinState extends State<AddBuletin> {
                               ),
                             ),
                             onPressed: (){
-              
+                              var form = _formKey.currentState;
+                              if(form!.validate()){
+                                if (widget.listBuletin == null) {
+                                  addBuletin();
+                                  setState(() {
+                                  
+                                  });
+                                } else {
+                                  ubahBuletin(id_info!);
+                                  setState(() {
+                                    
+                                  });
+                                }
+                              }
                             }, child: Text("Simpan",style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),), 
                           ),
                         ),
@@ -195,5 +215,59 @@ class _AddBuletinState extends State<AddBuletin> {
         ]),
       ),
     );
+  }
+
+  addBuletin() async {
+    ListBuletin listBuletin = ListBuletin();
+
+    listBuletin.judul = _judulBuletin.text.toString();
+    listBuletin.tgl = _tgl.text.toString();
+    listBuletin.pesan = _kontenBuletin.text.toString();
+
+    var api = await ApiBuletin.buletinTambah(listBuletin).then((value) {
+      TambahBuletin? buletinTambah = value;
+
+      if(buletinTambah != null){
+        if(buletinTambah.success!){
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              backgroundColor: Colors.green,
+              content: Text("Buletin Berhasil Ditambah",style: TextStyle(color: Colors.white))));
+              Navigator.maybePop(context, "Ok");
+        }else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              backgroundColor: Colors.red,
+              content: Text("Buletin Gagal Ditambah",style: TextStyle(color: Colors.white))));
+        }
+      }
+    });
+  }
+
+  ubahBuletin (int id_info) async {
+    ListBuletin ubahBuletin = ListBuletin();
+
+    ubahBuletin.judul = _judulBuletin.text.toString();
+    ubahBuletin.tgl = _tgl.text.toString();
+    ubahBuletin.pesan = _kontenBuletin.text.toString();
+
+    var api = await ApiBuletin.updateBuletin(id_info, ubahBuletin).then((value) {
+      TambahBuletin? buletinTambah = value;
+
+      if(buletinTambah != null){
+        if(buletinTambah.success!){
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              backgroundColor: Colors.green,
+              content: Text("Buletin Berhasil Diubah",style: TextStyle(color: Colors.white))));
+              Navigator.maybePop(context, "Ok");
+        }else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              backgroundColor: Colors.red,
+              content: Text("Buletin Gagal Diubah",style: TextStyle(color: Colors.white))));
+        }
+      }
+    });
   }
 }

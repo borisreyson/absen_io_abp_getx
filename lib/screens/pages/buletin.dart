@@ -23,9 +23,11 @@ class _BuletinState extends State<Buletin> {
   ApiBuletin? _buletin;
   List<ListBuletin>? infoListBuletin;
   var _popupMenuIndex = 0;
+  int? id_info;
 
   @override
   void initState() {
+    loadBuletin();
     super.initState();
   }
 
@@ -56,13 +58,16 @@ class _BuletinState extends State<Buletin> {
         floatingActionButton: FloatingActionButton(
           backgroundColor: const Color(0xFF21BFBD),
           elevation: 8,
-          onPressed: (){
-            Navigator.push(
+          onPressed: () async {
+          var tambahData = await Navigator.push(
               context, 
               MaterialPageRoute(
-                builder: ((context) => AddBuletin())
-              )
-            );
+                builder: ((context) => AddBuletin())));
+              if(tambahData == "Ok"){
+                    setState(() {
+                   
+                    });
+              }  
           }, 
             child: const Icon(Icons.add_to_photos_sharp),
             tooltip: 'Tambah Buletin',
@@ -148,7 +153,7 @@ class _BuletinState extends State<Buletin> {
                                       MaterialPageRoute(
                                         builder: (BuildContext context) => AddBuletin(
                                           listBuletin: _list
-                                        )));
+                                        ))).then((value) => setState(() {}));
                                   },
                                 ),
 
@@ -169,9 +174,10 @@ class _BuletinState extends State<Buletin> {
                                       ),
                                       TextButton(
                                         onPressed:() {
+                                          hapusBuletin(_list.id_info!);
                                           Navigator.of(context).pop();
                                           setState(() {
-                             
+                                            
                                           });
                                         }, 
                                         child: Text("IYA", style: TextStyle(color: Colors.blue),), 
@@ -217,6 +223,21 @@ class _BuletinState extends State<Buletin> {
                 content: Text("Error Jaringan ${onError.toString()}")));
         }
           ); 
-}
+  }
+
+  hapusBuletin(int id_info) async {
+    var api = await ApiBuletin.deleteBuletin(id_info).then((value) {
+      print("data ${value?.success}");
+      if (id_info != null){
+        ScaffoldMessenger.of(context).showSnackBar( SnackBar(
+          backgroundColor: Colors.green,
+          content: Text("Data Berhasil Dihapus", style: TextStyle(color: Colors.white))));
+      }else {
+        ScaffoldMessenger.of(context).showSnackBar( SnackBar(
+          backgroundColor: Colors.red,
+          content: Text("Data Gagal Dihapus", style: TextStyle(color: Colors.white))));
+      }
+    });
+  }
 }
 

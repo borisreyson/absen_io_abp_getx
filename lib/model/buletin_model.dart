@@ -20,6 +20,29 @@ class ApiBuletin {
     var objekJson = json.decode(apiWeb.body); 
     return ApiBuletin.fromJson(objekJson);  
   }
+
+  static Future<TambahBuletin?> buletinTambah(ListBuletin listBuletin) async{
+     var data = listBuletin.toJson();
+     var url = Uri.parse("https://lp.abpjobsite.com/api/save/buletin");
+     var apiResult = await http.post(url, body: data); 
+     var jsonObject = json.decode(apiResult.body);
+     return TambahBuletin.fromJson(jsonObject);
+  }
+
+  static Future<TambahBuletin?> updateBuletin(int id_info, ListBuletin listBuletin) async{
+     var data = listBuletin.toJson();
+     var url = Uri.parse("https://lp.abpjobsite.com/api/save/buletin?id_info=$id_info");
+     var apiResult = await http.put(url, body: data); 
+     var jsonObject = json.decode(apiResult.body);
+     return TambahBuletin.fromJson(jsonObject);
+  }
+
+  static Future<TambahBuletin?> deleteBuletin(int id_info) async{
+     var url = Uri.parse("https://lp.abpjobsite.com/api/save/buletin?id_info=$id_info");
+     var apiResult = await http.delete(url); 
+     var jsonObject = json.decode(apiResult.body);
+     return TambahBuletin.fromJson(jsonObject);
+  }
 }
 
 class ListBuletin {
@@ -45,5 +68,21 @@ class ListBuletin {
       tgl: objek["tgl"],
       status: objek["status"],
     );
+  }
+
+  Map<String, dynamic> toJson () => {
+    "judul": judul,
+    "tgl": tgl,
+    "pesan": pesan,
+  };
+} 
+
+class TambahBuletin{
+  bool? success;
+
+  TambahBuletin ({this.success});
+
+  factory TambahBuletin.fromJson(Map <String, dynamic> object){
+    return TambahBuletin(success: object['success']);
   }
 }
