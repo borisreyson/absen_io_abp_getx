@@ -38,8 +38,8 @@ class ApiBuletin {
   }
 
   static Future<TambahBuletin?> deleteBuletin(int id_info) async{
-     var url = Uri.parse("https://lp.abpjobsite.com/api/save/buletin?id_info=$id_info");
-     var apiResult = await http.delete(url); 
+     var url = Uri.parse("https://lp.abpjobsite.com/api/save/buletin?idInfo=$id_info");
+     var apiResult = await http.delete(url);
      var jsonObject = json.decode(apiResult.body);
      return TambahBuletin.fromJson(jsonObject);
   }

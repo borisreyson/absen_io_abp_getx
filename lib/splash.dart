@@ -5,6 +5,7 @@ import 'package:face_id_plus/screens/auth/register.dart';
 import 'package:face_id_plus/screens/pages/mainpage/absen_lokal.dart';
 import 'package:face_id_plus/screens/pages/home.dart';
 import 'package:face_id_plus/screens/pages/mainpage/home.dart';
+import 'package:face_id_plus/services/notification.dart';
 import 'package:face_id_plus/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -25,27 +26,27 @@ class _SplashState extends State<Splash> {
   StreamController<bool> _pingServer = StreamController.broadcast();
   StreamController<bool> _pingLokal = StreamController.broadcast();
   StreamController<bool> _pingServerOnline = StreamController.broadcast();
-  bool isOnline=false;
-  bool lokalOnline=false;
-  bool serverOnline=false;
-  Timer? _timer ;
+  bool isOnline = false;
+  bool lokalOnline = false;
+  bool serverOnline = false;
+  Timer? _timer;
   Duration _duration = Duration(seconds: 5);
   String? wifiBSSID;
-  int isLogin=0;
+  int isLogin = 0;
   @override
   void initState() {
+    NotificationAPI.initNotif();
     pingServer();
     serverStream();
     getPref(context);
     super.initState();
   }
-  _initNetworkInfo()async{
-    try{
 
-    }on PlatformException catch(e){
-      if(Platform.isIOS){
+  _initNetworkInfo() async {
+    try {} on PlatformException catch (e) {
+      if (Platform.isIOS) {
         wifiBSSID = await _networkInfo.getWifiBSSID();
-      }else{
+      } else {
         wifiBSSID = await _networkInfo.getWifiBSSID();
       }
     }
@@ -60,7 +61,7 @@ class _SplashState extends State<Splash> {
     return Scaffold(
       body: SingleChildScrollView(
         child: Opacity(
-          opacity:  1.0,
+          opacity: 1.0,
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             height: MediaQuery.of(context).size.height,
@@ -89,19 +90,20 @@ class _SplashState extends State<Splash> {
                 SizedBox(
                   height: 40,
                 ),
-                (isOnline)?
-                (isLogin==1 && isLogin!=null)?
-                (serverOnline)?
-                _lanjutOnline():
-                offlineCheck()
-                :Container()
-                :offlineCheck(),
-                (isOnline)?
-                  (isLogin==0 && isLogin!=null )?
-                    (serverOnline)?
-                      _submitButton():offlineCheck()
-                  :Container()
-                :serverIsOffline(),
+                (isOnline)
+                    ? (isLogin == 1 && isLogin != null)
+                        ? (serverOnline)
+                            ? _lanjutOnline()
+                            : offlineCheck()
+                        : Container()
+                    : offlineCheck(),
+                (isOnline)
+                    ? (isLogin == 0 && isLogin != null)
+                        ? (serverOnline)
+                            ? _submitButton()
+                            : offlineCheck()
+                        : Container()
+                    : serverIsOffline(),
                 const SizedBox(
                   height: 20,
                 ),
@@ -109,21 +111,44 @@ class _SplashState extends State<Splash> {
                 const SizedBox(
                   height: 20,
                 ),
-            Card(
-              elevation: 10,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: (!lokalOnline)?
-                (serverOnline)?
-                Text("Server : Online",style: TextStyle(color: Colors.green,fontWeight: FontWeight.bold),):
-                Text("Server : Offline",style: TextStyle(color: Colors.red,fontWeight: FontWeight.bold),):
-                Text("Server : Online",style: TextStyle(color: Colors.green,fontWeight: FontWeight.bold),),
-              ),
-            ),
-                SizedBox(height: 10,),
-                (!lokalOnline)?
-                (!serverOnline)?Center(child:
-                  CircularProgressIndicator(),):Center():Center()
+                Card(
+                  elevation: 10,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: (!lokalOnline)
+                        ? (serverOnline)
+                            ? Text(
+                                "Server : Online",
+                                style: TextStyle(
+                                    color: Colors.green,
+                                    fontWeight: FontWeight.bold),
+                              )
+                            : Text(
+                                "Server : Offline",
+                                style: TextStyle(
+                                    color: Colors.red,
+                                    fontWeight: FontWeight.bold),
+                              )
+                        : Text(
+                            "Server : Online",
+                            style: TextStyle(
+                                color: Colors.green,
+                                fontWeight: FontWeight.bold),
+                          ),
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                (!lokalOnline)
+                    ? (!serverOnline)
+                        ? Center(
+                            child: CircularProgressIndicator(),
+                          )
+                        : Center()
+                    : Center(),
+                tombolKeluar(),
+                // testNotif()
                 // _label()
               ],
             ),
@@ -132,9 +157,15 @@ class _SplashState extends State<Splash> {
       ),
     );
   }
-  Widget offlineCheck(){
-    return (lokalOnline)?(isLogin==1 && isLogin!=null)?_lanjutOffline():_submitButton():Container();
+
+  Widget offlineCheck() {
+    return (lokalOnline)
+        ? (isLogin == 1 && isLogin != null)
+            ? _lanjutOffline()
+            : _submitButton()
+        : Container();
   }
+
   Widget _logo() {
     return Padding(
         padding: const EdgeInsets.only(top: 10.0, bottom: 5.0),
@@ -142,25 +173,35 @@ class _SplashState extends State<Splash> {
           height: 100,
           decoration: BoxDecoration(
               image: DecorationImage(
-            image: NetworkImage((!lokalOnline)?"https://abpjobsite.com/abp_prof.png":"http://10.10.3.13/abp_prof.png"),
+            image: NetworkImage((!lokalOnline)
+                ? "https://abpjobsite.com/abp_prof.png"
+                : "http://10.10.3.13/abp_prof.png"),
             fit: BoxFit.contain,
           )),
         ));
   }
-  Widget serverIsOffline(){
+
+  Widget serverIsOffline() {
     var style = TextStyle(color: Colors.red);
     return Card(
-      elevation: 15,
+        elevation: 15,
         child: Padding(
           padding: const EdgeInsets.all(10.0),
           child: Column(
             children: [
-              Text("Jika Server Offline",style: style,),
-              Text("Coba Untuk Menggunakan Jaringan Wifi PT ABP",style: style,)
-                      ],
-    ),
+              Text(
+                "Jika Server Offline",
+                style: style,
+              ),
+              Text(
+                "Coba Untuk Menggunakan Jaringan Wifi PT ABP",
+                style: style,
+              )
+            ],
+          ),
         ));
   }
+
   Widget _lanjutOnline() {
     return InkWell(
       onTap: () {
@@ -168,7 +209,8 @@ class _SplashState extends State<Splash> {
         Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (BuildContext context) => const HomePageAndroid())).then((value) => reloadCekServer());
+                    builder: (BuildContext context) => const HomePageAndroid()))
+            .then((value) => reloadCekServer());
       },
       child: Container(
         width: MediaQuery.of(context).size.width,
@@ -188,10 +230,11 @@ class _SplashState extends State<Splash> {
 
   Widget _lanjutOffline() {
     return InkWell(
-      onTap: () async{
+      onTap: () async {
         closePing();
-        await Navigator.push(context,
-            MaterialPageRoute(builder: (context) => AbsenLokal())).then((value) => reloadCekServer());
+        await Navigator.push(
+                context, MaterialPageRoute(builder: (context) => AbsenLokal()))
+            .then((value) => reloadCekServer());
       },
       child: Container(
         width: MediaQuery.of(context).size.width,
@@ -208,7 +251,6 @@ class _SplashState extends State<Splash> {
       ),
     );
   }
-
 
   Widget _submitButton() {
     return InkWell(
@@ -243,25 +285,26 @@ class _SplashState extends State<Splash> {
   Widget _title() {
     return Padding(
       padding: EdgeInsets.only(left: 30, right: 30),
-      child: Column(children: [
-        Text(
-          "ABSENSI IO",
-          style: TextStyle(
-              color: Color(0xFF003F63),
-              fontSize: 30,
-              fontWeight: FontWeight.bold,
-              fontFamily: "RaleWay"
+      child: Column(
+        children: [
+          Text(
+            "ABSENSI IO",
+            style: TextStyle(
+                color: Color(0xFF003F63),
+                fontSize: 30,
+                fontWeight: FontWeight.bold,
+                fontFamily: "RaleWay"),
           ),
-        ),
-        Text(
-          "PT Alamjaya Bara Pratama",
-          style: TextStyle(
-              color: Color(0xFF003F63),
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              fontFamily: "RaleWay"),
-        )
-      ],),
+          Text(
+            "PT Alamjaya Bara Pratama",
+            style: TextStyle(
+                color: Color(0xFF003F63),
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                fontFamily: "RaleWay"),
+          )
+        ],
+      ),
     );
   }
 
@@ -270,18 +313,19 @@ class _SplashState extends State<Splash> {
     if (sharedPref.getInt("isLogin") != null) {
       isLogin = await sharedPref.getInt("isLogin")!;
       // if (isLogin == 1) {
-        // Navigator.pushReplacement(
-        //     context,
-        //     MaterialPageRoute(
-        //         builder: (BuildContext context) => const HomePage()));
+      // Navigator.pushReplacement(
+      //     context,
+      //     MaterialPageRoute(
+      //         builder: (BuildContext context) => const HomePage()));
       // }
-    }else{
-      isLogin=0;
+    } else {
+      isLogin = 0;
     }
   }
-  serverStream(){
+
+  serverStream() {
     _pingServer.stream.listen((bool isConnected) {
-      if(mounted){
+      if (mounted) {
         setState(() {
           isOnline = isConnected;
           print("isConnected ${isConnected}");
@@ -289,53 +333,67 @@ class _SplashState extends State<Splash> {
       }
     });
     _pingLokal.stream.listen((bool localConnected) {
-      if(mounted){
+      if (mounted) {
         setState(() {
           lokalOnline = localConnected;
           print("lokalOnline ${lokalOnline}");
-
         });
       }
     });
     _pingServerOnline.stream.listen((bool onlineServer) {
-      if(mounted){
+      if (mounted) {
         setState(() {
           serverOnline = onlineServer;
           print("onlineServer ${onlineServer}");
-
         });
       }
-
     });
   }
-  pingServer()async{
+
+  pingServer() async {
     _pingServer.add(await Utils().pingServer());
     _pingLokal.add(await Utils().pingServerLokal());
     _pingServerOnline.add(await Utils().pingServerOnline());
     timerAddnew();
   }
-  timerAddnew()async{
-    _timer = Timer.periodic(_duration, (timer)async {
+
+  timerAddnew() async {
+    _timer = Timer.periodic(_duration, (timer) async {
       _pingServer.add(await Utils().pingServer());
       _pingLokal.add(await Utils().pingServerLokal());
       _pingServerOnline.add(await Utils().pingServerOnline());
-
     });
   }
-  reloadCekServer(){
+
+  reloadCekServer() {
     getPref(context);
     print("Login $isLogin");
     closePing();
     timerAddnew();
   }
-  closePing(){
-    isOnline=false;
-    serverOnline=false;
-    lokalOnline=false;
+
+  closePing() {
+    isOnline = false;
+    serverOnline = false;
+    lokalOnline = false;
     _timer?.cancel();
 
-    setState(() {
+    setState(() {});
+  }
 
-    });
+  Widget tombolKeluar() {
+    return ElevatedButton(
+        onPressed: () {
+          SystemNavigator.pop();
+        },
+        child: Text("Keluar"));
+  }
+
+  Widget testNotif() {
+    return ElevatedButton(
+        onPressed: () async {
+          NotificationAPI.showNotification(title: "BORIS", body: "REYSON");
+        },
+        child: Text("Test Notifikasi"));
   }
 }

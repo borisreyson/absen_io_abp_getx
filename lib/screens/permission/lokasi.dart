@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:face_id_plus/screens/pages/cek_lokasi.dart';
 import 'package:face_id_plus/screens/pages/home.dart';
 import 'package:face_id_plus/screens/permission/izin_kamera.dart';
+import 'package:face_id_plus/screens/permission/izin_notifikasi.dart';
 import 'package:face_id_plus/splash.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -110,7 +111,7 @@ class _LokasiState extends State<Lokasi> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (BuildContext context) =>
-                                            const IzinKamera()));
+                                            const IzinNotifikasi()));
                               },
                               icon: const Icon(Icons.chevron_right));
                         } else {

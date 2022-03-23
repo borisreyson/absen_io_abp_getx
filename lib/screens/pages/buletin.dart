@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:face_id_plus/model/buletin_model.dart';
 import 'package:face_id_plus/screens/pages/add_buletin.dart';
@@ -226,9 +228,8 @@ class _BuletinState extends State<Buletin> {
   }
 
   hapusBuletin(int id_info) async {
-    var api = await ApiBuletin.deleteBuletin(id_info).then((value) {
-      print("data ${value?.success}");
-      if (id_info != null){
+    await ApiBuletin.deleteBuletin(id_info).then(( value) {
+      if (value!.success!){
         ScaffoldMessenger.of(context).showSnackBar( SnackBar(
           backgroundColor: Colors.green,
           content: Text("Data Berhasil Dihapus", style: TextStyle(color: Colors.white))));
@@ -237,6 +238,9 @@ class _BuletinState extends State<Buletin> {
           backgroundColor: Colors.red,
           content: Text("Data Gagal Dihapus", style: TextStyle(color: Colors.white))));
       }
+      setState(() {
+
+      });
     });
   }
 }

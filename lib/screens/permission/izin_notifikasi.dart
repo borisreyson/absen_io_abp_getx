@@ -1,16 +1,16 @@
-import 'package:face_id_plus/splash.dart';
+import 'package:face_id_plus/screens/permission/izin_kamera.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:permission_handler/permission_handler.dart' as handler;
-import 'package:shared_preferences/shared_preferences.dart';
 
-class IzinKamera extends StatefulWidget {
-  const IzinKamera({Key? key}) : super(key: key);
+class IzinNotifikasi extends StatefulWidget {
+  const IzinNotifikasi({Key? key}) : super(key: key);
 
   @override
-  _IzinKameraState createState() => _IzinKameraState();
+  State<IzinNotifikasi> createState() => _IzinNotifikasiState();
 }
 
-class _IzinKameraState extends State<IzinKamera> {
+class _IzinNotifikasiState extends State<IzinNotifikasi> {
   bool izinStatus = false;
 
   bool? intro = false;
@@ -23,9 +23,9 @@ class _IzinKameraState extends State<IzinKamera> {
       body: Container(
         decoration: const BoxDecoration(
             gradient: LinearGradient(colors: [
-          Color(0xFFF2D0A7),
-          Color(0xFF5D768C),
-        ], begin: Alignment.topCenter, end: Alignment.bottomCenter)),
+              Color(0xFFF2D0A7),
+              Color(0xFF5D768C),
+            ], begin: Alignment.topCenter, end: Alignment.bottomCenter)),
         child: Center(
           child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -34,24 +34,24 @@ class _IzinKameraState extends State<IzinKamera> {
                 const Padding(
                   padding: EdgeInsets.only(bottom: 8.0),
                   child: Text(
-                    "Penggunaan Kamera",
+                    "Penggunaan Notifikasi",
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
-                        color: Color(0xFF732002)),
+                        color: Color.fromARGB(255, 75, 115, 2)),
                   ),
                 ),
                 Container(
-                    width: 100, height: 100, child: const Icon(Icons.camera_enhance_outlined,size:100 ,color: Color(0xFFBF6734))),
+                    width: 100, height: 100, child: const Icon(Icons.notifications,size:100 ,color: Color(0xFFBF6734))),
                 const SizedBox(
                   height: 20,
                 ),
                 const Padding(
                   padding: EdgeInsets.all(16.0),
                   child: Text(
-                    "Kami Membutuhkan Penggunaan Kamera Anda untuk melakukan pengambilan gambar pengguna, sebagai validasi kehadiran, jadi Izin untuk penggunaan kamera sangat di perlukan",
+                    "Kami Membutuhkan Izin untuk mengakses Notifikasi, dilakukan pengiriman notifikasi dari server",
                     textAlign: TextAlign.justify,
-                    style: TextStyle(color: Color(0xFF732002)),
+                    style: TextStyle(color: Color.fromARGB(255, 45, 2, 115)),
                   ),
                 ),
                 const SizedBox(
@@ -63,9 +63,9 @@ class _IzinKameraState extends State<IzinKamera> {
                       if (snapshot.hasData) {
                         if (!snapshot.data) {
                           return ElevatedButton.icon(
-                              label: const Text("Meminta Izin Kamera"),
+                              label: const Text("Meminta Izin Notifikasi"),
                               style: ElevatedButton.styleFrom(
-                                  primary: Color.fromARGB(255, 189, 11, 165)),
+                                  primary: Color.fromARGB(255, 11, 189, 100)),
                               onPressed: () {
                                 getPermission();
                               },
@@ -74,9 +74,13 @@ class _IzinKameraState extends State<IzinKamera> {
                           return ElevatedButton.icon(
                               label: const Text("Selanjutnya"),
                               style: ElevatedButton.styleFrom(
-                                  primary: Color.fromARGB(255, 189, 11, 165)),
+                                  primary: Color.fromARGB(255, 11, 189, 100)),
                               onPressed: () {
-                                saveIntro(context);
+                                Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (BuildContext context) =>
+                                        const IzinKamera()));
                               },
                               icon: const Icon(Icons.chevron_right));
                         }
@@ -93,7 +97,11 @@ class _IzinKameraState extends State<IzinKamera> {
                     ),
                     style: ElevatedButton.styleFrom(primary: Colors.red),
                     onPressed: () {
-                      saveIntro(context);
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                              const IzinKamera()));
                     },
                     icon: const Icon(
                       Icons.chevron_right,
@@ -106,20 +114,15 @@ class _IzinKameraState extends State<IzinKamera> {
   }
 
   getPermission() async {
-    var mintaIzin = await handler.Permission.camera.status;
-    if (mintaIzin == handler.PermissionStatus.denied ||
-        mintaIzin == handler.PermissionStatus.limited) {
-      await handler.Permission.camera.request();
-    } else if (mintaIzin == handler.PermissionStatus.permanentlyDenied) {
-      await handler.openAppSettings();
-    }
-    setState(() {
-      
-    });
+    var flutterNotification = FlutterLocalNotificationsPlugin();
+    await flutterNotification.resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>()
+        ?.requestPermissions(alert: true,badge: true,sound: true);
+        setState(() {
+          
+        });
   }
-
   Future<bool> statusIzin() async {
-    var lokasi = await handler.Permission.camera;
+    var lokasi = await handler.Permission.notification;
     var status = await lokasi.status;
     if (status == handler.PermissionStatus.granted) {
       izinStatus = true;
@@ -132,44 +135,7 @@ class _IzinKameraState extends State<IzinKamera> {
     return izinStatus;
   }
 
-  saveIntro(BuildContext context) async {
-    var pref = await SharedPreferences.getInstance();
-    pref.setBool("introSlider", true);
-    checkIntro(context);
-  }
 
-  checkIntro(BuildContext context) async {
-    SharedPreferences? _pref = await SharedPreferences.getInstance();
-    intro = _pref.getBool("introSlider");
-    if (intro != null) {
-      if (intro!) {
-        getPref(context);
-      } else {
-        setState(() {
-          visbleIntro = true;
-        });
-      }
-    } else {
-      setState(() {
-        visbleIntro = true;
-      });
-    }
-  }
 
-  getPref(BuildContext context) async {
 
-    var sharedPref = await SharedPreferences.getInstance();
-    isLogin = sharedPref.getInt("isLogin") ?? 0;
-    // print("LoginStatus $isLogin");
-    if (isLogin == 1) {
-      Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (BuildContext context) =>
-                  const Splash()));
-    } else {
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => const Splash()));
-    }
-  }
 }
