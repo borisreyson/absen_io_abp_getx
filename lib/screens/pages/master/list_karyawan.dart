@@ -1,5 +1,5 @@
-import 'package:face_id_plus/screens/pages/add_karyawan.dart';
-import 'package:face_id_plus/screens/pages/add_karyawan.dart';
+import 'package:face_id_plus/screens/pages/master/add_karyawan.dart';
+import 'package:face_id_plus/screens/pages/master/add_karyawan.dart';
 import 'package:flutter/material.dart';
 
 class ListKaryawan extends StatefulWidget {
