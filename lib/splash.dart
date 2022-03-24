@@ -396,4 +396,10 @@ class _SplashState extends State<Splash> {
         },
         child: Text("Test Notifikasi"));
   }
+
+  @override
+  void dispose() {
+    closePing();
+    super.dispose();
+  }
 }

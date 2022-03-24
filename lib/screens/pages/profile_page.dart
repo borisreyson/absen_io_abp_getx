@@ -38,10 +38,10 @@ class _ProfilePageState extends State<ProfilePage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xffffffff),
-         elevation: 0,
-         leading: InkWell(
-         splashColor: const Color(0xff000000),
-         child: const Icon(
+        elevation: 0,
+        leading: InkWell(
+        splashColor: const Color(0xff000000),
+        child: const Icon(
           Icons.arrow_back_ios_new,
           color: Color(0xff000000),
         ),
@@ -69,14 +69,14 @@ class _ProfilePageState extends State<ProfilePage> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Card(
-                       elevation: 8,
-                       shape: CircleBorder(),
-                       child: Padding(
-                         padding: const EdgeInsets.only(right: 110, left: 110),
-                         child: Container(
-                           width: 60,
-                           height: 179,
-                           child: Padding(
+                      elevation: 8,
+                      shape: CircleBorder(),
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: 110, left: 110),
+                        child: Container(
+                        width: 60,
+                        height: 179,
+                        child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: GestureDetector(
                               onTap: () {

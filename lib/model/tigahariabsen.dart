@@ -41,9 +41,9 @@ class AbsenTigaHariModel {
       tanggal_jam: object['tanggal_jam'],
     );
   }
-  static Future<List<AbsenTigaHariModel>> apiAbsenTigaHari(String _nik) async {
+  static Future<List<AbsenTigaHariModel>> apiAbsenTigaHari(String? _nik) async {
     String apiUrl =
-        "https://abpjobsite.com/absen/get/AbsenTigaHari?nik=" + _nik;
+        "https://abpjobsite.com/absen/get/AbsenTigaHari?nik=" + _nik!;
     var apiResult = await http.get(Uri.parse(apiUrl));
     var jsonObject = json.decode(apiResult.body);
     var absensi = (jsonObject['AbsenTigaHari'] as List)

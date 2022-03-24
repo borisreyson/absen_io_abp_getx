@@ -3,6 +3,8 @@ import 'dart:io' show Platform;
 import 'dart:typed_data';
 import 'package:face_id_plus/model/last_absen.dart';
 import 'package:face_id_plus/model/map_area.dart';
+import 'package:face_id_plus/model/tigahariabsen.dart';
+import 'package:face_id_plus/screens/pages/absensi/detail_absen_profile.dart';
 import 'package:face_id_plus/screens/pages/area.dart';
 import 'package:face_id_plus/screens/pages/ios/masuk_ios.dart';
 import 'package:face_id_plus/screens/pages/ios/pulang_ios.dart';
@@ -11,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:intl/intl.dart';
 import 'package:location/location.dart' as iosLocation;
 import 'dart:ui' as ui;
 import 'package:permission_handler/permission_handler.dart' as handler;
@@ -54,11 +57,18 @@ class _HomePageState extends State<HomePageAndroid> {
   int jamS = 0, menitS = 0, detikS = 0;
   bool permanenDitolak = false;
   bool statusLokasi = false;
+  Widget loader = const Center(child: CircularProgressIndicator());
+  Presensi? jamAbsen;
+  Presensi? jamAbsenPulang;
+  String? _tanggal;
 
   @override
   void initState() {
     getPref(context);
     setCustomMapPin();
+    DateFormat fmt = DateFormat("dd MMMM yyyy");
+    DateTime now =DateTime.now();
+    _tanggal = fmt.format(now);
     super.initState();
   }
 
@@ -155,6 +165,22 @@ class _HomePageState extends State<HomePageAndroid> {
     return Stack(children: [googleMaps(pointABP), topContent(), _contents()]);
   }
 
+  Widget mapABP() {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: Align(
+        alignment: Alignment.bottomCenter,
+        child: ElevatedButton(
+            onPressed: () async {
+              closeStream();
+              await _googleMapController
+                  .animateCamera(CameraUpdate.newCameraPosition(_kGooglePlex));
+            },
+            child: const Text("Lokasi ABP")),
+      ),
+    );
+  }
+
   Widget topContent() {
     return Container(
       height: 125,
@@ -212,15 +238,20 @@ class _HomePageState extends State<HomePageAndroid> {
       children: [
         Padding(
           padding: const EdgeInsets.only(bottom: 5),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+          child: Column(
             children: [
-              Text(
-                "$startClock",
-                style: const TextStyle(
-                    color: Color(0xFF8C6A03),
-                    fontWeight: FontWeight.bold,
-                    fontSize: 25.0),
+                  roster(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "$startClock",
+                    style: const TextStyle(
+                        color: Color(0xFF8C6A03),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 25.0),
+                  ),
+                ],
               ),
             ],
           ),
@@ -235,7 +266,11 @@ class _HomePageState extends State<HomePageAndroid> {
             style: const TextStyle(color: Colors.black87),
           ),
         ),
-        (outside) ? _btnAbsen() : diluarArea(),
+        (serviceEnable)
+            ? (outside)
+                ? _btnAbsen()
+                : diluarArea()
+            : diluarArea(),
       ],
     );
   }
@@ -274,8 +309,11 @@ class _HomePageState extends State<HomePageAndroid> {
   void dispose() {
     codec?.dispose();
     markers.clear();
-    _googleMapController.dispose();
+    // if(_googleMapController!=null){
+    // _googleMapController.dispose();
+    // }
     closeStream();
+    closJam();
     super.dispose();
   }
 
@@ -287,29 +325,317 @@ class _HomePageState extends State<HomePageAndroid> {
         strokeWidth: 2,
         strokeColor: Colors.red,
         fillColor: Colors.green.withOpacity(0.25)));
+
     return Container(
       margin: EdgeInsets.only(top: 215),
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height - 200,
-      child: GoogleMap(
-        initialCameraPosition: _kGooglePlex,
-        mapType: MapType.normal,
-        onMapCreated: (GoogleMapController controller) async {
-          _map_controller.complete(controller);
-          _googleMapController = await controller;
-          if (_googleMapController != null) {
-            if (markerID != null) {
-              _googleMapController.showMarkerInfoWindow(markerID);
-            }
-            streamLokasi();
+      child: (serviceEnable)
+          ? Stack(
+              children: [
+                GoogleMap(
+                  initialCameraPosition: _kGooglePlex,
+                  mapType: MapType.normal,
+                  onMapCreated: (GoogleMapController controller) async {
+                    _map_controller.complete(controller);
+                    _googleMapController = await controller;
+                    if (_googleMapController != null) {
+                      if (markerID != null) {
+                        _googleMapController.showMarkerInfoWindow(markerID);
+                      }
+                      streamLokasi();
+                    }
+                  },
+                  polygons: Set<Polygon>.of(_polygons),
+                  markers: markers,
+                  myLocationEnabled: true,
+                  zoomControlsEnabled: true,
+                  zoomGesturesEnabled: true,
+                  myLocationButtonEnabled: false,
+                ),
+                lokasiSaya(),
+                mapABP(),
+                btnListAbsen()
+              ],
+            )
+          : enableGPS(),
+    );
+    ;
+  }
+
+  Widget btnListAbsen() {
+    return Padding(
+        padding: const EdgeInsets.only(bottom: 30, left: 10),
+        child: Align(
+            alignment: Alignment.bottomLeft,
+            child: Container(
+              width: 80,
+              height: 160,
+              child: InkWell(
+                onTap: (() => btmSheet()),
+                child: ListView(
+                  children: [
+                    Visibility(
+                      visible: (jamAbsen != null) ? true : false,
+                      child: Card(
+                        elevation: 10,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(100)),
+                        child: ClipRRect(
+                            borderRadius: BorderRadius.circular(50),
+                            child: Image.network(
+                              "https://abpjobsite.com/face_id/$nik/${jamAbsen?.gambar}",
+                              fit: BoxFit.fill,
+                              height: 70,
+                            )),
+                      ),
+                    ),
+                    Visibility(
+                      visible: (jamAbsenPulang != null) ? true : false,
+                      child: Card(
+                        elevation: 10,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(100)),
+                        child: ClipRRect(
+                            borderRadius: BorderRadius.circular(50),
+                            child: Image.network(
+                              "https://abpjobsite.com/face_id/$nik/${jamAbsenPulang?.gambar}",
+                              fit: BoxFit.fill,
+                              height: 70,
+                            )),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            )));
+  }
+
+  btmSheet() {
+    return showModalBottomSheet(
+      backgroundColor: Colors.transparent,
+        useRootNavigator: true,
+        context: context,
+        builder: (context) {
+          return lastAbsenTigaHari();
+        });
+  }
+
+  Widget lastAbsenTigaHari() {
+    return FutureBuilder(
+      
+      future: _loadTigaHari(nik),
+      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+        if (snapshot.hasData) {
+          List<AbsenTigaHariModel> _absensi = snapshot.data;
+          if (_absensi.isNotEmpty) {
+            return Stack(
+              children: [
+                Card(
+                  margin: EdgeInsets.only(top: 40),
+                  color: Colors.white,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top:20,left: 8,right: 8),
+                    child: ListView(
+                        children: _absensi.map((ab) => _cardAbsen(ab)).toList()),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 15.0, right: 8.0),
+                  child: Align(
+                    alignment: Alignment.topRight,
+                    child: Card(
+                        elevation: 20,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(150),
+                        ),
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          customBorder: const CircleBorder(),
+                          child: const Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Icon(Icons.close),
+                          ),
+                        )),
+                  ),
+                )
+              ],
+            );
           }
+        }
+        return loader;
+      },
+    );
+  }
+
+  Widget _cardAbsen(AbsenTigaHariModel _absen) {
+    DateFormat fmt = DateFormat("dd MMMM yyyy");
+    var tgl = DateTime.parse("${_absen.tanggal}");
+    TextStyle _style = const TextStyle(fontSize: 12, color: Colors.white);
+    return Card(
+      elevation: 10,
+      shadowColor: Colors.black87,
+      color: (_absen.status == "Masuk") ? Colors.green : Colors.red,
+      child: InkWell(
+        onTap: (){
+          Navigator.push(context, MaterialPageRoute(builder: ( (context) => DetailProfile(
+              absenTigaHariModel: _absen,
+            ))));
         },
-        polygons: Set<Polygon>.of(_polygons),
-        markers: markers,
-        myLocationEnabled: true,
-        zoomControlsEnabled: true,
-        zoomGesturesEnabled: true,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            imageResolve(_absen.gambar!),
+            Padding(
+              padding: const EdgeInsets.all(5.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(nama!, style: _style),
+                  Text("${_absen.status}", style: _style),
+                  Text(fmt.format(tgl), style: _style),
+                  Text("${_absen.jam}", style: _style),
+                  Text("${_absen.nik}", style: _style),
+                  Text("${_absen.lupa_absen}", style: _style),
+                ],
+              ),
+            )
+          ],
+        ),
       ),
+    );
+  }
+
+  Widget imageResolve(String gambar) {
+    NetworkImage image = NetworkImage(gambar);
+    return Container(
+      margin: const EdgeInsets.only(right: 10),
+      width: 100,
+      height: 100,
+      decoration: BoxDecoration(
+          borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(5), bottomLeft: Radius.circular(5)),
+          image: DecorationImage(
+            image: image,
+            fit: BoxFit.fitWidth,
+          ),
+          color: Colors.white),
+    );
+  }
+
+  Widget roster() {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              const Text(
+                "Jadwal",
+                style: TextStyle(color: Colors.black87),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: Text(
+                  "$kode_roster",
+                  style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blueAccent),
+                ),
+              ),
+            ],
+          ),
+          Text("$_tanggal"),
+        ],
+      ),
+    );
+  }
+  Widget lokasiSaya() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 8.0, right: 8.0),
+      child: Align(
+        alignment: Alignment.topRight,
+        child: Card(
+            elevation: 20,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(150),
+            ),
+            child: InkWell(
+              onTap: () {
+                closeStream();
+                streamLokasi();
+              },
+              customBorder: CircleBorder(),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Icon(Icons.gps_fixed),
+              ),
+            )),
+      ),
+    );
+  }
+
+  Future<List<AbsenTigaHariModel>> _loadTigaHari(String? nik) async {
+    var absensi = await AbsenTigaHariModel.apiAbsenTigaHari(nik);
+    return absensi;
+  }
+
+  Widget enableGPS() {
+    return ListView(
+      children: <Widget>[
+        const Center(
+          child: Padding(
+            padding: EdgeInsets.only(bottom: 16.0),
+            child: Text(
+              "GPS",
+              style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+            ),
+          ),
+        ),
+        const Center(child: Text("GPS anda Masih Mati.")),
+        const Padding(
+          padding: EdgeInsets.all(10.0),
+          child: Center(
+            child: Text(
+                "Aplikasi membutuhkan Lokasi anda untuk mengetahui apakah anda berada di dalam area yang di tentukan!"),
+          ),
+        ),
+        Center(
+            child: Image.asset(
+          "assets/images/abp_maps.png",
+          width: 200,
+          height: 200,
+        )),
+        const Center(child: Text("Area Lokasi yang dimaksud")),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: ElevatedButton(
+              onPressed: () async {
+                bool reqService = await iosLocation.Location().requestService();
+                if (reqService) {
+                  Navigator.pop(context);
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const HomePageAndroid()));
+                }
+              },
+              child: const Text("Aktifkan Lokasi?")),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: ElevatedButton(
+              onPressed: () {
+                appClose();
+              },
+              child: const Text("Tidak, Keluar!")),
+        ),
+      ],
     );
   }
 
@@ -547,7 +873,8 @@ class _HomePageState extends State<HomePageAndroid> {
       id_roster = "${lastAbsen.idRoster}";
       if (lastAbsen.lastAbsen != null) {
         var absenTerakhir = lastAbsen.lastAbsen;
-        var jamAbsen = lastAbsen.presensiMasuk;
+        jamAbsen = lastAbsen.presensiMasuk;
+        jamAbsenPulang = lastAbsen.presensiPulang;
         if (absenTerakhir == "Masuk") {
           if (lastAbsen.lastNew == "Pulang") {
             outside = false;
@@ -555,11 +882,11 @@ class _HomePageState extends State<HomePageAndroid> {
             _enMasuk = true;
             _enPulang = false;
             _pulang = 0.0;
-            jamPulang = "${jamAbsen?.jam}";
+            jamPulang = "${jamAbsenPulang?.jam}";
             jamMasuk = "";
           } else {
             jamMasuk = "${jamAbsen?.jam}";
-            jamPulang = "";
+            jamPulang = "${jamAbsenPulang?.jam}";
             outside = false;
             _enMasuk = false;
             _enPulang = true;
@@ -567,8 +894,8 @@ class _HomePageState extends State<HomePageAndroid> {
             _pulang = 1.0;
           }
         } else if (absenTerakhir == "Pulang") {
-          jamMasuk = "";
-          jamPulang = "";
+          jamMasuk = "${jamAbsen?.jam}";
+          jamPulang = "${jamAbsenPulang?.jam}";
           outside = false;
           _enMasuk = true;
           _enPulang = false;
@@ -678,6 +1005,10 @@ class _HomePageState extends State<HomePageAndroid> {
 
   cekGps() async {
     serviceEnable = await Geolocator.isLocationServiceEnabled();
+    if (serviceEnable) {
+    } else {
+      closeStream();
+    }
   }
 
   void setCustomMapPin() async {
@@ -718,18 +1049,20 @@ class _HomePageState extends State<HomePageAndroid> {
         if (mounted) {
           setState(() {});
           if (lokasiPalsu == true) {
-            // closeStream();
-            // showDialog(
-            //   barrierDismissible: false,
-            //     context: context,
-            //     builder: (context) {
-            //       return appClose();
-            //     });
+            closeStream();
+            showDialog(
+                barrierDismissible: false,
+                context: context,
+                builder: (context) {
+                  return appClose();
+                });
           } else {
-            CameraPosition cameraPosition =
-                CameraPosition(target: myLocation!, zoom: 17.5756);
-            await _googleMapController
-                .animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
+            if (serviceEnable) {
+              CameraPosition cameraPosition =
+                  CameraPosition(target: myLocation!, zoom: 17.5756);
+              await _googleMapController.animateCamera(
+                  CameraUpdate.newCameraPosition(cameraPosition));
+            }
           }
         }
       }
@@ -738,8 +1071,11 @@ class _HomePageState extends State<HomePageAndroid> {
 
   closeStream() {
     _timer?.cancel();
-    _timerClock?.cancel();
     // _getLokasi.close();
+  }
+
+  closJam() {
+    _timerClock?.cancel();
   }
 
   izinTidakAda() async {

@@ -143,24 +143,30 @@ class _IosPulangState extends State<IosPulang> {
             },
           )),
       body: (waiting)
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : Container(
               color: const Color(0xf0D9D9D9),
-              child: (visible) ? cameraFrame() : imgFrame()),
+              child: (visible) ? (isBusy)
+                      ? const Center(
+                          child: CircularProgressIndicator(),
+                        )
+                      : cameraFrame() : imgFrame()),
       floatingActionButton: (visible)
           ? (_cameraInitialized)?FloatingActionButton(
               onPressed: (isBusy)
                   ? null
                   : () async {
-                      isBusy = false;
-                      // _processImageStream(_savedImage);
-                      waiting = true;
+                      isBusy = true;
+                      // waiting = true;
                       savFile = await _cameraController?.takePicture();
-                      print("Gambar $savFile");
+                      setState(() {
+                        
+                      });
                       saveImage();
                     },
               tooltip: 'Scan Wajah',
-              child: const Icon(Icons.camera),
+              child: (isBusy)?const Center(child:  CircularProgressIndicator(color: Colors.white))
+                        :const Icon(Icons.camera),
             ):Visibility(
               visible: false,
               child: Container(),
@@ -200,19 +206,22 @@ class _IosPulangState extends State<IosPulang> {
                       Navigator.maybePop(context);
                     },
                     child: const Text("Selesai"))
-                : ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        visible = true;
-                        detect = false;
-                        initializeCamera();
-                        conv = convertImageLib
-                            .lookup<NativeFunction<convert_func>>(
-                                'convertImage')
-                            .asFunction<Convert>();
-                      });
-                    },
-                    child: const Text("Scan Ulang")),
+                : Visibility(
+                  visible: (isBusy)?false:true,
+                  child: ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          visible = true;
+                          detect = false;
+                          initializeCamera();
+                          conv = convertImageLib
+                              .lookup<NativeFunction<convert_func>>(
+                                  'convertImage')
+                              .asFunction<Convert>();
+                        });
+                      },
+                      child: const Text("Scan Ulang")),
+                ),
           ),
         )
       ],
@@ -394,7 +403,6 @@ class _IosPulangState extends State<IosPulang> {
   }
 
   saveImage() async {
-    visible = false;
     externalDirectory = await getApplicationDocumentsDirectory();
     String directoryPath = '${externalDirectory.path}/FaceIdPlus';
     await Directory(directoryPath).create(recursive: true);
