@@ -686,30 +686,30 @@ class _HomePageState extends State<HomePage> {
                       ),
                       onPressed: _enMasuk
                           ? () {
-                              Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (BuildContext context) =>
-                                              (Platform.isIOS)
-                                                  ? IosMasuk(
-                                                      nik: nik!,
-                                                      status: "Masuk",
-                                                      lat:
-                                                          "${myLocation?.latitude}",
-                                                      lng:
-                                                          "${myLocation?.longitude}",
-                                                      id_roster: id_roster!,
-                                                    )
-                                                  : IosMasuk(
-                                                      nik: nik!,
-                                                      status: "Masuk",
-                                                      lat:
-                                                          "${myLocation?.latitude}",
-                                                      lng:
-                                                          "${myLocation?.longitude}",
-                                                      id_roster: id_roster!,
-                                                    )))
-                                  .then((value) => getPref(context));
+                              // Navigator.push(
+                              //         context,
+                              //         MaterialPageRoute(
+                              //             builder: (BuildContext context) =>
+                              //                 (Platform.isIOS)
+                              //                     ? IosMasuk(
+                              //                         nik: nik!,
+                              //                         status: "Masuk",
+                              //                         lat:
+                              //                             "${myLocation?.latitude}",
+                              //                         lng:
+                              //                             "${myLocation?.longitude}",
+                              //                         id_roster: id_roster!,
+                              //                       )
+                              //                     : IosMasuk(
+                              //                         nik: nik!,
+                              //                         status: "Masuk",
+                              //                         lat:
+                              //                             "${myLocation?.latitude}",
+                              //                         lng:
+                              //                             "${myLocation?.longitude}",
+                              //                         id_roster: id_roster!,
+                              //                       )))
+                              //     .then((value) => getPref(context));
                             }
                           : null,
                     ),
@@ -735,25 +735,26 @@ class _HomePageState extends State<HomePage> {
                       ),
                       onPressed: _enPulang
                           ? () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => (Platform.isIOS)
-                                          ? IosPulang(
-                                              nik: nik!,
-                                              status: "Pulang",
-                                              lat: "${myLocation?.latitude}",
-                                              lng: "${myLocation?.longitude}",
-                                              id_roster: id_roster!,
-                                            )
-                                          : IosPulang(
-                                              nik: nik!,
-                                              status: "Pulang",
-                                              lat: "${myLocation?.latitude}",
-                                              lng: "${myLocation?.longitude}",
-                                              id_roster: id_roster!,
-                                            ))).then(
-                                  (value) => getPref(context));
+                              // Navigator.push(
+                              //     context,
+                              //     MaterialPageRoute(
+                              //         builder: (context) => (Platform.isIOS)
+                              //             ? IosPulang(
+                              //                 nik: nik!,
+                              //                 status: "Pulang",
+                              //                 lat: "${myLocation?.latitude}",
+                              //                 lng: "${myLocation?.longitude}",
+                              //                 id_roster: id_roster!,
+                              //               )
+                              //             : IosPulang(
+                              //                 nik: nik!,
+                              //                 status: "Pulang",
+                              //                 lat: "${myLocation?.latitude}",
+                              //                 lng: "${myLocation?.longitude}",
+                              //                 id_roster: id_roster!,
+                              //                 streamClock: _streamClock,
+                              //               ))).then(
+                              //     (value) => getPref(context));
                             }
                           : null,
                     ),

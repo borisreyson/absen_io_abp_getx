@@ -36,8 +36,8 @@ class _SplashState extends State<Splash> {
   @override
   void initState() {
     NotificationAPI.initNotif();
-    pingServer();
     serverStream();
+    pingServer();
     getPref(context);
     super.initState();
   }
@@ -352,22 +352,21 @@ class _SplashState extends State<Splash> {
 
   pingServer() async {
     _pingServer.add(await Utils().pingServer());
-    _pingLokal.add(await Utils().pingServerLokal());
     _pingServerOnline.add(await Utils().pingServerOnline());
+    _pingLokal.add(await Utils().pingServerLokal());
     timerAddnew();
   }
 
   timerAddnew() async {
     _timer = Timer.periodic(_duration, (timer) async {
       _pingServer.add(await Utils().pingServer());
-      _pingLokal.add(await Utils().pingServerLokal());
       _pingServerOnline.add(await Utils().pingServerOnline());
+      _pingLokal.add(await Utils().pingServerLokal());
     });
   }
 
   reloadCekServer() {
     getPref(context);
-    print("Login $isLogin");
     closePing();
     timerAddnew();
   }

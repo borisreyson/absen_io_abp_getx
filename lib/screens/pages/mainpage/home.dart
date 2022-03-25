@@ -61,13 +61,13 @@ class _HomePageState extends State<HomePageAndroid> {
   Presensi? jamAbsen;
   Presensi? jamAbsenPulang;
   String? _tanggal;
-
+  JamServer? jam_server;
   @override
   void initState() {
     getPref(context);
     setCustomMapPin();
     DateFormat fmt = DateFormat("dd MMMM yyyy");
-    DateTime now =DateTime.now();
+    DateTime now = DateTime.now();
     _tanggal = fmt.format(now);
     super.initState();
   }
@@ -240,7 +240,7 @@ class _HomePageState extends State<HomePageAndroid> {
           padding: const EdgeInsets.only(bottom: 5),
           child: Column(
             children: [
-                  roster(),
+              roster(),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -369,7 +369,7 @@ class _HomePageState extends State<HomePageAndroid> {
         child: Align(
             alignment: Alignment.bottomLeft,
             child: Container(
-              width: 80,
+              width: 77,
               height: 160,
               child: InkWell(
                 onTap: (() => btmSheet()),
@@ -382,7 +382,7 @@ class _HomePageState extends State<HomePageAndroid> {
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(100)),
                         child: ClipRRect(
-                            borderRadius: BorderRadius.circular(50),
+                            borderRadius: BorderRadius.circular(100),
                             child: Image.network(
                               "https://abpjobsite.com/face_id/$nik/${jamAbsen?.gambar}",
                               fit: BoxFit.fill,
@@ -397,7 +397,7 @@ class _HomePageState extends State<HomePageAndroid> {
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(100)),
                         child: ClipRRect(
-                            borderRadius: BorderRadius.circular(50),
+                            borderRadius: BorderRadius.circular(100),
                             child: Image.network(
                               "https://abpjobsite.com/face_id/$nik/${jamAbsenPulang?.gambar}",
                               fit: BoxFit.fill,
@@ -413,7 +413,7 @@ class _HomePageState extends State<HomePageAndroid> {
 
   btmSheet() {
     return showModalBottomSheet(
-      backgroundColor: Colors.transparent,
+        backgroundColor: Colors.transparent,
         useRootNavigator: true,
         context: context,
         builder: (context) {
@@ -423,7 +423,6 @@ class _HomePageState extends State<HomePageAndroid> {
 
   Widget lastAbsenTigaHari() {
     return FutureBuilder(
-      
       future: _loadTigaHari(nik),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.hasData) {
@@ -435,15 +434,16 @@ class _HomePageState extends State<HomePageAndroid> {
                   margin: EdgeInsets.only(top: 40),
                   color: Colors.white,
                   child: Padding(
-                    padding: const EdgeInsets.only(top:20,left: 8,right: 8),
+                    padding: const EdgeInsets.only(top: 20, left: 8, right: 8),
                     child: ListView(
-                        children: _absensi.map((ab) => _cardAbsen(ab)).toList()),
+                        children:
+                            _absensi.map((ab) => _cardAbsen(ab)).toList()),
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 15.0, right: 8.0),
                   child: Align(
-                    alignment: Alignment.topRight,
+                    alignment: Alignment.topCenter,
                     child: Card(
                         elevation: 20,
                         shape: RoundedRectangleBorder(
@@ -456,7 +456,7 @@ class _HomePageState extends State<HomePageAndroid> {
                           customBorder: const CircleBorder(),
                           child: const Padding(
                             padding: EdgeInsets.all(8.0),
-                            child: Icon(Icons.close),
+                            child: Icon(Icons.keyboard_arrow_down),
                           ),
                         )),
                   ),
@@ -465,7 +465,11 @@ class _HomePageState extends State<HomePageAndroid> {
             );
           }
         }
-        return loader;
+        return Card(
+          margin: EdgeInsets.only(top: 40),
+          child: loader,
+          color: Colors.white,
+        );
       },
     );
   }
@@ -479,10 +483,13 @@ class _HomePageState extends State<HomePageAndroid> {
       shadowColor: Colors.black87,
       color: (_absen.status == "Masuk") ? Colors.green : Colors.red,
       child: InkWell(
-        onTap: (){
-          Navigator.push(context, MaterialPageRoute(builder: ( (context) => DetailProfile(
-              absenTigaHariModel: _absen,
-            ))));
+        onTap: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: ((context) => DetailProfile(
+                        absenTigaHariModel: _absen,
+                      ))));
         },
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -555,6 +562,7 @@ class _HomePageState extends State<HomePageAndroid> {
       ),
     );
   }
+
   Widget lokasiSaya() {
     return Padding(
       padding: const EdgeInsets.only(top: 8.0, right: 8.0),
@@ -751,6 +759,7 @@ class _HomePageState extends State<HomePageAndroid> {
                                                       lng:
                                                           "${myLocation?.longitude}",
                                                       id_roster: id_roster!,
+                                                      jam_server: jam_server,
                                                     )
                                                   : IosMasuk(
                                                       nik: nik!,
@@ -760,6 +769,7 @@ class _HomePageState extends State<HomePageAndroid> {
                                                       lng:
                                                           "${myLocation?.longitude}",
                                                       id_roster: id_roster!,
+                                                      jam_server: jam_server,
                                                     )))
                                   .then((value) => getPref(context));
                             }
@@ -797,6 +807,7 @@ class _HomePageState extends State<HomePageAndroid> {
                                               lat: "${myLocation?.latitude}",
                                               lng: "${myLocation?.longitude}",
                                               id_roster: id_roster!,
+                                              jam_server: jam_server,
                                             )
                                           : IosPulang(
                                               nik: nik!,
@@ -804,6 +815,7 @@ class _HomePageState extends State<HomePageAndroid> {
                                               lat: "${myLocation?.latitude}",
                                               lng: "${myLocation?.longitude}",
                                               id_roster: id_roster!,
+                                              jam_server: jam_server,
                                             ))).then(
                                   (value) => getPref(context));
                             }
@@ -912,7 +924,9 @@ class _HomePageState extends State<HomePageAndroid> {
         _pulang = 0.0;
       }
       if (lastAbsen.jamServer != null) {
-        var jam_server = lastAbsen.jamServer;
+        setState(() {
+          jam_server = lastAbsen.jamServer;
+        });
         jamS = int.parse("${jam_server?.jam}");
         menitS = int.parse("${jam_server?.menit}");
         detikS = int.parse("${jam_server?.detik}");
