@@ -8,8 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-enum Options {edit, delete}
-
 class Buletin extends StatefulWidget {
 
   ListBuletin? listBuletin;
@@ -24,7 +22,6 @@ class _BuletinState extends State<Buletin> {
 
   ApiBuletin? _buletin;
   List<ListBuletin>? infoListBuletin;
-  var _popupMenuIndex = 0;
   int? id_info;
 
   @override
@@ -80,7 +77,7 @@ class _BuletinState extends State<Buletin> {
               builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot){
               return ListView(
                 children: (infoListBuletin != null) 
-                ? infoListBuletin!.map((b) =>    _content(b)).toList() 
+                ? infoListBuletin!.map((b) =>  _content(b)).toList()
                 : [ Padding(
                       padding: const EdgeInsets.only(top: 250),
                       child: Column(
@@ -135,7 +132,7 @@ class _BuletinState extends State<Buletin> {
                               padding: const EdgeInsets.only(bottom: 10),
                               child: ListTile(
                                 title: Text("${_list.judul}", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                                subtitle: Text("${_list.pesan}", maxLines: 6),
+                                subtitle: Text("\n${_list.pesan}", maxLines: 6),
                               ),
                             )
                           ]

@@ -148,7 +148,7 @@ class _AddBuletinState extends State<AddBuletin> {
                         scrollDirection: Axis.vertical,
                         reverse: true,
                         child: TextFormField(
-                          minLines: 1,
+                          minLines: 10,
                           keyboardType: TextInputType.multiline,
                           maxLines: 15,
                           cursorColor: Theme.of(context).cursorColor,
