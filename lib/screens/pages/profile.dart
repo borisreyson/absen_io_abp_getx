@@ -171,7 +171,7 @@ class _ProfileState extends State<Profile> {
       color: (_absen.status == "Masuk") ? Colors.green : Colors.red,
       child: InkWell(
         onTap: (){
-           Navigator.push(context, MaterialPageRoute(builder: ( (context) => DetailProfile(
+          Navigator.push(context, MaterialPageRoute(builder: ( (context) => DetailProfile(
               absenTigaHariModel: _absen,
             ))));
         },

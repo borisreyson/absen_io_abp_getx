@@ -216,14 +216,11 @@ class _HomePageState extends State<HomePage> {
           outside = false;
           _diluarAbp = 1.0;
           return enableGPS();
-          print("1");
         }
         if (snapshot.hasData) {
           if (!serviceEnable) {
             outside = false;
             _diluarAbp = 1.0;
-            print("2");
-
             return enableGPS();
           }
           List<LatLng> pointAbp = [];
@@ -689,30 +686,30 @@ class _HomePageState extends State<HomePage> {
                       ),
                       onPressed: _enMasuk
                           ? () {
-                              Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (BuildContext context) =>
-                                              (Platform.isIOS)
-                                                  ? IosMasuk(
-                                                      nik: nik!,
-                                                      status: "Masuk",
-                                                      lat:
-                                                          "${myLocation?.latitude}",
-                                                      lng:
-                                                          "${myLocation?.longitude}",
-                                                      id_roster: id_roster!,
-                                                    )
-                                                  : IosMasuk(
-                                                      nik: nik!,
-                                                      status: "Masuk",
-                                                      lat:
-                                                          "${myLocation?.latitude}",
-                                                      lng:
-                                                          "${myLocation?.longitude}",
-                                                      id_roster: id_roster!,
-                                                    )))
-                                  .then((value) => getPref(context));
+                              // Navigator.push(
+                              //         context,
+                              //         MaterialPageRoute(
+                              //             builder: (BuildContext context) =>
+                              //                 (Platform.isIOS)
+                              //                     ? IosMasuk(
+                              //                         nik: nik!,
+                              //                         status: "Masuk",
+                              //                         lat:
+                              //                             "${myLocation?.latitude}",
+                              //                         lng:
+                              //                             "${myLocation?.longitude}",
+                              //                         id_roster: id_roster!,
+                              //                       )
+                              //                     : IosMasuk(
+                              //                         nik: nik!,
+                              //                         status: "Masuk",
+                              //                         lat:
+                              //                             "${myLocation?.latitude}",
+                              //                         lng:
+                              //                             "${myLocation?.longitude}",
+                              //                         id_roster: id_roster!,
+                              //                       )))
+                              //     .then((value) => getPref(context));
                             }
                           : null,
                     ),
@@ -738,25 +735,26 @@ class _HomePageState extends State<HomePage> {
                       ),
                       onPressed: _enPulang
                           ? () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => (Platform.isIOS)
-                                          ? IosPulang(
-                                              nik: nik!,
-                                              status: "Pulang",
-                                              lat: "${myLocation?.latitude}",
-                                              lng: "${myLocation?.longitude}",
-                                              id_roster: id_roster!,
-                                            )
-                                          : IosPulang(
-                                              nik: nik!,
-                                              status: "Pulang",
-                                              lat: "${myLocation?.latitude}",
-                                              lng: "${myLocation?.longitude}",
-                                              id_roster: id_roster!,
-                                            ))).then(
-                                  (value) => getPref(context));
+                              // Navigator.push(
+                              //     context,
+                              //     MaterialPageRoute(
+                              //         builder: (context) => (Platform.isIOS)
+                              //             ? IosPulang(
+                              //                 nik: nik!,
+                              //                 status: "Pulang",
+                              //                 lat: "${myLocation?.latitude}",
+                              //                 lng: "${myLocation?.longitude}",
+                              //                 id_roster: id_roster!,
+                              //               )
+                              //             : IosPulang(
+                              //                 nik: nik!,
+                              //                 status: "Pulang",
+                              //                 lat: "${myLocation?.latitude}",
+                              //                 lng: "${myLocation?.longitude}",
+                              //                 id_roster: id_roster!,
+                              //                 streamClock: _streamClock,
+                              //               ))).then(
+                              //     (value) => getPref(context));
                             }
                           : null,
                     ),

@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:ffi';
+import 'package:face_id_plus/model/last_absen.dart';
 import 'package:face_id_plus/model/upload.dart';
 import 'package:face_id_plus/screens/pages/painters/face_detector_painter.dart';
 import 'package:flutter/foundation.dart';
@@ -11,6 +13,7 @@ import 'dart:ui' as ui show Image;
 import 'dart:typed_data';
 import 'package:ffi/ffi.dart';
 import 'package:image/image.dart' as imglib;
+import 'dart:math' as math;
 
 typedef convert_func = Pointer<Uint32> Function(
     Pointer<Uint8>, Pointer<Uint8>, Pointer<Uint8>, Int32, Int32, Int32, Int32);
@@ -23,8 +26,14 @@ class IosMasuk extends StatefulWidget {
   final String lat;
   final String lng;
   final String id_roster;
-
-  const IosMasuk({Key? key, required this.nik, required this.status,required this.lat,required this.lng,required this.id_roster})
+  final JamServer? jam_server;
+  const IosMasuk(
+      {Key? key,
+      required this.nik,
+      required this.status,
+      required this.lat,
+      required this.lng,
+      required this.id_roster,required this.jam_server})
       : super(key: key);
 
   @override
@@ -32,10 +41,11 @@ class IosMasuk extends StatefulWidget {
 }
 
 class _IosMasukState extends State<IosMasuk> {
+  bool isLoading = false;
   final DynamicLibrary convertImageLib = Platform.isAndroid
       ? DynamicLibrary.open("libconvertImage.so")
       : DynamicLibrary.process();
-  bool waiting=false;
+  bool waiting = false;
   late Convert conv;
   XFile? savFile;
   late imglib.Image img;
@@ -57,16 +67,25 @@ class _IosMasukState extends State<IosMasuk> {
   List<int>? intImage;
   bool startCamera = false;
 
+  int jamS = 0, menitS = 0, detikS = 0;
+  JamServer? serverJam;
+  String? startClock;
+  StreamController<String> _streamClock = StreamController.broadcast();
+  Timer? _timerClock;
+
   static const shift = (0xFF << 24);
 
   void initializeCamera() async {
     cameras = await availableCameras();
     if (cameras.isNotEmpty) {
       _cameraController = CameraController(
-          cameras[cameraPick], ResolutionPreset.medium,
-          enableAudio: false);
+        cameras[cameraPick],
+        ResolutionPreset.medium,
+        enableAudio: false,
+      );
       await _cameraController?.initialize().then((_) async {
         _cameraController?.buildPreview();
+        _cameraController?.setFlashMode(FlashMode.off);
         setState(() {
           _cameraInitialized = true;
         });
@@ -97,15 +116,61 @@ class _IosMasukState extends State<IosMasuk> {
     });
   }
 
+  String doJam() {
+    if (detikS >= 59) {
+      if (menitS >= 59) {
+        if (jamS >= 23) {
+          jamS = 00;
+          menitS = 00;
+          detikS = 00;
+        } else {
+          jamS = jamS + 1;
+          menitS = 00;
+          detikS = 00;
+        }
+      } else {
+        menitS = menitS + 1;
+        detikS = 00;
+      }
+    } else {
+      detikS = detikS + 1;
+    }
+    return "${jamS.toString().padLeft(2, "0")}:${menitS.toString().padLeft(2, "0")}:${detikS.toString().padLeft(2, "0")}";
+  }
+
+  streamJam() {
+    _timerClock?.cancel();
+    createJamStream();
+    _streamClock.add(doJam());
+    _timerClock = Timer.periodic(Duration(seconds: 1), (timer) {
+      _streamClock.add(doJam());
+    });
+  }
+
+  createJamStream() {
+    _streamClock.stream.listen((String jam) {
+      if (jam != null) {
+        if (mounted) {
+          setState(() {
+            startClock = jam;
+          });
+        }
+      }
+    });
+  }
+
   @override
   void initState() {
+    serverJam = widget.jam_server;
+    jamS = int.parse("${serverJam?.jam}");
+    menitS = int.parse("${serverJam?.menit}");
+    detikS = int.parse("${serverJam?.detik}");
+    streamJam();
     initializeCamera();
-    if(_cameraInitialized){
-
-    conv = convertImageLib
-        .lookup<NativeFunction<convert_func>>('convertImage')
-        .asFunction<Convert>();
-    
+    if (_cameraInitialized) {
+      conv = convertImageLib
+          .lookup<NativeFunction<convert_func>>('convertImage')
+          .asFunction<Convert>();
     }
     super.initState();
   }
@@ -138,29 +203,47 @@ class _IosMasukState extends State<IosMasuk> {
               Navigator.maybePop(context);
             },
           )),
-      body: (waiting)?Center(child: CircularProgressIndicator()):Container(
-          color: const Color(0xf0D9D9D9),
-          child: (visible) ? cameraFrame() : imgFrame()),
+      body: (waiting)
+          ? const Center(child: CircularProgressIndicator())
+          : Container(
+              color: const Color(0xf0D9D9D9),
+              child: (visible)
+                  ? (isBusy)
+                      ? const Center(
+                          child: CircularProgressIndicator(),
+                        )
+                      : cameraFrame()
+                  : imgFrame()),
       floatingActionButton: (visible)
-          ? (_cameraInitialized)?FloatingActionButton(
-        onPressed: (isBusy)?null:() async {
-          isBusy=true;
-          // _processImageStream(_savedImage);
-          waiting=true;
-          savFile = await _cameraController?.takePicture();
-          print("Gambar $savFile");
-          saveImage();
-        },
-        tooltip: 'Scan Wajah',
-        child: const Icon(Icons.camera),
-      )
+          ? (_cameraInitialized)
+              ? FloatingActionButton(
+                  onPressed: (isBusy)
+                      ? null
+                      : () async {
+                          isBusy = true;
+                          // _processImageStream(_savedImage);
+                          // waiting = true;
+                          savFile = await _cameraController?.takePicture();
+                          print("Gambar $savFile");
+                          setState(() {});
+                          saveImage();
+                        },
+                  tooltip: 'Scan Wajah',
+                  child: (isBusy)
+                      ? const Center(
+                          child: CircularProgressIndicator(
+                          color: Colors.white,
+                        ))
+                      : const Icon(Icons.camera),
+                )
+              : Visibility(
+                  visible: false,
+                  child: Container(),
+                )
           : Visibility(
-        visible: false,
-        child: Container(),
-      ): Visibility(
-        visible: visible,
-        child: Container(),
-      ),
+              visible: visible,
+              child: Container(),
+            ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
@@ -170,41 +253,48 @@ class _IosMasukState extends State<IosMasuk> {
       children: [
         Positioned(
             child: Stack(
-              fit: StackFit.expand,
-              children: [
-                SizedBox(
-                    width: MediaQuery.of(context).size.width,
-                    child: (intImage != null)
-                        ? Image.memory(Uint8List.fromList(intImage!))
-                        : Image.file(File(savFile!.path))),
-                if (customPaint != null) customPaint!,
-              ],
-            )),
+          fit: StackFit.expand,
+          children: [
+            Transform(
+              alignment: Alignment.center,
+              transform: Matrix4.rotationY(math.pi),
+              child: SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  child: (intImage != null)
+                      ? Image.memory(Uint8List.fromList(intImage!))
+                      : Image.file(File(savFile!.path))),
+            ),
+            if (customPaint != null) customPaint!,
+          ],
+        )),
         Align(
           alignment: FractionalOffset.bottomCenter,
           child: Container(
             width: MediaQuery.of(context).size.width,
             color: Colors.white,
             padding: const EdgeInsets.only(left: 4.0, right: 4.0),
-            child: (detect)
+            child: ((detect)
                 ? ElevatedButton(
-                onPressed: () {
-                  Navigator.maybePop(context);
-                },
-                child: const Text("Selesai"))
-                : ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    visible = true;
-                    detect = false;
-                    initializeCamera();
-                    conv = convertImageLib
-                        .lookup<NativeFunction<convert_func>>(
-                        'convertImage')
-                        .asFunction<Convert>();
-                  });
-                },
-                child: const Text("Scan Ulang")),
+                    onPressed: () {
+                      Navigator.maybePop(context);
+                    },
+                    child: const Text("Selesai"))
+                : Visibility(
+                    visible: (isBusy) ? false : true,
+                    child: ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            visible = true;
+                            detect = false;
+                            initializeCamera();
+                            conv = convertImageLib
+                                .lookup<NativeFunction<convert_func>>(
+                                    'convertImage')
+                                .asFunction<Convert>();
+                          });
+                        },
+                        child: const Text("Scan Ulang")),
+                  )),
           ),
         )
       ],
@@ -216,15 +306,21 @@ class _IosMasukState extends State<IosMasuk> {
       children: [
         (_cameraInitialized)
             ? Container(
-          child: cameraPreview(),
-        )
+                child: cameraPreview(),
+              )
             : const Center(
-          child: SizedBox(
-            height: 20,
-            width: 20,
-            child: CircularProgressIndicator(),
+                child: SizedBox(
+                  height: 20,
+                  width: 20,
+                  child: CircularProgressIndicator(),
+                ),
+              ),
+        Card(
+          child: Padding(
+            padding: EdgeInsets.all(10),
+            child: Text("Boris"),
           ),
-        ),
+        )
       ],
     );
   }
@@ -240,8 +336,8 @@ class _IosMasukState extends State<IosMasuk> {
             child: (_cameraController != null)
                 ? CameraPreview(_cameraController!)
                 : const Center(
-              child: Text("Camera Tidak Tersedia!"),
-            )));
+                    child: Text("Camera Tidak Tersedia!"),
+                  )));
   }
 
   Future<void> processImage(InputImage inputImage) async {
@@ -287,7 +383,7 @@ class _IosMasukState extends State<IosMasuk> {
     final bytes = allBytes.done().buffer.asUint8List();
 
     final Size imageSize =
-    Size(image.width.toDouble(), image.height.toDouble());
+        Size(image.width.toDouble(), image.height.toDouble());
 
     final camera = cameras[cameraPick];
     final imageRotation =
@@ -299,7 +395,7 @@ class _IosMasukState extends State<IosMasuk> {
             InputImageFormat.NV21;
 
     final planeData = image.planes.map(
-          (Plane plane) {
+      (Plane plane) {
         return InputImagePlaneMetadata(
           bytesPerRow: plane.bytesPerRow,
           height: plane.height,
@@ -316,7 +412,7 @@ class _IosMasukState extends State<IosMasuk> {
     );
 
     final inputImage =
-    InputImage.fromBytes(bytes: bytes, inputImageData: inputImageData);
+        InputImage.fromBytes(bytes: bytes, inputImageData: inputImageData);
     processImage(inputImage);
   }
 
@@ -330,9 +426,9 @@ class _IosMasukState extends State<IosMasuk> {
       // Assign the planes data to the pointers of the image
       Uint8List pointerList = p.asTypedList(_savedImage.planes[0].bytes.length);
       Uint8List pointerList1 =
-      p1.asTypedList(_savedImage.planes[1].bytes.length);
+          p1.asTypedList(_savedImage.planes[1].bytes.length);
       Uint8List pointerList2 =
-      p2.asTypedList(_savedImage.planes[2].bytes.length);
+          p2.asTypedList(_savedImage.planes[2].bytes.length);
       pointerList.setRange(
           0, _savedImage.planes[0].bytes.length, _savedImage.planes[0].bytes);
       pointerList1.setRange(
@@ -384,8 +480,8 @@ class _IosMasukState extends State<IosMasuk> {
     print("Filess ${_files}");
     absensiPulang(_files);
   }
+
   saveImage() async {
-    visible=false;
     externalDirectory = await getApplicationDocumentsDirectory();
     String directoryPath = '${externalDirectory.path}/FaceIdPlus';
     await Directory(directoryPath).create(recursive: true);
@@ -396,15 +492,20 @@ class _IosMasukState extends State<IosMasuk> {
   }
 
   absensiPulang(File files) async {
-    var uploadRes = await Upload.uploadApi(widget.nik, widget.status, files,widget.lat,widget.lng,widget.id_roster);
+    var uploadRes = await Upload.uploadApi(widget.nik, widget.status, files,
+        widget.lat, widget.lng, widget.id_roster);
     if (uploadRes != null) {
-      isBusy=false;
+      isBusy = false;
       print("UploadResult ${uploadRes.image}");
       visible = false;
       detect = true;
-      waiting=false;
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(backgroundColor: Colors.green,
-          content: Text("Absen Di Daftar!",style: TextStyle(color: Colors.white),)));
+      waiting = false;
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          backgroundColor: Colors.green,
+          content: Text(
+            "Absen Di Daftar!",
+            style: TextStyle(color: Colors.white),
+          )));
       setState(() {});
     }
   }

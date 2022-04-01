@@ -44,7 +44,7 @@ class Utils{
 
   Future<bool> pingServerLokal()async{
     try{
-      var uri = Uri.parse("http://10.10.3.13");
+      var uri = Uri.parse("http://10.10.3.13/cek/server");
       http.Response api = await http.get(uri).timeout(Duration(seconds: 5));
       print("pingLokal ${api.statusCode}");
       if(api.statusCode<200 || api.statusCode>299){
@@ -64,7 +64,7 @@ class Utils{
   }
   Future<bool> pingServerOnline()async{
     try{
-      var uri = Uri.parse("https://abpjobsite.com");
+      var uri = Uri.parse("https://abpjobsite.com/cek/server");
       http.Response api = await http.get(uri).timeout(Duration(seconds: 5));
       print("pingStatus ${api.statusCode}");
       if(api.statusCode<200 || api.statusCode>299){
