@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:face_id_plus/screens/pages/master/add_karyawan.dart';
 import 'package:face_id_plus/screens/pages/master/show_karyawan.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:http/http.dart' as http;
 import '../../../model/karyawan_model.dart';
 
@@ -18,20 +20,6 @@ class _ListKaryawanState extends State<ListKaryawan> {
   List<DataKaryawan> employee = [];
   List<DataKaryawan> cariEmployee = [];
   TextEditingController cariController = new TextEditingController();
-
-  onSearch(String text) {
-    cariEmployee.clear();
-    if (text.isEmpty) {
-      setState(() {});
-      return;
-    }
-
-    employee.forEach((e) {
-      if (e.nama_lengkap!.toLowerCase().contains(text.toLowerCase()))
-        cariEmployee.add(e);
-    });
-    setState(() {});
-  }
 
   @override
   void initState() {
@@ -67,14 +55,22 @@ class _ListKaryawanState extends State<ListKaryawan> {
               Navigator.maybePop(context);
             },
           ),
+          actions: [_cari()],
           title: const Text(
             "List Karyawan",
             style: TextStyle(color: Colors.black),
           ),
         ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: ((context) => FormKaryawan())));
+          },
+          tooltip: 'Tambah Karyawan',
+          child: Icon(Icons.add),
+        ),
         body: Column(
           children: <Widget>[
-            Padding(padding: const EdgeInsets.all(8.0), child: _cari()),
             Expanded(
                 child: loading
                     ? Center(child: CircularProgressIndicator())
@@ -96,72 +92,133 @@ class _ListKaryawanState extends State<ListKaryawan> {
         }
         return Padding(
             padding: const EdgeInsets.all(10.0),
-            child: Card(
-              elevation: 8,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
-              color: (c.status == 0) ? Colors.green : Colors.red,
-              child: InkWell(
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: ((context) => ShowKaryawan(
-                                dataKaryawan: cariEmployee[i],
-                              ))));
-                },
-                child: (c.nama_perusahaan != "PT Alamjaya Bara Pratama")
-                    ? Container()
-                    : ListTile(
-                        title: Row(
-                          children: [
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(top: 10, bottom: 10),
-                              child: Container(
-                                  height: 80,
-                                  width: 80,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  child: (foto != null)
-                                      ? ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          child: Image.network(foto,
-                                              fit: BoxFit.fill),
-                                        )
-                                      : Center(
-                                          child: Icon(
-                                          Icons.person,
-                                          size: 50,
-                                          color: Colors.grey,
-                                        ))),
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+            child: Slidable(
+              endActionPane: ActionPane (
+                motion: ScrollMotion(),
+                children: [
+                  GestureDetector(
+                    onTap: (){
+                      showDialog(context: context, builder: (context){
+                        return dialog();
+                      });
+                    },
+                    child: Container(
+                      height: 110,
+                      width: 90,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.blue),
+                      child: Icon(Icons.edit, color: Colors.white,),
+                    ),
+                  ),
+                  SizedBox(width: 5),
+                  GestureDetector(
+                    onTap: (){
+                      Navigator.push(context,
+                        MaterialPageRoute(builder: ((context) => FormKaryawan())));
+                    },
+                    child: Container(
+                      height: 110,
+                      width: 90,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.red),
+                      child: Icon(Icons.delete, color: Colors.white),
+                    ),
+                  )
+                  // SlidableAction(
+                  //   onPressed: (context) {
+                  //     Navigator.push(context,
+                  //       MaterialPageRoute(builder: ((context) => FormKaryawan())));
+                  //   },
+                  //   icon: Icons.edit,
+                  //   label: 'Ubah',
+                  //   backgroundColor: Colors.blue,
+                  // ),
+                  // SlidableAction(
+                  //   onPressed: (context) {
+                  //     showDialog(context: context, builder: (context){
+                  //       return dialog();
+                  //     });
+                  //   },
+                  //   icon: Icons.delete,
+                  //   label: 'Hapus',
+                  //   backgroundColor: Colors.red,
+                  // ),
+                ],
+              ),
+              child: Card(
+                elevation: 8,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+                color: (c.status == 0) ? Colors.green : Colors.red,
+                child: InkWell(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: ((context) => ShowKaryawan(
+                                    dataKaryawan: cariEmployee[i],
+                                  ))));
+                    },
+                    child: (c.nama_perusahaan == "PT Alamjaya Bara Pratama")
+                        ? ListTile(
+                            title: Row(
                               children: [
-                                Text(c.nama_lengkap!,
-                                    style: TextStyle(
-                                        color: Colors.white, fontSize: 14)),
-                                Text(c.nik!,
-                                    style: TextStyle(
-                                        color: Colors.white, fontSize: 14)),
-                                Text(c.dept!,
-                                    style: TextStyle(
-                                        color: Colors.white, fontSize: 14)),
-                                Text(c.section!,
-                                    style: TextStyle(
-                                        color: Colors.white, fontSize: 14)),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: 10, bottom: 10),
+                                  child: Container(
+                                      height: 80,
+                                      width: 80,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius:
+                                            BorderRadius.circular(10),
+                                      ),
+                                      child: (foto != null)
+                                          ? ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              child: Image.network(foto,
+                                                  fit: BoxFit.fill),
+                                            )
+                                          : Center(
+                                              child: Icon(
+                                              Icons.person,
+                                              size: 50,
+                                              color: Colors.grey,
+                                            ))),
+                                ),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                  children: [
+                                    Text(c.nama_lengkap!,
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 14)),
+                                    Text(c.nik!,
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 14)),
+                                    Text(c.dept!,
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 14)),
+                                    Text(c.section!,
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 14)),
+                                  ],
+                                )
                               ],
-                            )
-                          ],
-                        ),
-                      ),
+                            ),
+                          )
+                        : Container()),
               ),
             ));
       },
@@ -171,12 +228,12 @@ class _ListKaryawanState extends State<ListKaryawan> {
   Widget _cari() {
     return AnimatedContainer(
       duration: Duration(milliseconds: 400),
-      width: _folded ? 56 : 300,
+      width: _folded ? 56 : 350,
       height: 56,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(32),
         color: Colors.white,
-        boxShadow: kElevationToShadow[6],
+        //boxShadow: kElevationToShadow[1],
       ),
       child: Row(
         children: [
@@ -218,10 +275,10 @@ class _ListKaryawanState extends State<ListKaryawan> {
                   bottomRight: Radius.circular(32),
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.only(right: 15),
                   child: Icon(
                     _folded ? Icons.search : Icons.close,
-                    color: Colors.blue[900],
+                    color: Colors.black,
                   ),
                 ),
                 onTap: () {
@@ -235,6 +292,39 @@ class _ListKaryawanState extends State<ListKaryawan> {
         ],
       ),
     );
+  }
+
+  Widget dialog() {
+    return AlertDialog(
+      title: Text("Konfirmasi"),
+      content: Text("Yakin ingin Menghapus data ini?"),
+      actions: [
+        TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text("Hapus")),
+        TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text("Batal"))
+      ],
+    );
+  }
+
+  onSearch(String text) {
+    cariEmployee.clear();
+    if (text.isEmpty) {
+      setState(() {});
+      return;
+    }
+
+    employee.forEach((e) {
+      if (e.nama_lengkap!.toLowerCase().contains(text.toLowerCase()))
+        cariEmployee.add(e);
+    });
+    setState(() {});
   }
 
   Future<List<DataKaryawan>> getKaryawan() async {

@@ -1,3 +1,4 @@
+import 'package:face_id_plus/screens/pages/cuti/form_cuti.dart';
 import 'package:face_id_plus/screens/pages/cuti/list_roster.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -65,7 +66,10 @@ class _RosterCutiState extends State<RosterCuti> {
                     Expanded(
                       child: ElevatedButton(
                         onPressed: (){
-                    
+                          Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (BuildContext context) => const FormCuti()));
                         }, child: Text("Pengajuan Cuti")
                       ),
                     ),
