@@ -330,7 +330,6 @@ class _IosPulangState extends State<IosPulang> {
         child: GestureDetector(
             onDoubleTap: () {
               initCameras();
-              print("Double Tap");
             },
             child: (_cameraController != null)
                 ? CameraPreview(_cameraController!)
@@ -365,7 +364,6 @@ class _IosPulangState extends State<IosPulang> {
 
   Future<String> get _localPath async {
     final directory = await getApplicationDocumentsDirectory();
-    // For your reference print the AppDoc directory
     return directory.path;
   }
 
@@ -476,7 +474,6 @@ class _IosPulangState extends State<IosPulang> {
     await Directory(directoryPath).create(recursive: true);
     String filePath = '$directoryPath/${DateTime.now()}_pulang.jpg';
     File _files = await File(filePath).writeAsBytes(intImage!);
-    print("Filess ${_files}");
     absensiPulang(_files);
   }
 
@@ -486,7 +483,6 @@ class _IosPulangState extends State<IosPulang> {
     await Directory(directoryPath).create(recursive: true);
     String filePath = '$directoryPath/${DateTime.now()}_pulang.jpg';
     File _files = File(savFile!.path);
-    print("Filess ${_files}");
     absensiPulang(_files);
   }
 
@@ -494,8 +490,6 @@ class _IosPulangState extends State<IosPulang> {
     var uploadRes = await Upload.uploadApi(widget.nik, widget.status, files,
         widget.lat, widget.lng, widget.id_roster);
     if (uploadRes != null) {
-      print("UploadResult ${uploadRes.image}");
-      print("UploadResult ${uploadRes.res}");
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           backgroundColor: Colors.green,
           content: Text(

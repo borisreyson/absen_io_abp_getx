@@ -433,7 +433,6 @@ class _AbsenLokalState extends State<AbsenLokal> {
       }
       if (lastAbsen.jamServer != null) {
         jam_server = lastAbsen.jamServer;
-        print("JamServer ${jam_server?.menit}");
         jamS = int.parse("${jam_server?.jam}");
         menitS = int.parse("${jam_server?.menit}");
         detikS = int.parse("${jam_server?.detik}");

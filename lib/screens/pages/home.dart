@@ -107,7 +107,6 @@ class _HomePageState extends State<HomePage> {
         hour: int.parse(startClock.split(":")[0]),
         minute: int.parse(startClock.split(":")[1])
         );
-    print("Jam Sekarang = ${mulai}");
     NetworkCheck().checkConnection(context);
     setCustomMapPin();
     if (Platform.isAndroid) {
@@ -131,7 +130,6 @@ class _HomePageState extends State<HomePage> {
       DateFormat fmt = DateFormat("dd MMMM yyyy");
       DateTime old = DateTime.now();
       now = DateTime(old.year, old.month, old.day, mulai.hour, mulai.minute,00);
-      print("Jam Sekarang = ${now}");
 
       _tanggal = fmt.format(now);
       timerss =
@@ -238,7 +236,6 @@ class _HomePageState extends State<HomePage> {
 
           if (Platform.isAndroid) {
             if (!serviceEnable) {
-              print("3");
 
               outside = false;
               _diluarAbp = 1.0;

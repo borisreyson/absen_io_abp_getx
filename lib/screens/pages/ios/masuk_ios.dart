@@ -224,7 +224,6 @@ class _IosMasukState extends State<IosMasuk> {
                           // _processImageStream(_savedImage);
                           // waiting = true;
                           savFile = await _cameraController?.takePicture();
-                          print("Gambar $savFile");
                           setState(() {});
                           saveImage();
                         },
@@ -331,7 +330,6 @@ class _IosMasukState extends State<IosMasuk> {
         child: GestureDetector(
             onDoubleTap: () {
               initCameras();
-              print("Double Tap");
             },
             child: (_cameraController != null)
                 ? CameraPreview(_cameraController!)
@@ -366,7 +364,6 @@ class _IosMasukState extends State<IosMasuk> {
 
   Future<String> get _localPath async {
     final directory = await getApplicationDocumentsDirectory();
-    // For your reference print the AppDoc directory
     return directory.path;
   }
 
@@ -477,7 +474,6 @@ class _IosMasukState extends State<IosMasuk> {
     await Directory(directoryPath).create(recursive: true);
     String filePath = '$directoryPath/${DateTime.now()}_masuk.jpg';
     File _files = await File(filePath).writeAsBytes(intImage!);
-    print("Filess ${_files}");
     absensiPulang(_files);
   }
 
@@ -487,7 +483,6 @@ class _IosMasukState extends State<IosMasuk> {
     await Directory(directoryPath).create(recursive: true);
     String filePath = '$directoryPath/${DateTime.now()}_masuk.jpg';
     File _files = File(savFile!.path);
-    print("Filess ${_files}");
     absensiPulang(_files);
   }
 
@@ -496,7 +491,6 @@ class _IosMasukState extends State<IosMasuk> {
         widget.lat, widget.lng, widget.id_roster);
     if (uploadRes != null) {
       isBusy = false;
-      print("UploadResult ${uploadRes.image}");
       visible = false;
       detect = true;
       waiting = false;

@@ -90,7 +90,7 @@ class _ListKaryawanState extends State<ListKaryawan> {
         } else {
           foto = null;
         }
-        return Padding(
+        return (c.nama_perusahaan == "PT Alamjaya Bara Pratama")?Padding(
             padding: const EdgeInsets.all(10.0),
             child: Slidable(
               endActionPane: ActionPane (
@@ -161,8 +161,7 @@ class _ListKaryawanState extends State<ListKaryawan> {
                                     dataKaryawan: cariEmployee[i],
                                   ))));
                     },
-                    child: (c.nama_perusahaan == "PT Alamjaya Bara Pratama")
-                        ? ListTile(
+                    child:  ListTile(
                             title: Row(
                               children: [
                                 Padding(
@@ -218,9 +217,9 @@ class _ListKaryawanState extends State<ListKaryawan> {
                               ],
                             ),
                           )
-                        : Container()),
+                        ),
               ),
-            ));
+            )):Container();
       },
     );
   }
@@ -284,6 +283,7 @@ class _ListKaryawanState extends State<ListKaryawan> {
                 onTap: () {
                   setState(() {
                     _folded = !_folded;
+                    cariEmployee = employee;
                   });
                 },
               ),
