@@ -206,7 +206,12 @@ class _SplashState extends State<Splash> {
     return InkWell(
       onTap: () {
         closePing();
-        Navigator.push(
+        // Navigator.push(
+        //         context,
+        //         MaterialPageRoute(
+        //             builder: (BuildContext context) => const AbsenLokal()))
+        //     .then((value) => reloadCekServer());
+            Navigator.push(
                 context,
                 MaterialPageRoute(
                     builder: (BuildContext context) => const HomePageAndroid()))

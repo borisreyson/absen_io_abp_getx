@@ -55,95 +55,98 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
       ),
 
-    body: Center(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: SizedBox(
-          width: double.infinity,
+    body: Stack(
+      children: [
+        Container(
           height: 500,
-          child: Card(
-            elevation: 8,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            child: Column(
-              children: <Widget> [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Card(
-                      elevation: 8,
-                      shape: CircleBorder(),
-                      child: Padding(
-                        padding: const EdgeInsets.only(right: 110, left: 110),
-                        child: Container(
-                        width: 60,
-                        height: 179,
-                        child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: GestureDetector(
-                              onTap: () {
-                                  showDialog(context: context, builder: (context){
-                                  return AlertDialog(
-                                    title: Text("Pilih Foto"),
-                                    actions: [
-                                      Column(
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.only(right: 210),
-                                            child: TextButton(onPressed: (){
-                                                    getImageCamera();
-                                                    Navigator.of(context).pop();
-                                            }, child: Text("Kamera",
-                                            style: TextStyle(color: Colors.blue, fontSize: 16))),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(right: 222),
-                                            child: TextButton(onPressed: (){
-                                                    getImageGallery();
-                                                    Navigator.of(context).pop();
-                                            }, child: Text("Galeri", 
-                                            style: TextStyle(color: Colors.blue, fontSize: 16))),
-                                          ),
-                                        ],
-                                      ),
-                                      
-                                    ],
-                                  );
-                                });  
-                              }, child: Icon(Icons.add_a_photo, size: 50),
-                            ),
-                          ),
+          child: Padding(
+            padding: const EdgeInsets.all(30.0),
+            child: Card(
+              margin: EdgeInsets.only(top:100),
+              elevation: 8,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              child: Padding(
+                padding: const EdgeInsets.only(top:90.0),
+                child: Column(
+                  children: <Widget> [
+                    Column(
+                      children: const [
+                        ListTile(
+                          leading: Icon(Icons.person),
+                          title: Text("Hendra", style: TextStyle(fontWeight: FontWeight.bold)),
                         ),
-                       ),
-                     ),
-                ),
 
-                Column(
-                  children: [
-                    ListTile(
-                      leading: Icon(Icons.person),
-                      title: Text("Hendra", style: TextStyle(fontWeight: FontWeight.bold)),
-                    ),
+                        ListTile(
+                          leading: Icon(Icons.format_list_numbered),
+                          title: Text("220202323", style: TextStyle(fontWeight: FontWeight.bold)),
+                        ),
 
-                    ListTile(
-                      leading: Icon(Icons.format_list_numbered),
-                      title: Text("220202323", style: TextStyle(fontWeight: FontWeight.bold)),
-                    ),
+                        ListTile(
+                          leading: Icon(Icons.business),
+                          title: Text("HCGA", style: TextStyle(fontWeight: FontWeight.bold)),
+                        ),
 
-                    ListTile(
-                      leading: Icon(Icons.business),
-                      title: Text("HCGA", style: TextStyle(fontWeight: FontWeight.bold)),
-                    ),
-
-                    ListTile(
-                      leading: Icon(Icons.business_center_rounded),
-                      title: Text("IT Staff", style: TextStyle(fontWeight: FontWeight.bold)),
-                    ),
+                        ListTile(
+                          leading: Icon(Icons.business_center_rounded),
+                          title: Text("IT Staff", style: TextStyle(fontWeight: FontWeight.bold)),
+                        ),
+                      ],
+                    )
                   ],
-                )
-              ],
+                ),
+              ),
             ),
           ),
         ),
-      ),
+        Align(
+          alignment: Alignment.topCenter,
+          child: Card(
+            margin: EdgeInsets.only(top: 40),
+              elevation: 18,
+              shape: CircleBorder(),
+              child: Padding(
+                padding: const EdgeInsets.only(right: 110, left: 110),
+                child: Container(
+                width: 60,
+                height: 179,
+                child: Center(
+                  child: GestureDetector(
+                    onTap: () {
+                        showDialog(context: context, builder: (context){
+                        return AlertDialog(
+                          title: Text("Pilih Foto"),
+                          actions: [
+                            Column(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 210),
+                                  child: TextButton(onPressed: (){
+                                          getImageCamera();
+                                          Navigator.of(context).pop();
+                                  }, child: Text("Kamera",
+                                  style: TextStyle(color: Colors.blue, fontSize: 16))),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 222),
+                                  child: TextButton(onPressed: (){
+                                          getImageGallery();
+                                          Navigator.of(context).pop();
+                                  }, child: Text("Galeri", 
+                                  style: TextStyle(color: Colors.blue, fontSize: 16))),
+                                ),
+                              ],
+                            ),
+                          ],
+                        );
+                      });  
+                    }, child: Icon(Icons.add_a_photo, size: 50),
+                  ),
+                ),
+                ),
+              ),
+            ),
+        ),
+      ],
     ),  
     );
   }

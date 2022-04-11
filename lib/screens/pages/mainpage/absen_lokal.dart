@@ -36,6 +36,7 @@ class _AbsenLokalState extends State<AbsenLokal> {
   String startClock = "00:00:00";
   int jamS = 0, menitS = 0, detikS = 0;
   JamServer? jam_server;
+  
   @override
   void initState() {
     getPref(context);
@@ -72,7 +73,8 @@ class _AbsenLokalState extends State<AbsenLokal> {
                           context,
                           MaterialPageRoute(
                               builder: (BuildContext context) =>
-                                  const AreaAbp()));
+                                  const AreaAbp())).then(
+                                  (value) => getPref(context));
                     },
                     icon: const Icon(Icons.map_sharp),
                     color: Colors.white,
@@ -190,6 +192,8 @@ class _AbsenLokalState extends State<AbsenLokal> {
   @override
   void dispose() {
     closeStream();
+    closJam();
+
     super.dispose();
   }
 
@@ -387,14 +391,17 @@ class _AbsenLokalState extends State<AbsenLokal> {
   }
 
   loadLastAbsen(String _nik) async {
-    var lastAbsen = await LastAbsen.apiAbsenTigaHariOffline(_nik);
+    // _diluarAbp = 1.0;
+    // outside = false;
+    var lastAbsen = await LastAbsen.apiAbsenTigaHari(_nik);
     if (lastAbsen != null) {
       _jam_kerja = lastAbsen.jamKerja;
       kode_roster = lastAbsen.kodeRoster;
       id_roster = "${lastAbsen.idRoster}";
       if (lastAbsen.lastAbsen != null) {
         var absenTerakhir = lastAbsen.lastAbsen;
-        var jamAbsen = lastAbsen.presensiMasuk;
+        // jamAbsen = lastAbsen.presensiMasuk;
+        // jamAbsenPulang = lastAbsen.presensiPulang;
         if (absenTerakhir == "Masuk") {
           if (lastAbsen.lastNew == "Pulang") {
             outside = false;
@@ -402,11 +409,11 @@ class _AbsenLokalState extends State<AbsenLokal> {
             _enMasuk = true;
             _enPulang = false;
             _pulang = 0.0;
-            jamPulang = "${jamAbsen?.jam}";
+            // jamPulang = "${jamAbsenPulang?.jam}";
             jamMasuk = "";
           } else {
-            jamMasuk = "${jamAbsen?.jam}";
-            jamPulang = "";
+            // jamMasuk = "${jamAbsen?.jam}";
+            // jamPulang = "${jamAbsenPulang?.jam}";
             outside = false;
             _enMasuk = false;
             _enPulang = true;
@@ -414,8 +421,8 @@ class _AbsenLokalState extends State<AbsenLokal> {
             _pulang = 1.0;
           }
         } else if (absenTerakhir == "Pulang") {
-          jamMasuk = "";
-          jamPulang = "";
+          // jamMasuk = "${jamAbsen?.jam}";
+          // jamPulang = "${jamAbsenPulang?.jam}";
           outside = false;
           _enMasuk = true;
           _enPulang = false;
@@ -432,14 +439,16 @@ class _AbsenLokalState extends State<AbsenLokal> {
         _pulang = 0.0;
       }
       if (lastAbsen.jamServer != null) {
-        jam_server = lastAbsen.jamServer;
+        setState(() {
+          jam_server = lastAbsen.jamServer;
+        });
         jamS = int.parse("${jam_server?.jam}");
         menitS = int.parse("${jam_server?.menit}");
         detikS = int.parse("${jam_server?.detik}");
+        // startClock = "${jamS.toString().padLeft(2,"0")}:${menitS.toString().padLeft(2,"0")}:${detikS.toString().padLeft(2,"0")}";
         streamJam();
       }
     }
-    setState(() {});
   }
 
   Future<List<AbsenTigaHariModel>> _loadTigaHari(String nik) async {
@@ -470,6 +479,7 @@ class _AbsenLokalState extends State<AbsenLokal> {
   }
 
   streamJam() {
+    _timerClock?.cancel();
     createJamStream();
     _streamClock.add(doJam());
     _timerClock = Timer.periodic(Duration(seconds: 1), (timer) {
@@ -490,7 +500,10 @@ class _AbsenLokalState extends State<AbsenLokal> {
   }
 
   closeStream() {
-    _timerClock?.cancel();
+    // _timerClock?.cancel();
     _timer?.cancel();
+  }
+  closJam() {
+    _timerClock?.cancel();
   }
 }
