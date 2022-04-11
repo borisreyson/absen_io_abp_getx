@@ -17,12 +17,14 @@ class ListKaryawan extends StatefulWidget {
 class _ListKaryawanState extends State<ListKaryawan> {
   bool _folded = true;
   var loading = false;
+  late FocusNode focusNode;
   List<DataKaryawan> employee = [];
   List<DataKaryawan> cariEmployee = [];
   TextEditingController cariController = new TextEditingController();
 
   @override
   void initState() {
+    focusNode = FocusNode();
     super.initState();
     getKaryawan().then((value) {
       setState(() {
@@ -90,136 +92,147 @@ class _ListKaryawanState extends State<ListKaryawan> {
         } else {
           foto = null;
         }
-        return (c.nama_perusahaan == "PT Alamjaya Bara Pratama")?Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Slidable(
-              endActionPane: ActionPane (
-                motion: ScrollMotion(),
-                children: [
-                  GestureDetector(
-                    onTap: (){
-                      showDialog(context: context, builder: (context){
-                        return dialog();
-                      });
-                    },
-                    child: Container(
-                      height: 110,
-                      width: 90,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.blue),
-                      child: Icon(Icons.edit, color: Colors.white,),
-                    ),
-                  ),
-                  SizedBox(width: 5),
-                  GestureDetector(
-                    onTap: (){
-                      Navigator.push(context,
-                        MaterialPageRoute(builder: ((context) => FormKaryawan())));
-                    },
-                    child: Container(
-                      height: 110,
-                      width: 90,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.red),
-                      child: Icon(Icons.delete, color: Colors.white),
-                    ),
-                  )
-                  // SlidableAction(
-                  //   onPressed: (context) {
-                  //     Navigator.push(context,
-                  //       MaterialPageRoute(builder: ((context) => FormKaryawan())));
-                  //   },
-                  //   icon: Icons.edit,
-                  //   label: 'Ubah',
-                  //   backgroundColor: Colors.blue,
-                  // ),
-                  // SlidableAction(
-                  //   onPressed: (context) {
-                  //     showDialog(context: context, builder: (context){
-                  //       return dialog();
-                  //     });
-                  //   },
-                  //   icon: Icons.delete,
-                  //   label: 'Hapus',
-                  //   backgroundColor: Colors.red,
-                  // ),
-                ],
-              ),
-              child: Card(
-                elevation: 8,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)),
-                color: (c.status == 0) ? Colors.green : Colors.red,
-                child: InkWell(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: ((context) => ShowKaryawan(
-                                    dataKaryawan: cariEmployee[i],
-                                  ))));
-                    },
-                    child:  ListTile(
-                            title: Row(
+        return (c.nama_perusahaan == "PT Alamjaya Bara Pratama")
+            ? Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Slidable(
+                  endActionPane: ActionPane(
+                    motion: ScrollMotion(),
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: ((context) => FormKaryawan())));
+                        },
+                        child: SizedBox(
+                          height: 120,
+                          width: 100,
+                          child: Card(
+                            elevation: 10,
+                            color: Colors.blue,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10)
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 10, bottom: 10),
-                                  child: Container(
-                                      height: 80,
-                                      width: 80,
-                                      decoration: BoxDecoration(
+                                Icon(
+                                  Icons.edit,
+                                  color: Colors.white,
+                                ),
+                                Text("UBAH",
+                                    style: TextStyle(
                                         color: Colors.white,
-                                        borderRadius:
-                                            BorderRadius.circular(10),
-                                      ),
-                                      child: (foto != null)
-                                          ? ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                              child: Image.network(foto,
-                                                  fit: BoxFit.fill),
-                                            )
-                                          : Center(
-                                              child: Icon(
-                                              Icons.person,
-                                              size: 50,
-                                              color: Colors.grey,
-                                            ))),
-                                ),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
-                                  children: [
-                                    Text(c.nama_lengkap!,
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 14)),
-                                    Text(c.nik!,
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 14)),
-                                    Text(c.dept!,
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 14)),
-                                    Text(c.section!,
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 14)),
-                                  ],
-                                )
+                                        fontWeight: FontWeight.bold))
                               ],
                             ),
-                          )
+                          ),
                         ),
-              ),
-            )):Container();
+                      ),
+                      SizedBox(width: 5),
+                      GestureDetector(
+                        onTap: () {
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return dialog();
+                              });
+                        },
+                        child: SizedBox(
+                          height: 120,
+                          width: 100,
+                          child: Card(
+                            elevation: 10,
+                            color: Colors.red,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10)
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Icon(Icons.delete, color: Colors.white),
+                                Text("Hapus",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold))
+                              ],
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                  child: Card(
+                    elevation: 10,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                    color: (c.status == 0) ? Colors.green : Colors.red,
+                    child: InkWell(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: ((context) => ShowKaryawan(
+                                        dataKaryawan: cariEmployee[i],
+                                      ))));
+                        },
+                        child: ListTile(
+                          title: Row(
+                            children: [
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(top: 10, bottom: 10),
+                                child: Container(
+                                    height: 80,
+                                    width: 80,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: (foto != null)
+                                        ? ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            child: Image.network(foto,
+                                                fit: BoxFit.fill),
+                                          )
+                                        : Center(
+                                            child: Icon(
+                                            Icons.person,
+                                            size: 50,
+                                            color: Colors.grey,
+                                          ))),
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(c.nama_lengkap!,
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 14)),
+                                  Text(c.nik!,
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 14)),
+                                  Text(c.dept!,
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 14)),
+                                  Text(c.section!,
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 14)),
+                                ],
+                              )
+                            ],
+                          ),
+                        )),
+                  ),
+                ))
+            : Container();
       },
     );
   }
@@ -241,6 +254,7 @@ class _ListKaryawanState extends State<ListKaryawan> {
             padding: EdgeInsets.only(left: 16),
             child: !_folded
                 ? TextField(
+                    focusNode: focusNode,
                     decoration: InputDecoration(
                       hintText: 'Cari Karyawan',
                       hintStyle: TextStyle(color: Colors.grey),
@@ -283,6 +297,8 @@ class _ListKaryawanState extends State<ListKaryawan> {
                 onTap: () {
                   setState(() {
                     _folded = !_folded;
+                    focusNode.requestFocus();
+                    cariController.clear();
                     cariEmployee = employee;
                   });
                 },
