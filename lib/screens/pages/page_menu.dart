@@ -21,6 +21,7 @@ class MenuPage extends StatefulWidget {
 }
 
 class _MenuPageState extends State<MenuPage> {
+  int? isLogin,showAbsen;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,20 +49,18 @@ class _MenuPageState extends State<MenuPage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
+              children: const [
                 Text("Keluar / Logout"),
                 SizedBox(width: 5),
                 Icon(Icons.logout)
               ],
             ),
-            
           ),
         ),
         body: Container(
           color: Colors.white,
           child: menuGrid(),
-        )
-      );
+        ));
   }
 
   Widget menuGrid() {
@@ -71,24 +70,25 @@ class _MenuPageState extends State<MenuPage> {
         crossAxisSpacing: 30,
         mainAxisSpacing: 5,
         crossAxisCount: 2,
-        children: <Widget> [
+        children: <Widget>[
           Card(
             elevation: 10,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             margin: const EdgeInsets.all(8.0),
             child: InkWell(
-              onTap: (){
+              onTap: () {
                 Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (BuildContext context) => const ProfilePage()));
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) =>
+                            const ProfilePage()));
               },
               splashColor: Colors.blue,
               child: Center(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
-                  children: [
+                  children: const [
                     Icon(Icons.person, size: 80, color: Colors.blue),
                     Text("PROFIL",
                         style: TextStyle(
@@ -100,129 +100,128 @@ class _MenuPageState extends State<MenuPage> {
           ),
           Card(
             elevation: 10,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             margin: const EdgeInsets.all(8.0),
             child: InkWell(
-              onTap: (){
+              onTap: () {
                 Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (BuildContext context) => const LihatAbsen()));
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) => const LihatAbsen()));
               },
               splashColor: Colors.blue,
               child: Center(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(Icons.list,
-                          size: 80, color: Colors.blue),
+                  children: const [
+                    Icon(Icons.list, size: 80, color: Colors.blue),
                     Text("List Absen",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold, color: Colors.blue))
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, color: Colors.blue))
                   ],
                 ),
               ),
             ),
           ),
-          Card(
+          if(showAbsen == 1) Card(
             elevation: 10,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             margin: const EdgeInsets.all(8.0),
             child: InkWell(
-              onTap: (){
+              onTap: () {
                 Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (BuildContext context) => const ListKaryawan()));
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) =>
+                            const ListKaryawan()));
               },
               splashColor: Colors.blue,
               child: Center(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(Icons.people_alt_sharp,
-                          size: 80, color: Colors.blue),
+                  children: const [
+                    Icon(Icons.people_alt_sharp, size: 80, color: Colors.blue),
                     Text("List Karyawan",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold, color: Colors.blue))
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, color: Colors.blue))
                   ],
                 ),
               ),
             ),
           ),
-          Card(
+          if(showAbsen == 1) Card(
             elevation: 10,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             margin: const EdgeInsets.all(8.0),
             child: InkWell(
-              onTap: (){
+              onTap: () {
                 Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (BuildContext context) => const ListDepartemen()));
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) =>
+                            const ListDepartemen()));
               },
               splashColor: Colors.blue,
               child: Center(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(Icons.business_rounded,
-                          size: 80, color: Colors.blue),
+                  children: const [
+                    Icon(Icons.business_rounded, size: 80, color: Colors.blue),
                     Text("List Departemen",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold, color: Colors.blue))
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, color: Colors.blue))
                   ],
                 ),
               ),
             ),
           ),
-          Card(
+          if(showAbsen == 1) Card(
             elevation: 10,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             margin: const EdgeInsets.all(8.0),
             child: InkWell(
-              onTap: (){
+              onTap: () {
                 Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (BuildContext context) => const ListDivisi()));
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) => const ListDivisi()));
               },
               splashColor: Colors.blue,
               child: Center(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
-                  children: [
+                  children: const [
                     Icon(Icons.business_center_rounded,
-                          size: 80, color: Colors.blue),
+                        size: 80, color: Colors.blue),
                     Text("List Divisi",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold, color: Colors.blue))
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, color: Colors.blue))
                   ],
                 ),
               ),
             ),
           ),
-          Card(
+          if(showAbsen == 1) Card(
             elevation: 10,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             margin: const EdgeInsets.all(8.0),
             child: InkWell(
-              onTap: (){},
+              onTap: () {},
               splashColor: Colors.blue,
               child: Center(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
-                  children: [
+                  children: const [
                     Icon(Icons.access_time_filled_rounded,
-                          size: 80, color: Colors.blue),
+                        size: 80, color: Colors.blue),
                     Text("Jam Kerja",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold, color: Colors.blue))
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, color: Colors.blue))
                   ],
                 ),
               ),
@@ -230,26 +229,26 @@ class _MenuPageState extends State<MenuPage> {
           ),
           Card(
             elevation: 10,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             margin: const EdgeInsets.all(8.0),
             child: InkWell(
-              onTap: (){
+              onTap: () {
                 Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (BuildContext context) => const RosterKerja()));
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) =>
+                            const RosterKerja()));
               },
               splashColor: Colors.blue,
               child: Center(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(Icons.date_range,
-                          size: 80, color: Colors.blue),
+                  children: const [
+                    Icon(Icons.date_range, size: 80, color: Colors.blue),
                     Text("Roster Kerja",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold, color: Colors.blue))
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, color: Colors.blue))
                   ],
                 ),
               ),
@@ -257,26 +256,25 @@ class _MenuPageState extends State<MenuPage> {
           ),
           Card(
             elevation: 10,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             margin: const EdgeInsets.all(8.0),
             child: InkWell(
-              onTap: (){
+              onTap: () {
                 Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (BuildContext context) => const RosterCuti()));
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) => const RosterCuti()));
               },
               splashColor: Colors.blue,
               child: Center(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(Icons.calendar_month,
-                          size: 80, color: Colors.blue),
+                  children: const [
+                    Icon(Icons.calendar_month, size: 80, color: Colors.blue),
                     Text("Roster Cuti",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold, color: Colors.blue))
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, color: Colors.blue))
                   ],
                 ),
               ),
@@ -284,80 +282,79 @@ class _MenuPageState extends State<MenuPage> {
           ),
           Card(
             elevation: 10,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             margin: const EdgeInsets.all(8.0),
             child: InkWell(
-              onTap: (){
+              onTap: () {
                 Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (BuildContext context) => Buletin()));
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) => Buletin()));
               },
               splashColor: Colors.blue,
               child: Center(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(Icons.newspaper_rounded,
-                          size: 80, color: Colors.blue),
+                  children: const [
+                    Icon(Icons.newspaper_rounded, size: 80, color: Colors.blue),
                     Text("Buletin",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold, color: Colors.blue))
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, color: Colors.blue))
                   ],
                 ),
               ),
             ),
           ),
-          Card(
+          if(showAbsen == 1) Card(
             elevation: 10,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10)),
+                borderRadius: BorderRadius.circular(10)),
             margin: const EdgeInsets.all(8.0),
             child: InkWell(
-              onTap: (){
+              onTap: () {
                 Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (BuildContext context) => const AreaAbp()));
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) => const AreaAbp()));
               },
               splashColor: Colors.blue,
               child: Center(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
-                  children: [
+                  children: const [
                     Icon(Icons.location_on_outlined,
-                          size: 80, color: Colors.blue),
+                        size: 80, color: Colors.blue),
                     Text("Area ABP",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold, color: Colors.blue))
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, color: Colors.blue))
                   ],
                 ),
               ),
             ),
           ),
-          Card(
+          if(showAbsen == 1) Card(
             elevation: 10,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             margin: const EdgeInsets.all(8.0),
             child: InkWell(
-              onTap: (){
+              onTap: () {
                 Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (BuildContext context) => const AdminListAbsen()));
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) =>
+                            const AdminListAbsen()));
               },
               splashColor: Colors.blue,
               child: Center(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(Icons.boy_rounded,
-                          size: 80, color: Colors.blue),
+                  children: const [
+                    Icon(Icons.boy_rounded, size: 80, color: Colors.blue),
                     Text("Admin Absen",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold, color: Colors.blue))
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, color: Colors.blue))
                   ],
                 ),
               ),
@@ -399,6 +396,20 @@ class _MenuPageState extends State<MenuPage> {
       await _pref.clear();
       Navigator.pop(context);
       Navigator.pop(context);
+    }
+  }
+
+  getPref(BuildContext context) async {
+    var sharedPref = await SharedPreferences.getInstance();
+    isLogin = sharedPref.getInt("isLogin");
+    if (isLogin != null) {
+      if (isLogin == 1) {
+        showAbsen = sharedPref.getInt("show_absen");
+      } else {
+        showAbsen = 0;
+      }
+    } else {
+      showAbsen = 0;
     }
   }
 }

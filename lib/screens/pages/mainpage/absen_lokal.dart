@@ -31,6 +31,8 @@ class _AbsenLokalState extends State<AbsenLokal> {
   StreamController<bool> _getLokasi = StreamController.broadcast();
   StreamController<String> _streamClock = StreamController.broadcast();
   Widget loader = const Center(child: CircularProgressIndicator());
+  String? _tanggal;
+  Presensi? jamAbsen, jamAbsenPulang;
 
   Timer? _timer, _timerClock;
   String startClock = "00:00:00";
@@ -39,6 +41,9 @@ class _AbsenLokalState extends State<AbsenLokal> {
   
   @override
   void initState() {
+    DateFormat fmt = DateFormat("dd MMMM yyyy");
+    DateTime now = DateTime.now();
+    _tanggal = fmt.format(now);
     getPref(context);
     super.initState();
   }
@@ -161,15 +166,21 @@ class _AbsenLokalState extends State<AbsenLokal> {
       children: [
         Padding(
           padding: const EdgeInsets.only(bottom: 5),
-          child: Row(
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
-                "$startClock",
-                style: const TextStyle(
-                    color: Color(0xFF8C6A03),
-                    fontWeight: FontWeight.bold,
-                    fontSize: 25.0),
+              roster(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "$startClock",
+                    style: const TextStyle(
+                        color: Color(0xFF8C6A03),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 25.0),
+                  ),
+                ],
               ),
             ],
           ),
@@ -188,7 +199,35 @@ class _AbsenLokalState extends State<AbsenLokal> {
       ],
     );
   }
-
+Widget roster() {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              const Text(
+                "Jadwal",
+                style: TextStyle(color: Colors.black87),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: Text(
+                  "$kode_roster",
+                  style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blueAccent),
+                ),
+              ),
+            ],
+          ),
+          Text("$_tanggal"),
+        ],
+      ),
+    );
+  }
   @override
   void dispose() {
     closeStream();
@@ -400,8 +439,8 @@ class _AbsenLokalState extends State<AbsenLokal> {
       id_roster = "${lastAbsen.idRoster}";
       if (lastAbsen.lastAbsen != null) {
         var absenTerakhir = lastAbsen.lastAbsen;
-        // jamAbsen = lastAbsen.presensiMasuk;
-        // jamAbsenPulang = lastAbsen.presensiPulang;
+        jamAbsen = lastAbsen.presensiMasuk;
+        jamAbsenPulang = lastAbsen.presensiPulang;
         if (absenTerakhir == "Masuk") {
           if (lastAbsen.lastNew == "Pulang") {
             outside = false;
@@ -409,11 +448,11 @@ class _AbsenLokalState extends State<AbsenLokal> {
             _enMasuk = true;
             _enPulang = false;
             _pulang = 0.0;
-            // jamPulang = "${jamAbsenPulang?.jam}";
+            jamPulang = "${jamAbsenPulang?.jam}";
             jamMasuk = "";
           } else {
-            // jamMasuk = "${jamAbsen?.jam}";
-            // jamPulang = "${jamAbsenPulang?.jam}";
+            jamMasuk = "${jamAbsen?.jam}";
+            jamPulang = "${jamAbsenPulang?.jam}";
             outside = false;
             _enMasuk = false;
             _enPulang = true;
@@ -421,8 +460,8 @@ class _AbsenLokalState extends State<AbsenLokal> {
             _pulang = 1.0;
           }
         } else if (absenTerakhir == "Pulang") {
-          // jamMasuk = "${jamAbsen?.jam}";
-          // jamPulang = "${jamAbsenPulang?.jam}";
+          jamMasuk = "${jamAbsen?.jam}";
+          jamPulang = "${jamAbsenPulang?.jam}";
           outside = false;
           _enMasuk = true;
           _enPulang = false;

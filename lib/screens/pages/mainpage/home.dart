@@ -58,8 +58,7 @@ class _HomePageState extends State<HomePageAndroid> {
   bool permanenDitolak = false;
   bool statusLokasi = false;
   Widget loader = const Center(child: CircularProgressIndicator());
-  Presensi? jamAbsen;
-  Presensi? jamAbsenPulang;
+  Presensi? jamAbsen, jamAbsenPulang;
   String? _tanggal;
   JamServer? jam_server;
   @override
@@ -104,17 +103,6 @@ class _HomePageState extends State<HomePageAndroid> {
                   color: Colors.white,
                 )
               : Container(),
-          // IconButton(
-          //   onPressed: () async {
-          //     showDialog(
-          //         context: context,
-          //         builder: (context) {
-          //           return appClose();
-          //         });
-          //   },
-          //   icon: const Icon(Icons.exit_to_app),
-          //   color: Colors.white,
-          // ),
           IconButton(
             onPressed: () async {
               await Navigator.push(
