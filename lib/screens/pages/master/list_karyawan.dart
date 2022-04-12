@@ -106,19 +106,18 @@ class _ListKaryawanState extends State<ListKaryawan> {
                               MaterialPageRoute(
                                   builder: ((context) => FormKaryawan())));
                         },
-                        child: SizedBox(
-                          height: 120,
-                          width: 100,
-                          child: Card(
-                            elevation: 10,
-                            color: Colors.blue,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10)
-                            ),
+                        child: Card(
+                          elevation: 10,
+                          color: Colors.blue,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(20.0),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
+                              children: const [
                                 Icon(
                                   Icons.edit,
                                   color: Colors.white,
@@ -132,7 +131,6 @@ class _ListKaryawanState extends State<ListKaryawan> {
                           ),
                         ),
                       ),
-                      SizedBox(width: 5),
                       GestureDetector(
                         onTap: () {
                           showDialog(
@@ -141,19 +139,18 @@ class _ListKaryawanState extends State<ListKaryawan> {
                                 return dialog();
                               });
                         },
-                        child: SizedBox(
-                          height: 120,
-                          width: 100,
-                          child: Card(
-                            elevation: 10,
-                            color: Colors.red,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10)
-                            ),
+                        child: Card(
+                          elevation: 10,
+                          color: Colors.red,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(20.0),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
+                              children: const [
                                 Icon(Icons.delete, color: Colors.white),
                                 Text("Hapus",
                                     style: TextStyle(

@@ -21,7 +21,13 @@ class MenuPage extends StatefulWidget {
 }
 
 class _MenuPageState extends State<MenuPage> {
-  int? isLogin,showAbsen;
+  int? isLogin, showAbsen;
+  @override
+  void initState() {
+    getPref(context);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -124,109 +130,116 @@ class _MenuPageState extends State<MenuPage> {
               ),
             ),
           ),
-          if(showAbsen == 1) Card(
-            elevation: 10,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            margin: const EdgeInsets.all(8.0),
-            child: InkWell(
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (BuildContext context) =>
-                            const ListKaryawan()));
-              },
-              splashColor: Colors.blue,
-              child: Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: const [
-                    Icon(Icons.people_alt_sharp, size: 80, color: Colors.blue),
-                    Text("List Karyawan",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, color: Colors.blue))
-                  ],
+          if (showAbsen == 1)
+            Card(
+              elevation: 10,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
+              margin: const EdgeInsets.all(8.0),
+              child: InkWell(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              const ListKaryawan()));
+                },
+                splashColor: Colors.blue,
+                child: Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: const [
+                      Icon(Icons.people_alt_sharp,
+                          size: 80, color: Colors.blue),
+                      Text("List Karyawan",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, color: Colors.blue))
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-          if(showAbsen == 1) Card(
-            elevation: 10,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            margin: const EdgeInsets.all(8.0),
-            child: InkWell(
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (BuildContext context) =>
-                            const ListDepartemen()));
-              },
-              splashColor: Colors.blue,
-              child: Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: const [
-                    Icon(Icons.business_rounded, size: 80, color: Colors.blue),
-                    Text("List Departemen",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, color: Colors.blue))
-                  ],
+          if (showAbsen == 1)
+            Card(
+              elevation: 10,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
+              margin: const EdgeInsets.all(8.0),
+              child: InkWell(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              const ListDepartemen()));
+                },
+                splashColor: Colors.blue,
+                child: Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: const [
+                      Icon(Icons.business_rounded,
+                          size: 80, color: Colors.blue),
+                      Text("List Departemen",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, color: Colors.blue))
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-          if(showAbsen == 1) Card(
-            elevation: 10,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            margin: const EdgeInsets.all(8.0),
-            child: InkWell(
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (BuildContext context) => const ListDivisi()));
-              },
-              splashColor: Colors.blue,
-              child: Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: const [
-                    Icon(Icons.business_center_rounded,
-                        size: 80, color: Colors.blue),
-                    Text("List Divisi",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, color: Colors.blue))
-                  ],
+          if (showAbsen == 1)
+            Card(
+              elevation: 10,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
+              margin: const EdgeInsets.all(8.0),
+              child: InkWell(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              const ListDivisi()));
+                },
+                splashColor: Colors.blue,
+                child: Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: const [
+                      Icon(Icons.business_center_rounded,
+                          size: 80, color: Colors.blue),
+                      Text("List Divisi",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, color: Colors.blue))
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-          if(showAbsen == 1) Card(
-            elevation: 10,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            margin: const EdgeInsets.all(8.0),
-            child: InkWell(
-              onTap: () {},
-              splashColor: Colors.blue,
-              child: Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: const [
-                    Icon(Icons.access_time_filled_rounded,
-                        size: 80, color: Colors.blue),
-                    Text("Jam Kerja",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, color: Colors.blue))
-                  ],
+          if (showAbsen == 1)
+            Card(
+              elevation: 10,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
+              margin: const EdgeInsets.all(8.0),
+              child: InkWell(
+                onTap: () {},
+                splashColor: Colors.blue,
+                child: Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: const [
+                      Icon(Icons.access_time_filled_rounded,
+                          size: 80, color: Colors.blue),
+                      Text("Jam Kerja",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, color: Colors.blue))
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
           Card(
             elevation: 10,
             shape:
@@ -306,60 +319,62 @@ class _MenuPageState extends State<MenuPage> {
               ),
             ),
           ),
-          if(showAbsen == 1) Card(
-            elevation: 10,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10)),
-            margin: const EdgeInsets.all(8.0),
-            child: InkWell(
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (BuildContext context) => const AreaAbp()));
-              },
-              splashColor: Colors.blue,
-              child: Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: const [
-                    Icon(Icons.location_on_outlined,
-                        size: 80, color: Colors.blue),
-                    Text("Area ABP",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, color: Colors.blue))
-                  ],
+          if (showAbsen == 1)
+            Card(
+              elevation: 10,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
+              margin: const EdgeInsets.all(8.0),
+              child: InkWell(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (BuildContext context) => const AreaAbp()));
+                },
+                splashColor: Colors.blue,
+                child: Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: const [
+                      Icon(Icons.location_on_outlined,
+                          size: 80, color: Colors.blue),
+                      Text("Area ABP",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, color: Colors.blue))
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-          if(showAbsen == 1) Card(
-            elevation: 10,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            margin: const EdgeInsets.all(8.0),
-            child: InkWell(
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (BuildContext context) =>
-                            const AdminListAbsen()));
-              },
-              splashColor: Colors.blue,
-              child: Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: const [
-                    Icon(Icons.boy_rounded, size: 80, color: Colors.blue),
-                    Text("Admin Absen",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, color: Colors.blue))
-                  ],
+          if (showAbsen == 1)
+            Card(
+              elevation: 10,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
+              margin: const EdgeInsets.all(8.0),
+              child: InkWell(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              const AdminListAbsen()));
+                },
+                splashColor: Colors.blue,
+                child: Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: const [
+                      Icon(Icons.boy_rounded, size: 80, color: Colors.blue),
+                      Text("Admin Absen",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, color: Colors.blue))
+                    ],
+                  ),
                 ),
               ),
-            ),
-          )
+            )
         ],
       ),
     );
@@ -393,7 +408,7 @@ class _MenuPageState extends State<MenuPage> {
     var _pref = await SharedPreferences.getInstance();
     var isLogin = _pref.getInt("isLogin");
     if (isLogin == 1) {
-      await _pref.clear();
+      await _pref.remove("isLogin");
       Navigator.pop(context);
       Navigator.pop(context);
     }
@@ -411,5 +426,8 @@ class _MenuPageState extends State<MenuPage> {
     } else {
       showAbsen = 0;
     }
+    setState(() {
+      
+    });
   }
 }
