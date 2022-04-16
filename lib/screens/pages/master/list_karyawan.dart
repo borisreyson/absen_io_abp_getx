@@ -334,7 +334,7 @@ class _ListKaryawanState extends State<ListKaryawan> {
     }
 
     employee.forEach((e) {
-      if (e.nama_lengkap!.toLowerCase().contains(text.toLowerCase()))
+      if (e.nama_lengkap!.toLowerCase().contains(text.toLowerCase()) || e.nik!.toLowerCase().contains(text.toLowerCase()))
         cariEmployee.add(e);
     });
     setState(() {});

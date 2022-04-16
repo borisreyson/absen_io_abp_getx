@@ -1,5 +1,6 @@
 import 'package:face_id_plus/model/karyawan_model.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class ShowKaryawan extends StatefulWidget {
   DataKaryawan? dataKaryawan;
@@ -39,59 +40,69 @@ class _ShowKaryawanState extends State<ShowKaryawan> {
           style: TextStyle(color: Colors.black),
         ),
       ),
-      body: Container(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
+      body: Stack(
+        children:[ Container(
           child: Center(
             child: SizedBox(
               width: double.infinity,
-              height: 600,
-              child: Card(
-                elevation: 8,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)),
-                child: Column(
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Card(
-                        elevation: 8,
-                        shape: CircleBorder(),
-                        child: Padding(
-                          padding: const EdgeInsets.only(right: 110, left: 110),
-                          child: Container(
-                            width: 130,
-                            height: 130,
-                            child: Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 1, right: 1, bottom: 3, top: 3),
-                                child: (foto != null)
-                                    ? ClipRRect(
-                                        borderRadius: BorderRadius.circular(200),
-                                        child: Image.network(
-                                          foto!,
-                                          fit: BoxFit.fill,
-                                        ),
-                                      )
-                                    : Icon(Icons.person,
-                                        size: 60, color: Colors.grey)),
-                          ),
-                        ),
-                      ),
+              height: 550,
+              child: Padding(
+                padding: const EdgeInsets.all(15),
+                child: Card(
+                  elevation: 8,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 115),
+                    child: Column(
+                      children: <Widget>[
+                        content(),
+                      ],
                     ),
-                    content()
-                  ],
+                  ),
                 ),
               ),
             ),
           ),
         ),
-      ),
+        Align(
+          alignment: Alignment.topCenter,
+          child: Padding(
+            padding: const EdgeInsets.only(top: 20),
+            child: Card(
+              elevation: 18,
+              shape: CircleBorder(),
+              child: Padding(
+                padding: const EdgeInsets.only(right: 110, left: 110),
+                child: Container(
+                  width: 180,
+                  height: 180,
+                  child: Padding(
+                      padding: const EdgeInsets.only(
+                          left: 1, right: 1, bottom: 3, top: 3),
+                      child: (foto != null)
+                          ? ClipRRect(
+                              borderRadius:
+                                  BorderRadius.circular(200),
+                              child: Image.network(
+                                foto!,
+                                fit: BoxFit.fill,
+                              ),
+                            )
+                          : Icon(Icons.person,
+                              size: 60, color: Colors.grey)),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ]),
     );
   }
 
   Widget content() {
     var _data = widget.dataKaryawan;
+    var seksi = _data!.sect;
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -102,7 +113,7 @@ class _ShowKaryawanState extends State<ShowKaryawan> {
           children: [
             Text("Nama Lengkap",
                 style: TextStyle(fontSize: 12, color: Colors.black)),
-            Text("${_data!.nama_lengkap}",
+            Text("${_data.nama_lengkap}",
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
@@ -181,20 +192,6 @@ class _ShowKaryawanState extends State<ShowKaryawan> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text("Tanggal Masuk",
-                style: TextStyle(fontSize: 12, color: Colors.black)),
-            Text("${_data.tglEntry}",
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                    color: Colors.black))
-          ],
-        ),
-        SizedBox(height: 10),
-        Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
             Text("Dept", style: TextStyle(fontSize: 12, color: Colors.black)),
             Text("${_data.dept}",
                 style: TextStyle(
@@ -209,11 +206,17 @@ class _ShowKaryawanState extends State<ShowKaryawan> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text("Sect", style: TextStyle(fontSize: 12, color: Colors.black)),
-            Text("${_data.sect}",
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                    color: Colors.black))
+            (seksi == null)
+                ? Text(seksi ?? "-",
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                        color: Colors.black))
+                : Text(seksi,
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                        color: Colors.black))
           ],
         ),
         SizedBox(height: 10),
