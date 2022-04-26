@@ -14,7 +14,6 @@ class LihatAbsen extends StatefulWidget {
   @override
   _LihatAbsenState createState() => _LihatAbsenState();
 }
-
 class _LihatAbsenState extends State<LihatAbsen> {
   Widget loader = const Center(child: CircularProgressIndicator());
   int _selectedNavbar = 0;

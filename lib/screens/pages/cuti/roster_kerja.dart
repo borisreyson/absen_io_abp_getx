@@ -12,7 +12,6 @@ class RosterKerja extends StatefulWidget {
 }
 
 class _RosterKerjaState extends State<RosterKerja> {
-  List<Roster> rosterKerja = <Roster>[];
   ApiRoster? _roster;
   List<Roster>? infoRoster;
 
@@ -141,7 +140,6 @@ class _RosterKerjaState extends State<RosterKerja> {
       }
     }).catchError((onError) {
       print(onError.toString());
-
       ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text("Error Jaringan ${onError.toString()}")));
     });
