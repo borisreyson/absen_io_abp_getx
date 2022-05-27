@@ -46,7 +46,6 @@ dependencies:
   firebase_core: ^1.10.6
   camera: ^0.9.4+5
   path_provider: ^2.0.8
-  google_ml_kit: ^0.7.3
   image_picker: ^0.8.4+4
   flutter_datetime_picker:
     git: https://github.com/Realank/flutter_datetime_picker.git
@@ -75,7 +74,7 @@ dev_dependencies:
 flutter_icons:
   android: true
   ios: true
-  image_path: "assets/icon.png"
+  image_path: "assets/ic_abp.png"
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
   # activated in the `analysis_options.yaml` file located at the root of your
