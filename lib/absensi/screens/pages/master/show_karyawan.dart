@@ -77,20 +77,17 @@ class _ShowKaryawanState extends State<ShowKaryawan> {
                 child: Container(
                   width: 180,
                   height: 180,
-                  child: Padding(
-                      padding: const EdgeInsets.only(
-                          bottom: 6, top: 6),
-                      child: (foto != null)
-                          ? ClipRRect(
-                              borderRadius:
-                                  BorderRadius.circular(200),
-                              child: Image.network(
-                                foto!,
-                                fit: BoxFit.fill,
-                              ),
-                            )
-                          : Icon(Icons.person,
-                              size: 60, color: Colors.grey)),
+                  child: (foto != null)
+                      ? ClipRRect(
+                          borderRadius:
+                              BorderRadius.circular(200),
+                          child: Image.network(
+                            foto!,
+                            fit: BoxFit.fill,
+                          ),
+                        )
+                      : Icon(Icons.person,
+                          size: 60, color: Colors.grey),
                 ),
               ),
             ),

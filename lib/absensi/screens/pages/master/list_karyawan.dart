@@ -63,14 +63,14 @@ class _ListKaryawanState extends State<ListKaryawan> {
             style: TextStyle(color: Colors.black),
           ),
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: ((context) => FormKaryawan())));
-          },
-          tooltip: 'Tambah Karyawan',
-          child: Icon(Icons.add),
-        ),
+        // floatingActionButton: FloatingActionButton(
+        //   onPressed: () {
+        //     Navigator.push(context,
+        //         MaterialPageRoute(builder: ((context) => FormKaryawan())));
+        //   },
+        //   tooltip: 'Tambah Karyawan',
+        //   child: Icon(Icons.add),
+        // ),
         body: Column(
           children: <Widget>[
             Expanded(

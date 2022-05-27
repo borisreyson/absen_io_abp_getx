@@ -64,8 +64,21 @@ class _MenuPageState extends State<MenuPage> {
         ),
         body: Container(
           color: Colors.white,
-          child: menuGrid(),
+          child: Column(
+            children: [
+              logo(),
+              Expanded(child: menuGrid()),
+            ],
+          ),
         ));
+  }
+
+  Widget logo(){
+    return Container(
+      width: 150,
+      height: 150,
+      child: Image.asset("assets/images/abp_60x60.png"),
+    );  
   }
 
   Widget menuGrid() {
@@ -273,10 +286,37 @@ class _MenuPageState extends State<MenuPage> {
             margin: const EdgeInsets.all(8.0),
             child: InkWell(
               onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (BuildContext context) => const RosterCuti()));
+                showDialog(
+                  context: context,
+                  builder: (context){
+                    return Dialog(
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                      elevation: 16,
+                      child: Container(
+                        height: 230,
+                        width: 400,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(left: 20),
+                              child: Image.asset("assets/images/dev.png", height: 100, width: 100),
+                            ),
+                            SizedBox(height: 20),
+                            Text("Fitur Belum Tersedia",style: TextStyle(fontWeight: FontWeight.bold),),
+                            SizedBox(height: 20,),
+                            Text("Maaf, fitur sedang dalam tahap pengembangan")
+                          ],
+                        ),
+                      ),
+                    );
+                  }
+                );
+                // Navigator.push(
+                //     context,
+                //     MaterialPageRoute(
+                //         builder: (BuildContext context) => const RosterCuti()));
               },
               splashColor: Colors.blue,
               child: Center(
