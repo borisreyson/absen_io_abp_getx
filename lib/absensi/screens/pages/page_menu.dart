@@ -3,7 +3,6 @@ import 'package:face_id_plus/absensi/screens/pages/absensi/admin_absen.dart';
 import 'package:face_id_plus/absensi/screens/pages/absensi/lihat_absensi.dart';
 import 'package:face_id_plus/absensi/screens/pages/area.dart';
 import 'package:face_id_plus/absensi/screens/pages/buletin/buletin.dart';
-import 'package:face_id_plus/absensi/screens/pages/cuti/roster_cuti.dart';
 import 'package:face_id_plus/absensi/screens/pages/cuti/roster_kerja.dart';
 import 'package:face_id_plus/absensi/screens/pages/master/list_departemen.dart';
 import 'package:face_id_plus/absensi/screens/pages/master/list_divisi.dart';

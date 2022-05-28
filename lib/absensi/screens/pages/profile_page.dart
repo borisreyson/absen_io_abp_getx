@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:ui';
+
 import 'package:face_id_plus/absensi/model/face_login_model.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -14,7 +15,7 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   int? isLogin = 0;
-  late String nama;
+  late String nama; 
   late String nik;
   late int _showAbsen;
   XFile? _foto;
@@ -50,25 +51,26 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: const Color(0xffffffff),
-          elevation: 0,
-          leading: InkWell(
-            splashColor: const Color(0xff000000),
-            child: const Icon(
-              Icons.arrow_back_ios_new,
-              color: Color(0xff000000),
-            ),
-            onTap: () {
-              Navigator.maybePop(context);
-            },
+      appBar: AppBar(
+        backgroundColor: const Color(0xffffffff),
+        elevation: 0,
+        leading: InkWell(
+          splashColor: const Color(0xff000000),
+          child: const Icon(
+            Icons.arrow_back_ios_new,
+            color: Color(0xff000000),
           ),
-          title: const Text(
-            "Profile",
-            style: TextStyle(color: Colors.black),
-          ),
+          onTap: () {
+            Navigator.maybePop(context);
+          },
         ),
-        body: _topContent());
+        title: const Text(
+          "Profile",
+          style: TextStyle(color: Colors.black),
+        ),
+      ),
+      body: _topContent()
+    );
   }
 
   Widget _topContent() {
@@ -100,20 +102,23 @@ class _ProfilePageState extends State<ProfilePage> {
                                 children: [
                                   ListTile(
                                     leading: Icon(Icons.person),
-                                    title: Text("${fUsers.nama}",
+                                    title: Text(
+                                      "${fUsers.nama}",
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold)),
                                   ),
                                   ListTile(
                                     leading: Icon(Icons.format_list_numbered),
-                                    title: Text("${fUsers.nik}",
+                                    title: Text(
+                                      "${fUsers.nik}",
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold)),
                                   ),
                                   ListTile(
                                     leading:
                                         Icon(Icons.business_center_rounded),
-                                    title: Text("${fUsers.devisi}",
+                                    title: Text(
+                                      "${fUsers.devisi}",
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold)),
                                   ),

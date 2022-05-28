@@ -103,6 +103,18 @@ flutter:
       - assets/images/abp_60x60.png
       - assets/images/abp_maps.png
       - assets/images/abp_ic.png
+      - assets/images/sarana.png
+      - assets/images/sarana_add.png
+      - assets/images/ob.png
+      - assets/images/crushing.png
+      - assets/images/hauling.png
+      - assets/images/product_stock.png
+      - assets/images/stock.png
+      - assets/images/total_rkb.png
+      - assets/images/appr_rkb.png
+      - assets/images/cancel_rkb.png
+      - assets/images/close_rkb.png
+      - assets/images/waiting_rkb.png
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 
