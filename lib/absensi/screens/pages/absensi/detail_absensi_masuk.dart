@@ -1,13 +1,10 @@
-import 'package:face_id_plus/absensi/model/face_login_model.dart';
 import 'package:face_id_plus/absensi/model/last_absen.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class DetailMasuk extends StatefulWidget {
-  Presensi? absensi;
-  DetailMasuk({Key? key, this.absensi}) : super(key: key);
+  final Presensi? absensi;
+  const DetailMasuk({Key? key, this.absensi}) : super(key: key);
 
   @override
   State<DetailMasuk> createState() => _DetailMasukState();

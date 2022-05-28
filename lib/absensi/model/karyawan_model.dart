@@ -1,6 +1,5 @@
-import 'dart:convert';
-import 'package:flutter/foundation.dart';
-import 'package:http/http.dart' as http;
+
+// ignore_for_file: non_constant_identifier_names
 
 class ApiKaryawan {
   List <DataKaryawan>? karyawan;

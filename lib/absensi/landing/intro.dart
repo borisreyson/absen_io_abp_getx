@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:face_id_plus/absensi/screens/permission/lokasi.dart';
+import 'package:face_id_plus/abp_energy/service/lokasi.dart';
 import 'package:face_id_plus/absensi/landing/splash.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';

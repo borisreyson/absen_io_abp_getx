@@ -1,4 +1,6 @@
+import 'package:face_id_plus/absensi/api/provider.dart';
 import 'package:face_id_plus/absensi/model/roster_kerja_model.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
@@ -13,10 +15,12 @@ class RosterKerja extends StatefulWidget {
 
 class _RosterKerjaState extends State<RosterKerja> {
   ApiRoster? _roster;
+  late AbsenProvider _provider;
   List<Roster>? infoRoster;
 
   @override
   void initState() {
+    _provider = AbsenProvider();
     super.initState();
     initializeDateFormatting();
   }
@@ -46,21 +50,22 @@ class _RosterKerjaState extends State<RosterKerja> {
           future: loadRoster(),
           builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
             return Container(
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   gradient: LinearGradient(
                       colors: [
                         Color.fromARGB(255, 253, 253, 253),
                         Color.fromARGB(255, 255, 226, 65),
                       ],
-                      begin: const FractionalOffset(0.0, 0.0),
-                      end: const FractionalOffset(1.0, 0.0),
+                      begin: FractionalOffset(0.0, 0.0),
+                      end: FractionalOffset(1.0, 0.0),
                       stops: [0.0, 1.0],
                       tileMode: TileMode.clamp),
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: GridView(
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
                         childAspectRatio: 2 / 1.1,
                         crossAxisSpacing: 8,
                         mainAxisSpacing: 8,
@@ -73,7 +78,7 @@ class _RosterKerjaState extends State<RosterKerja> {
                                 padding: const EdgeInsets.only(top: 250),
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
+                                  children: const [
                                     CircularProgressIndicator(),
                                   ],
                                 ),
@@ -96,7 +101,7 @@ class _RosterKerjaState extends State<RosterKerja> {
       elevation: 20,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       color: (tanggal == thisDay)
-          ? Color.fromARGB(255, 49, 255, 56)
+          ? const Color.fromARGB(255, 49, 255, 56)
           : Color(int.parse(color)),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -126,20 +131,22 @@ class _RosterKerjaState extends State<RosterKerja> {
     var pref = await SharedPreferences.getInstance();
     var nik = pref.getString("nik");
     var bulan = dt.month.toString().padLeft(2, '0');
-    var load = ApiRoster.getRoster(nik!, bulan, "${dt.year}");
+    var load = _provider.getRoster(nik!, bulan, "${dt.year}");
     await load.then((value) {
       _roster = value;
       if (_roster != null) {
         var info = _roster?.roster;
         if (info != null) {
-          infoRoster = info as List<Roster>?;
+          infoRoster = info;
         } else {
           ScaffoldMessenger.of(context)
               .showSnackBar(const SnackBar(content: Text("Data Tidak Ada")));
         }
       }
     }).catchError((onError) {
-      print(onError.toString());
+      if (kDebugMode) {
+        print(onError.toString());
+      }
       ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text("Error Jaringan ${onError.toString()}")));
     });

@@ -36,7 +36,7 @@ class _ListDivisiState extends State<ListDivisi> {
           context,
           MaterialPageRoute(
             builder: (BuildContext context) => const AddDivisi()));
-      }, child: Icon(Icons.add),
+      }, child: const Icon(Icons.add),
     ),
 
     body: ListView(
@@ -53,22 +53,22 @@ class _ListDivisiState extends State<ListDivisi> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text("ID Divisi"),
+                      const Text("ID Divisi"),
                       ElevatedButton(
                         onPressed: (){
 
-                        }, child: Text("Ubah")),
+                        }, child: const Text("Ubah")),
                     ],
                   ),
 
                    Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text("Nama Divisi"),
+                      const Text("Nama Divisi"),
                       ElevatedButton(
                         onPressed: (){
 
-                        }, child: Text("Hapus")),
+                        }, child: const Text("Hapus")),
                     ],
                   ),
                 ],

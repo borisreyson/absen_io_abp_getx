@@ -1,5 +1,3 @@
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 class LoginValidate {
   bool? success = false;
@@ -12,14 +10,6 @@ class LoginValidate {
         user: (object['user'] != null)
             ? PostLogin.fromJson(object['user'])
             : null);
-  }
-  static Future<LoginValidate?> loginToApi(
-      String username, String password) async {
-    String apiUrl = "https://lp.abpjobsite.com/api/login";
-    var apiResult = await http.post(Uri.parse(apiUrl),
-        body: {"username": username, "password": password});
-    var jsonObject = json.decode(apiResult.body);
-    return LoginValidate.fromJson(jsonObject);
   }
 }
 

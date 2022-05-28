@@ -1,18 +1,16 @@
 import 'dart:async';
 
+import 'package:face_id_plus/abp_energy/utils/constants.dart';
+import 'package:face_id_plus/absensi/screens/auth/login.dart';
+import 'package:face_id_plus/absensi/screens/pages/mainpage/absen_lokal.dart';
+import 'package:face_id_plus/absensi/screens/pages/mainpage/home.dart';
+import 'package:face_id_plus/absensi/services/notification.dart';
+import 'package:face_id_plus/absensi/utils/utils.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:network_info_plus/network_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:io';
-
-import '../screens/auth/login.dart';
-import '../screens/pages/mainpage/absen_lokal.dart';
-import '../screens/pages/mainpage/home.dart';
-import '../services/notification.dart';
-import '../utils/utils.dart';
-
-int isLogin = 0;
 
 class Splash extends StatefulWidget {
   const Splash({Key? key}) : super(key: key);
@@ -21,15 +19,14 @@ class Splash extends StatefulWidget {
 }
 
 class _SplashState extends State<Splash> {
-  final NetworkInfo _networkInfo = NetworkInfo();
-  StreamController<bool> _pingServer = StreamController.broadcast();
-  StreamController<bool> _pingLokal = StreamController.broadcast();
-  StreamController<bool> _pingServerOnline = StreamController.broadcast();
+  final StreamController<bool> _pingServer = StreamController.broadcast();
+  final StreamController<bool> _pingLokal = StreamController.broadcast();
+  final StreamController<bool> _pingServerOnline = StreamController.broadcast();
   bool isOnline = false;
   bool lokalOnline = false;
   bool serverOnline = false;
   Timer? _timer;
-  Duration _duration = Duration(seconds: 5);
+  final Duration _duration = const Duration(seconds: 5);
   String? wifiBSSID;
   int isLogin = 0;
   @override
@@ -41,16 +38,6 @@ class _SplashState extends State<Splash> {
     super.initState();
   }
 
-  _initNetworkInfo() async {
-    try {} on PlatformException catch (e) {
-      if (Platform.isIOS) {
-        wifiBSSID = await _networkInfo.getWifiBSSID();
-      } else {
-        wifiBSSID = await _networkInfo.getWifiBSSID();
-      }
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return _main();
@@ -58,108 +45,127 @@ class _SplashState extends State<Splash> {
 
   Widget _main() {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Opacity(
-          opacity: 1.0,
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            height: MediaQuery.of(context).size.height,
-            decoration: BoxDecoration(
-                borderRadius: const BorderRadius.all(Radius.circular(0)),
-                boxShadow: <BoxShadow>[
-                  BoxShadow(
-                      color: Colors.grey.shade200,
-                      offset: const Offset(2, 4),
-                      blurRadius: 5,
-                      spreadRadius: 2)
-                ],
-                gradient: const LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [Color(0xffffffff), Color(0xffA6BF4B)])),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                _logo(),
-                const SizedBox(
-                  height: 30,
-                ),
-                _title(),
-                SizedBox(
-                  height: 40,
-                ),
-                (isOnline)
-                    ? (isLogin == 1 && isLogin != null)
-                        ? (serverOnline)
-                            ? _lanjutOnline()
-                            : offlineCheck()
-                        : Container()
-                    : offlineCheck(),
-                (isOnline)
-                    ? (isLogin == 0 && isLogin != null)
-                        ? (serverOnline)
-                            ? _submitButton()
-                            : offlineCheck()
-                        : Container()
-                    : serverIsOffline(),
-                const SizedBox(
-                  height: 20,
-                ),
-                // _signUpButton(),
-                const SizedBox(
-                  height: 20,
-                ),
-                Card(
-                  elevation: 10,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: (!lokalOnline)
-                        ? (serverOnline)
-                            ? Text(
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            child: Opacity(
+              opacity: 1.0,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                height: MediaQuery.of(context).size.height,
+                decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.all(Radius.circular(0)),
+                    boxShadow: <BoxShadow>[
+                      BoxShadow(
+                          color: Colors.grey.shade200,
+                          offset: const Offset(2, 4),
+                          blurRadius: 5,
+                          spreadRadius: 2)
+                    ],
+                    gradient: const LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [Color(0xffffffff), Color(0xffA6BF4B)])),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    _logo(),
+                    const SizedBox(
+                      height: 30,
+                    ),
+                    _title(),
+                    const SizedBox(
+                      height: 40,
+                    ),
+                    (isOnline)
+                        ? (isLogin == 1)
+                            ? (serverOnline)
+                                ? _lanjutOnline()
+                                : offlineCheck()
+                            : Container()
+                        : offlineCheck(),
+                    (isOnline)
+                        ? (isLogin == 0)
+                            ? (serverOnline)
+                                ? _submitButton()
+                                : offlineCheck()
+                            : Container()
+                        : serverIsOffline(),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Card(
+                      elevation: 10,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: (!lokalOnline)
+                            ? (serverOnline)
+                                ? const Text(
+                                    "Server : Online",
+                                    style: TextStyle(
+                                        color: Colors.green,
+                                        fontWeight: FontWeight.bold),
+                                  )
+                                : const Text(
+                                    "Server : Offline",
+                                    style: TextStyle(
+                                        color: Colors.red,
+                                        fontWeight: FontWeight.bold),
+                                  )
+                            : const Text(
                                 "Server : Online",
                                 style: TextStyle(
                                     color: Colors.green,
                                     fontWeight: FontWeight.bold),
+                              ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    (!lokalOnline)
+                        ? (!serverOnline)
+                            ? const Center(
+                                child: CircularProgressIndicator(),
                               )
-                            : Text(
-                                "Server : Offline",
-                                style: TextStyle(
-                                    color: Colors.red,
-                                    fontWeight: FontWeight.bold),
-                              )
-                        : Text(
-                            "Server : Online",
-                            style: TextStyle(
-                                color: Colors.green,
-                                fontWeight: FontWeight.bold),
-                          ),
-                  ),
+                            : const Center()
+                        : const Center(),
+                    if (Platform.isAndroid) tombolKeluar(),
+                    // testNotif()
+                    // _label()
+                  ],
                 ),
-                SizedBox(
-                  height: 10,
-                ),
-                (!lokalOnline)
-                    ? (!serverOnline)
-                        ? Center(
-                            child: CircularProgressIndicator(),
-                          )
-                        : Center()
-                    : Center(),
-                if(Platform.isAndroid) tombolKeluar(),
-                // testNotif()
-                // _label()
-              ],
+              ),
             ),
           ),
-        ),
+          Align(
+            alignment: Alignment.topLeft,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 40, left: 20),
+              child: InkWell(
+                onTap: () {
+                  Navigator.pop(context, false);
+                },
+                child: const Icon(
+                  Icons.arrow_back_ios_new_rounded,
+                  size: 35,
+                  color: Color(0xFF003F63),
+                ),
+              ),
+            ),
+          )
+        ],
       ),
     );
   }
 
   Widget offlineCheck() {
     return (lokalOnline)
-        ? (isLogin == 1 && isLogin != null)
+        ? (isLogin == 1)
             ? _lanjutOffline()
             : _submitButton()
         : Container();
@@ -181,7 +187,7 @@ class _SplashState extends State<Splash> {
   }
 
   Widget serverIsOffline() {
-    var style = TextStyle(color: Colors.red);
+    var style = const TextStyle(color: Colors.red);
     return Card(
         elevation: 15,
         child: Padding(
@@ -205,12 +211,7 @@ class _SplashState extends State<Splash> {
     return InkWell(
       onTap: () {
         closePing();
-        // Navigator.push(
-        //         context,
-        //         MaterialPageRoute(
-        //             builder: (BuildContext context) => const AbsenLokal()))
-        //     .then((value) => reloadCekServer());
-            Navigator.push(
+        Navigator.push(
                 context,
                 MaterialPageRoute(
                     builder: (BuildContext context) => const HomePageAndroid()))
@@ -236,8 +237,8 @@ class _SplashState extends State<Splash> {
     return InkWell(
       onTap: () async {
         closePing();
-        await Navigator.push(
-                context, MaterialPageRoute(builder: (context) => AbsenLokal()))
+        await Navigator.push(context,
+                MaterialPageRoute(builder: (context) => const AbsenLokal()))
             .then((value) => reloadCekServer());
       },
       child: Container(
@@ -259,10 +260,26 @@ class _SplashState extends State<Splash> {
   Widget _submitButton() {
     return InkWell(
       hoverColor: Colors.white60,
-      onTap: () {
+      onTap: () async {
         closePing();
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => const FormLogin()));
+        bool wait = await Constants().goTo(() => const FormLogin(), context);
+        if (wait) {
+          setState(() {
+            lokalOnline = false;
+          });
+          reloadCekServer();
+          if (kDebugMode) {
+            print("State $wait");
+          }
+        } else {
+          setState(() {
+            lokalOnline = false;
+          });
+          reloadCekServer();
+          if (kDebugMode) {
+            print("State $wait");
+          }
+        }
       },
       child: Container(
         width: MediaQuery.of(context).size.width,
@@ -288,9 +305,9 @@ class _SplashState extends State<Splash> {
 
   Widget _title() {
     return Padding(
-      padding: EdgeInsets.only(left: 30, right: 30),
+      padding: const EdgeInsets.only(left: 30, right: 30),
       child: Column(
-        children: [
+        children: const [
           Text(
             "ABSENSI IO",
             style: TextStyle(
@@ -315,13 +332,7 @@ class _SplashState extends State<Splash> {
   getPref(BuildContext context) async {
     var sharedPref = await SharedPreferences.getInstance();
     if (sharedPref.getInt("isLogin") != null) {
-      isLogin = await sharedPref.getInt("isLogin")!;
-      // if (isLogin == 1) {
-      // Navigator.pushReplacement(
-      //     context,
-      //     MaterialPageRoute(
-      //         builder: (BuildContext context) => const HomePage()));
-      // }
+      isLogin = sharedPref.getInt("isLogin")!;
     } else {
       isLogin = 0;
     }
@@ -332,7 +343,9 @@ class _SplashState extends State<Splash> {
       if (mounted) {
         setState(() {
           isOnline = isConnected;
-          print("isConnected ${isConnected}");
+          if (kDebugMode) {
+            print("isConnected $isConnected");
+          }
         });
       }
     });
@@ -340,7 +353,9 @@ class _SplashState extends State<Splash> {
       if (mounted) {
         setState(() {
           lokalOnline = localConnected;
-          print("lokalOnline ${lokalOnline}");
+          if (kDebugMode) {
+            print("lokalOnline $lokalOnline");
+          }
         });
       }
     });
@@ -348,7 +363,9 @@ class _SplashState extends State<Splash> {
       if (mounted) {
         setState(() {
           serverOnline = onlineServer;
-          print("onlineServer ${onlineServer}");
+          if (kDebugMode) {
+            print("onlineServer $onlineServer");
+          }
         });
       }
     });
@@ -370,8 +387,8 @@ class _SplashState extends State<Splash> {
   }
 
   reloadCekServer() {
-    getPref(context);
     closePing();
+    getPref(context);
     timerAddnew();
   }
 
@@ -380,8 +397,6 @@ class _SplashState extends State<Splash> {
     serverOnline = false;
     lokalOnline = false;
     _timer?.cancel();
-
-    setState(() {});
   }
 
   Widget tombolKeluar() {
@@ -389,7 +404,7 @@ class _SplashState extends State<Splash> {
         onPressed: () {
           SystemNavigator.pop();
         },
-        child: Text("Keluar"));
+        child: const Text("Keluar"));
   }
 
   Widget testNotif() {
@@ -397,7 +412,7 @@ class _SplashState extends State<Splash> {
         onPressed: () async {
           NotificationAPI.showNotification(title: "BORIS", body: "REYSON");
         },
-        child: Text("Test Notifikasi"));
+        child: const Text("Test Notifikasi"));
   }
 
   @override

@@ -1,6 +1,4 @@
-import 'dart:convert';
 import 'package:face_id_plus/absensi/model/last_absen.dart';
-import 'package:http/http.dart' as http;
 
 class AbsenList {
   ListAbsen? listAbsen;
@@ -8,14 +6,7 @@ class AbsenList {
   factory AbsenList.fromJson(Map<String, dynamic> object) {
     return AbsenList(listAbsen: ListAbsen.fromJason(object['listAbsen']));
   }
-  static Future<AbsenList> apiAbsenTigaHari(String _nik, String _status) async {
-    String apiUrl =
-        "https://abpjobsite.com/api/android/get/list/absen?nik=$_nik&status=$_status";
-    var apiResult = await http.get(Uri.parse(apiUrl));
-    var jsonObject = json.decode(apiResult.body);
-    var absenList = AbsenList.fromJson(jsonObject);
-    return absenList;
-  }
+  
 }
 
 class ListAbsen {

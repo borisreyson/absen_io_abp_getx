@@ -1,4 +1,4 @@
-import 'package:face_id_plus/absensi/screens/permission/izin_kamera.dart';
+import 'package:face_id_plus/abp_energy/service/izin_kamera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:permission_handler/permission_handler.dart' as handler;
@@ -23,9 +23,9 @@ class _IzinNotifikasiState extends State<IzinNotifikasi> {
       body: Container(
         decoration: const BoxDecoration(
             gradient: LinearGradient(colors: [
-              Color(0xFFF2D0A7),
-              Color(0xFF5D768C),
-            ], begin: Alignment.topCenter, end: Alignment.bottomCenter)),
+          Color(0xFFF2D0A7),
+          Color(0xFF5D768C),
+        ], begin: Alignment.topCenter, end: Alignment.bottomCenter)),
         child: Center(
           child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -41,8 +41,11 @@ class _IzinNotifikasiState extends State<IzinNotifikasi> {
                         color: Color.fromARGB(255, 75, 115, 2)),
                   ),
                 ),
-                Container(
-                    width: 100, height: 100, child: const Icon(Icons.notifications,size:100 ,color: Color(0xFFBF6734))),
+                const SizedBox(
+                    width: 100,
+                    height: 100,
+                    child: Icon(Icons.notifications,
+                        size: 100, color: Color(0xFFBF6734))),
                 const SizedBox(
                   height: 20,
                 ),
@@ -65,7 +68,7 @@ class _IzinNotifikasiState extends State<IzinNotifikasi> {
                           return ElevatedButton.icon(
                               label: const Text("Meminta Izin Notifikasi"),
                               style: ElevatedButton.styleFrom(
-                                  primary: Color.fromARGB(255, 11, 189, 100)),
+                                  primary: const Color.fromARGB(255, 11, 189, 100)),
                               onPressed: () {
                                 getPermission();
                               },
@@ -74,13 +77,13 @@ class _IzinNotifikasiState extends State<IzinNotifikasi> {
                           return ElevatedButton.icon(
                               label: const Text("Selanjutnya"),
                               style: ElevatedButton.styleFrom(
-                                  primary: Color.fromARGB(255, 11, 189, 100)),
+                                  primary: const Color.fromARGB(255, 11, 189, 100)),
                               onPressed: () {
                                 Navigator.pushReplacement(
                                     context,
                                     MaterialPageRoute(
                                         builder: (BuildContext context) =>
-                                        const IzinKamera()));
+                                            const IzinKamera()));
                               },
                               icon: const Icon(Icons.chevron_right));
                         }
@@ -101,7 +104,7 @@ class _IzinNotifikasiState extends State<IzinNotifikasi> {
                           context,
                           MaterialPageRoute(
                               builder: (BuildContext context) =>
-                              const IzinKamera()));
+                                  const IzinKamera()));
                     },
                     icon: const Icon(
                       Icons.chevron_right,
@@ -115,14 +118,15 @@ class _IzinNotifikasiState extends State<IzinNotifikasi> {
 
   getPermission() async {
     var flutterNotification = FlutterLocalNotificationsPlugin();
-    await flutterNotification.resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>()
-        ?.requestPermissions(alert: true,badge: true,sound: true);
-        setState(() {
-          
-        });
+    await flutterNotification
+        .resolvePlatformSpecificImplementation<
+            IOSFlutterLocalNotificationsPlugin>()
+        ?.requestPermissions(alert: true, badge: true, sound: true);
+    setState(() {});
   }
+
   Future<bool> statusIzin() async {
-    var lokasi = await handler.Permission.notification;
+    var lokasi = handler.Permission.notification;
     var status = await lokasi.status;
     if (status == handler.PermissionStatus.granted) {
       izinStatus = true;
@@ -134,8 +138,4 @@ class _IzinNotifikasiState extends State<IzinNotifikasi> {
     }
     return izinStatus;
   }
-
-
-
-
 }

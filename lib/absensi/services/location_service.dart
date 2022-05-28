@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:location/location.dart';
 class LocationService{
   late UserLocation _currentLocation;
@@ -9,21 +10,23 @@ class LocationService{
       var userLocation = await location.getLocation();
       _currentLocation= UserLocation(userLocation.latitude!, userLocation.longitude!);
     } on Exception catch(e){
-      print("Could Not Get Location : ${e.toString()}");
+      if (kDebugMode) {
+        print("Could Not Get Location : ${e.toString()}");
+      }
     }
     return _currentLocation;
   }
-  StreamController<UserLocation> _locationController = StreamController<UserLocation>.broadcast();
+  final StreamController<UserLocation> _locationController = StreamController<UserLocation>.broadcast();
   Stream<UserLocation> get locationStream => _locationController.stream;
   LocationService() {
     location.requestPermission().then((PermissionStatus granted){
-      print("MockLocation ${granted}");
+      if (kDebugMode) {
+        print("MockLocation $granted");
+      }
 
       if(granted==PermissionStatus.granted){
         location.onLocationChanged.listen((locationData) {
-          if(locationData!=null){
-            _locationController.add(UserLocation(locationData.latitude!, locationData.longitude!));
-          }
+          _locationController.add(UserLocation(locationData.latitude!, locationData.longitude!));
         });
       }
     });

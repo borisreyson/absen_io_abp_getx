@@ -1,19 +1,18 @@
+// ignore_for_file: non_constant_identifier_names, duplicate_ignore
+
 import 'dart:io' show Platform;
-import 'dart:ui' as ui;
 import 'dart:async';
+import 'package:face_id_plus/absensi/api/provider.dart';
 import 'package:face_id_plus/absensi/model/last_absen.dart';
 import 'package:face_id_plus/absensi/model/tigahariabsen.dart';
 import 'package:face_id_plus/absensi/screens/pages/absensi/detail_absen_profile.dart';
-import 'package:face_id_plus/absensi/screens/pages/absensi/kamera/masuk.dart';
-import 'package:face_id_plus/absensi/screens/pages/absensi/kamera/pulang.dart';
-import 'package:face_id_plus/absensi/screens/pages/area.dart';
-import 'package:face_id_plus/absensi/screens/pages/page_menu.dart';
+import 'package:face_id_plus/absensi/screens/pages/kamera/masuk.dart';
+import 'package:face_id_plus/absensi/screens/pages/kamera/pulang.dart';
+import 'package:face_id_plus/absensi/screens/pages/maps/area.dart';
+import 'package:face_id_plus/absensi/screens/pages/profile/page_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../ios/masuk_ios.dart';
-import '../ios/pulang_ios.dart';
 
 class AbsenLokal extends StatefulWidget {
   const AbsenLokal({Key? key}) : super(key: key);
@@ -23,15 +22,16 @@ class AbsenLokal extends StatefulWidget {
 }
 
 class _AbsenLokalState extends State<AbsenLokal> {
+  late AbsenProvider _provider;
   bool serviceEnable = false, _enMasuk = false, _enPulang = false;
   bool outside = false;
   bool iosMapLocation = false;
   bool lokasiPalsu = false;
   int? isLogin = 0, showAbsen = 0;
+  // ignore: non_constant_identifier_names
   String? nama, nik, _jam_kerja, kode_roster, jamPulang, jamMasuk, id_roster;
   double? _masuk = 0.0, _pulang = 0.0;
-  StreamController<bool> _getLokasi = StreamController.broadcast();
-  StreamController<String> _streamClock = StreamController.broadcast();
+  final StreamController<String> _streamClock = StreamController.broadcast();
   Widget loader = const Center(child: CircularProgressIndicator());
   String? _tanggal;
   Presensi? jamAbsen, jamAbsenPulang;
@@ -40,9 +40,10 @@ class _AbsenLokalState extends State<AbsenLokal> {
   String startClock = "00:00:00";
   int jamS = 0, menitS = 0, detikS = 0;
   JamServer? jam_server;
-  
+
   @override
   void initState() {
+    _provider = AbsenProvider();
     DateFormat fmt = DateFormat("dd MMMM yyyy");
     DateTime now = DateTime.now();
     _tanggal = fmt.format(now);
@@ -54,7 +55,7 @@ class _AbsenLokalState extends State<AbsenLokal> {
   Widget build(BuildContext context) {
     return (nik != null)
         ? _mainContent(nik!)
-        : Center(
+        : const Center(
             child: CircularProgressIndicator(),
           );
   }
@@ -63,7 +64,7 @@ class _AbsenLokalState extends State<AbsenLokal> {
     return Scaffold(
         appBar: AppBar(
           leading: InkWell(
-            splashColor: const Color(0xfff8f8f8f8),
+            splashColor: const Color(0xfff8f8f8),
             child: const Icon(
               Icons.arrow_back_ios_new,
               color: Color(0xffffffff),
@@ -77,11 +78,11 @@ class _AbsenLokalState extends State<AbsenLokal> {
                 ? IconButton(
                     onPressed: () async {
                       await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (BuildContext context) =>
-                                  const AreaAbp())).then(
-                                  (value) => getPref(context));
+                              context,
+                              MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      const AreaAbp()))
+                          .then((value) => getPref(context));
                     },
                     icon: const Icon(Icons.map_sharp),
                     color: Colors.white,
@@ -176,7 +177,7 @@ class _AbsenLokalState extends State<AbsenLokal> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    "$startClock",
+                    startClock,
                     style: const TextStyle(
                         color: Color(0xFF8C6A03),
                         fontWeight: FontWeight.bold,
@@ -201,7 +202,8 @@ class _AbsenLokalState extends State<AbsenLokal> {
       ],
     );
   }
-Widget roster() {
+
+  Widget roster() {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8.0),
       child: Row(
@@ -230,6 +232,7 @@ Widget roster() {
       ),
     );
   }
+
   @override
   void dispose() {
     closeStream();
@@ -339,7 +342,7 @@ Widget roster() {
 
   Widget _listAbsen(String nik) {
     return Container(
-        margin: EdgeInsets.only(top: 215),
+        margin: const EdgeInsets.only(top: 215),
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height - 200,
         child: FutureBuilder(
@@ -434,66 +437,64 @@ Widget roster() {
   loadLastAbsen(String _nik) async {
     // _diluarAbp = 1.0;
     // outside = false;
-    var lastAbsen = await LastAbsen.apiAbsenTigaHari(_nik);
-    if (lastAbsen != null) {
-      _jam_kerja = lastAbsen.jamKerja;
-      kode_roster = lastAbsen.kodeRoster;
-      id_roster = "${lastAbsen.idRoster}";
-      if (lastAbsen.lastAbsen != null) {
-        var absenTerakhir = lastAbsen.lastAbsen;
-        jamAbsen = lastAbsen.presensiMasuk;
-        jamAbsenPulang = lastAbsen.presensiPulang;
-        if (absenTerakhir == "Masuk") {
-          if (lastAbsen.lastNew == "Pulang") {
-            outside = false;
-            _masuk = 1.0;
-            _enMasuk = true;
-            _enPulang = false;
-            _pulang = 0.0;
-            jamPulang = "${jamAbsenPulang?.jam}";
-            jamMasuk = "";
-          } else {
-            jamMasuk = "${jamAbsen?.jam}";
-            jamPulang = "${jamAbsenPulang?.jam}";
-            outside = false;
-            _enMasuk = false;
-            _enPulang = true;
-            _masuk = 0.0;
-            _pulang = 1.0;
-          }
-        } else if (absenTerakhir == "Pulang") {
+    var lastAbsen = await _provider.apiAbsenTigaHari(_nik);
+    _jam_kerja = lastAbsen.jamKerja;
+    kode_roster = lastAbsen.kodeRoster;
+    id_roster = "${lastAbsen.idRoster}";
+    if (lastAbsen.lastAbsen != null) {
+      var absenTerakhir = lastAbsen.lastAbsen;
+      jamAbsen = lastAbsen.presensiMasuk;
+      jamAbsenPulang = lastAbsen.presensiPulang;
+      if (absenTerakhir == "Masuk") {
+        if (lastAbsen.lastNew == "Pulang") {
+          outside = false;
+          _masuk = 1.0;
+          _enMasuk = true;
+          _enPulang = false;
+          _pulang = 0.0;
+          jamPulang = "${jamAbsenPulang?.jam}";
+          jamMasuk = "";
+        } else {
           jamMasuk = "${jamAbsen?.jam}";
           jamPulang = "${jamAbsenPulang?.jam}";
           outside = false;
-          _enMasuk = true;
-          _enPulang = false;
-          _masuk = 1.0;
-          _pulang = 0.0;
+          _enMasuk = false;
+          _enPulang = true;
+          _masuk = 0.0;
+          _pulang = 1.0;
         }
-      } else {
-        jamMasuk = "";
-        jamPulang = "";
-        _enMasuk = true;
+      } else if (absenTerakhir == "Pulang") {
+        jamMasuk = "${jamAbsen?.jam}";
+        jamPulang = "${jamAbsenPulang?.jam}";
         outside = false;
+        _enMasuk = true;
         _enPulang = false;
         _masuk = 1.0;
         _pulang = 0.0;
       }
-      if (lastAbsen.jamServer != null) {
-        setState(() {
-          jam_server = lastAbsen.jamServer;
-        });
-        jamS = int.parse("${jam_server?.jam}");
-        menitS = int.parse("${jam_server?.menit}");
-        detikS = int.parse("${jam_server?.detik}");
-        // startClock = "${jamS.toString().padLeft(2,"0")}:${menitS.toString().padLeft(2,"0")}:${detikS.toString().padLeft(2,"0")}";
-        streamJam();
-      }
+    } else {
+      jamMasuk = "";
+      jamPulang = "";
+      _enMasuk = true;
+      outside = false;
+      _enPulang = false;
+      _masuk = 1.0;
+      _pulang = 0.0;
+    }
+    if (lastAbsen.jamServer != null) {
+      setState(() {
+        jam_server = lastAbsen.jamServer;
+      });
+      jamS = int.parse("${jam_server?.jam}");
+      menitS = int.parse("${jam_server?.menit}");
+      detikS = int.parse("${jam_server?.detik}");
+      // startClock = "${jamS.toString().padLeft(2,"0")}:${menitS.toString().padLeft(2,"0")}:${detikS.toString().padLeft(2,"0")}";
+      streamJam();
     }
   }
 
   Future<List<AbsenTigaHariModel>> _loadTigaHari(String nik) async {
-    var absensi = await AbsenTigaHariModel.apiAbsenTigaHariOffline(nik);
+    var absensi = await _provider.apiAbsenTigaHariOfflineGet(nik);
     return absensi;
   }
 
@@ -523,19 +524,17 @@ Widget roster() {
     _timerClock?.cancel();
     createJamStream();
     _streamClock.add(doJam());
-    _timerClock = Timer.periodic(Duration(seconds: 1), (timer) {
+    _timerClock = Timer.periodic(const Duration(seconds: 1), (timer) {
       _streamClock.add(doJam());
     });
   }
 
   createJamStream() {
     _streamClock.stream.listen((String jam) {
-      if (jam != null) {
-        if (mounted) {
-          setState(() {
-            startClock = jam;
-          });
-        }
+      if (mounted) {
+        setState(() {
+          startClock = jam;
+        });
       }
     });
   }
@@ -544,6 +543,7 @@ Widget roster() {
     // _timerClock?.cancel();
     _timer?.cancel();
   }
+
   closJam() {
     _timerClock?.cancel();
   }

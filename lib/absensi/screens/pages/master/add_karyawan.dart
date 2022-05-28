@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class FormKaryawan extends StatefulWidget {
   const FormKaryawan({ Key? key }) : super(key: key);
@@ -98,10 +97,10 @@ class _FormKaryawanState extends State<FormKaryawan> {
 
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Container(
+                  child: SizedBox(
                     width: double.infinity,
                     child: DropdownButtonFormField<String>(
-                      value: _departemen, style: TextStyle(color: Colors.black),
+                      value: _departemen, style: const TextStyle(color: Colors.black),
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(10))
@@ -115,7 +114,7 @@ class _FormKaryawanState extends State<FormKaryawan> {
                             child: Text(a),
                           );
                         }).toList(),
-                        hint: Text("--Pilih Departemen--"),
+                        hint: const Text("--Pilih Departemen--"),
                         onChanged: (String? b){
                           setState(() {
                             _departemen = b; 
@@ -127,10 +126,10 @@ class _FormKaryawanState extends State<FormKaryawan> {
 
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Container(
+                  child: SizedBox(
                     width: double.infinity,
                     child: DropdownButtonFormField<String>(
-                      value: _divisi, style: TextStyle(color: Colors.black),
+                      value: _divisi, style: const TextStyle(color: Colors.black),
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(10))
@@ -144,7 +143,7 @@ class _FormKaryawanState extends State<FormKaryawan> {
                             child: Text(a),
                           );
                         }).toList(),
-                        hint: Text("--Pilih Divisi--"),
+                        hint: const Text("--Pilih Divisi--"),
                         onChanged: (String? b){
                           setState(() {
                             _divisi = b; 
@@ -170,10 +169,10 @@ class _FormKaryawanState extends State<FormKaryawan> {
 
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Container(
+                  child: SizedBox(
                     width: double.infinity,
                     child: DropdownButtonFormField<String>(
-                      value: _perusahaan, style: TextStyle(color: Colors.black),
+                      value: _perusahaan, style: const TextStyle(color: Colors.black),
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(10))
@@ -187,7 +186,7 @@ class _FormKaryawanState extends State<FormKaryawan> {
                             child: Text(a),
                           );
                         }).toList(),
-                        hint: Text("--Pilih Perusahaan--"),
+                        hint: const Text("--Pilih Perusahaan--"),
                         onChanged: (String? b){
                           setState(() {
                             _perusahaan = b; 
@@ -211,7 +210,7 @@ class _FormKaryawanState extends State<FormKaryawan> {
                             ),
                             onPressed: (){
               
-                            }, child: Text("Simpan",style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),), 
+                            }, child: const Text("Simpan",style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),), 
                           ),
                         ),
                       ),

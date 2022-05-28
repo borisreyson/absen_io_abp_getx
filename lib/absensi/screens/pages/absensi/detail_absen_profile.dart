@@ -2,6 +2,7 @@ import 'package:face_id_plus/absensi/model/tigahariabsen.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+// ignore: must_be_immutable
 class DetailProfile extends StatefulWidget {
   AbsenTigaHariModel? absenTigaHariModel;
   DetailProfile({Key? key, this.absenTigaHariModel}) : super(key: key);
@@ -81,19 +82,19 @@ class _DetailProfileState extends State<DetailProfile> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(dataAbsen.nik!,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 14)),
                                 Text(fmt.format(tgl),
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 14)),
                                 Text(dataAbsen.jam!,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 14)),
                                 Text(dataAbsen.lupa_absen!,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 14)),
                               ]),
@@ -112,7 +113,7 @@ class _DetailProfileState extends State<DetailProfile> {
                                 color: Colors.green,
                                 child: Center(
                                   child: Text(dataAbsen.status!,
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 16,
                                           color: Colors.white)),
@@ -122,7 +123,7 @@ class _DetailProfileState extends State<DetailProfile> {
                                 color: Colors.red,
                                 child: Center(
                                   child: Text(dataAbsen.status!,
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 16,
                                           color: Colors.white)),

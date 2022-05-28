@@ -1,3 +1,4 @@
+import 'package:face_id_plus/absensi/api/provider.dart';
 import 'package:face_id_plus/absensi/model/last_absen.dart';
 import 'package:face_id_plus/absensi/model/list_absen.dart';
 import 'package:flutter/foundation.dart';
@@ -13,11 +14,19 @@ class LihatAbsen extends StatefulWidget {
   @override
   _LihatAbsenState createState() => _LihatAbsenState();
 }
+
 class _LihatAbsenState extends State<LihatAbsen> {
+  late AbsenProvider _provider;
   Widget loader = const Center(child: CircularProgressIndicator());
   int _selectedNavbar = 0;
   String apiStatus = "Masuk";
   final ScrollController _scrollController = ScrollController();
+  @override
+  void initState() {
+    _provider = AbsenProvider();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -142,16 +151,17 @@ class _LihatAbsenState extends State<LihatAbsen> {
             case ConnectionState.waiting:
               return loader;
             case ConnectionState.done:
-            AbsenList _absensi = snapshot.data;
-            if (_absensi.listAbsen != null) {
-              ListAbsen _presensi = _absensi.listAbsen!;
-              List<Presensi> absensiList = _presensi.data!;
-              return Column(
-                  children: absensiList.map((e) => absensiWidget(e)).toList());
-            }
-            return loader;
+              AbsenList _absensi = snapshot.data;
+              if (_absensi.listAbsen != null) {
+                ListAbsen _presensi = _absensi.listAbsen!;
+                List<Presensi> absensiList = _presensi.data!;
+                return Column(
+                    children:
+                        absensiList.map((e) => absensiWidget(e)).toList());
+              }
+              return loader;
             default:
-            return loader;
+              return loader;
           }
         });
   }
@@ -167,30 +177,33 @@ class _LihatAbsenState extends State<LihatAbsen> {
         shadowColor: Colors.black87,
         color: (_absen.status == "Masuk") ? Colors.green : Colors.red,
         child: InkWell(
-          onTap: (){
-            Navigator.push(context, MaterialPageRoute(builder: ( (context) => DetailMasuk(
-              absensi: _absen,
-            ))));
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: ((context) => DetailMasuk(
+                          absensi: _absen,
+                        ))));
           },
           child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            imageResolve(_absen.gambar!),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                //Text(nama, style: _style),
-                Text("${_absen.status}", style: _style),
-                Text(fmt.format(tgl), style: _style),
-                Text("${_absen.jam}", style: _style),
-                Text("${_absen.nik}", style: _style),
-                Text("${_absen.lupaAbsen}", style: _style),
-              ],
-            )
-          ],
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              imageResolve(_absen.gambar!),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  //Text(nama, style: _style),
+                  Text("${_absen.status}", style: _style),
+                  Text(fmt.format(tgl), style: _style),
+                  Text("${_absen.jam}", style: _style),
+                  Text("${_absen.nik}", style: _style),
+                  Text("${_absen.lupaAbsen}", style: _style),
+                ],
+              )
+            ],
+          ),
         ),
-      ),
       ),
     );
   }
@@ -269,7 +282,7 @@ class _LihatAbsenState extends State<LihatAbsen> {
     var pref = await SharedPreferences.getInstance();
     var nik = pref.getString("nik");
     if (nik == null) {}
-    AbsenList listAbsen = await AbsenList.apiAbsenTigaHari(nik!, status);
+    AbsenList listAbsen = await _provider.apiAbsenTigaHariList(nik!, status);
     return listAbsen;
   }
 }

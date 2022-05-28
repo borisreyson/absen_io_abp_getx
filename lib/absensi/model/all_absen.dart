@@ -1,6 +1,5 @@
 import 'package:face_id_plus/absensi/model/last_absen.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+
 class AllAbsen {
   int? currenPage;
   List<Presensi>? presensi;
@@ -27,7 +26,8 @@ class AllAbsen {
   factory AllAbsen.fromJson(Map<String, dynamic> object) {
     return AllAbsen(
       currenPage: object['current_page'],
-      presensi: (object['data'] as List).map((e) => Presensi.fromJson(e)).toList(),
+      presensi:
+          (object['data'] as List).map((e) => Presensi.fromJson(e)).toList(),
       from: object['from'],
       lastPage: object['last_page'],
       nextPageUrl: object['next_page_url'],
@@ -37,13 +37,5 @@ class AllAbsen {
       to: object['to'],
       total: object['total'],
     );
-  }
-  static Future<AllAbsen> adminAbsenApi(String status,String tgl) async{
-    String apiUrl =
-        "https://abpjobsite.com/absen/list/all?status=$status&tanggal=$tgl";
-    var apiResult = await http.get(Uri.parse(apiUrl));
-    var jsonObject = json.decode(apiResult.body);
-    var absenList = AllAbsen.fromJson(jsonObject);
-    return absenList;
   }
 }

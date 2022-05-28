@@ -1,5 +1,3 @@
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 class MapAreModel {
   int? idLok;
@@ -27,10 +25,4 @@ class MapAreModel {
     );
   }
 
-  static Future<List<MapAreModel>> mapAreaApi(String _company) async {
-    String apiUrl = "https://abpjobsite.com/absen/map/area?company="+_company;
-    var apiResult = await http.get(Uri.parse(apiUrl));
-    var jsonObject = json.decode(apiResult.body);
-    return (jsonObject['mapArea'] as List).map((e) => MapAreModel.fromJason(e)).toList();
-  }
 }

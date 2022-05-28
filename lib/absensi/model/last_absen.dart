@@ -1,5 +1,3 @@
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 class LastAbsen {
   int? idRoster;
@@ -51,20 +49,7 @@ class LastAbsen {
     );
   }
 
-  static Future<LastAbsen> apiAbsenTigaHari(String _nik) async {
-    String apiUrl = "https://lp.abpjobsite.com/api/lastAbsen?nik=" + _nik;
-    var apiResult = await http.get(Uri.parse(apiUrl));
-    var jsonObject = json.decode(apiResult.body);
-    var lastAbsen = LastAbsen.fromJson(jsonObject);
-    return lastAbsen;
-  }
-  static Future<LastAbsen> apiAbsenTigaHariOffline(String _nik) async {
-    String apiUrl = "http://10.10.3.13/flutter/get/last/absen?nik=" + _nik;
-    var apiResult = await http.get(Uri.parse(apiUrl));
-    var jsonObject = json.decode(apiResult.body);
-    var lastAbsen = LastAbsen.fromJson(jsonObject);
-    return lastAbsen;
-  }
+  
 }
 
 class Presensi {

@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 
 /// Requests & displays the current user permissions for this device.
 class Permissions extends StatefulWidget {
+  const Permissions({Key? key}) : super(key: key);
+
   @override
   State<StatefulWidget> createState() => _Permissions();
 }

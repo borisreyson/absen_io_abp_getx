@@ -20,7 +20,7 @@ class _ListKaryawanState extends State<ListKaryawan> {
   late FocusNode focusNode;
   List<DataKaryawan> employee = [];
   List<DataKaryawan> cariEmployee = [];
-  TextEditingController cariController = new TextEditingController();
+  TextEditingController cariController = TextEditingController();
 
   @override
   void initState() {
@@ -75,7 +75,7 @@ class _ListKaryawanState extends State<ListKaryawan> {
           children: <Widget>[
             Expanded(
                 child: loading
-                    ? Center(child: CircularProgressIndicator())
+                    ? const Center(child: CircularProgressIndicator())
                     : _content())
           ],
         ));
@@ -97,14 +97,14 @@ class _ListKaryawanState extends State<ListKaryawan> {
                 padding: const EdgeInsets.all(10.0),
                 child: Slidable(
                   endActionPane: ActionPane(
-                    motion: ScrollMotion(),
+                    motion: const ScrollMotion(),
                     children: [
                       GestureDetector(
                         onTap: () {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: ((context) => FormKaryawan())));
+                                  builder: ((context) => const FormKaryawan())));
                         },
                         child: Card(
                           elevation: 10,
@@ -197,30 +197,30 @@ class _ListKaryawanState extends State<ListKaryawan> {
                                             child: Image.network(foto,
                                                 fit: BoxFit.fill),
                                           )
-                                        : Center(
+                                        : const Center(
                                             child: Icon(
                                             Icons.person,
                                             size: 50,
                                             color: Colors.grey,
                                           ))),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 width: 10,
                               ),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(c.nama_lengkap!,
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                           color: Colors.white, fontSize: 14)),
                                   Text(c.nik!,
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                           color: Colors.white, fontSize: 14)),
                                   Text(c.dept!,
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                           color: Colors.white, fontSize: 14)),
                                   Text(c.section!,
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                           color: Colors.white, fontSize: 14)),
                                 ],
                               )
@@ -236,7 +236,7 @@ class _ListKaryawanState extends State<ListKaryawan> {
 
   Widget _cari() {
     return AnimatedContainer(
-      duration: Duration(milliseconds: 400),
+      duration: const Duration(milliseconds: 400),
       width: _folded ? 56 : 350,
       height: 56,
       decoration: BoxDecoration(
@@ -248,11 +248,11 @@ class _ListKaryawanState extends State<ListKaryawan> {
         children: [
           Expanded(
               child: Container(
-            padding: EdgeInsets.only(left: 16),
+            padding: const EdgeInsets.only(left: 16),
             child: !_folded
                 ? TextField(
                     focusNode: focusNode,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       hintText: 'Cari Karyawan',
                       hintStyle: TextStyle(color: Colors.grey),
                       border: InputBorder.none,
@@ -274,15 +274,15 @@ class _ListKaryawanState extends State<ListKaryawan> {
                 : null,
           )),
           AnimatedContainer(
-            duration: Duration(milliseconds: 400),
+            duration: const Duration(milliseconds: 400),
             child: Material(
               type: MaterialType.transparency,
               child: InkWell(
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(_folded ? 32 : 0),
-                  topRight: Radius.circular(32),
+                  topRight: const Radius.circular(32),
                   bottomLeft: Radius.circular(_folded ? 32 : 0),
-                  bottomRight: Radius.circular(32),
+                  bottomRight: const Radius.circular(32),
                 ),
                 child: Padding(
                   padding: const EdgeInsets.only(right: 15),
@@ -309,19 +309,19 @@ class _ListKaryawanState extends State<ListKaryawan> {
 
   Widget dialog() {
     return AlertDialog(
-      title: Text("Konfirmasi"),
-      content: Text("Yakin ingin Menghapus data ini?"),
+      title: const Text("Konfirmasi"),
+      content: const Text("Yakin ingin Menghapus data ini?"),
       actions: [
         TextButton(
             onPressed: () {
               Navigator.of(context).pop();
             },
-            child: Text("Hapus")),
+            child: const Text("Hapus")),
         TextButton(
             onPressed: () {
               Navigator.of(context).pop();
             },
-            child: Text("Batal"))
+            child: const Text("Batal"))
       ],
     );
   }
@@ -333,10 +333,11 @@ class _ListKaryawanState extends State<ListKaryawan> {
       return;
     }
 
-    employee.forEach((e) {
-      if (e.nama_lengkap!.toLowerCase().contains(text.toLowerCase()) || e.nik!.toLowerCase().contains(text.toLowerCase()))
+    for (var e in employee) {
+      if (e.nama_lengkap!.toLowerCase().contains(text.toLowerCase()) || e.nik!.toLowerCase().contains(text.toLowerCase())) {
         cariEmployee.add(e);
-    });
+      }
+    }
     setState(() {});
   }
 

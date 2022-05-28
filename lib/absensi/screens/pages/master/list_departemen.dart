@@ -37,7 +37,7 @@ class _ListDepartemenState extends State<ListDepartemen> {
           context,
           MaterialPageRoute(
             builder: (BuildContext context) => const AddDepartemen()));
-      }, child: Icon(Icons.add),
+      }, child: const Icon(Icons.add),
     ),
 
     body: ListView(
@@ -54,22 +54,22 @@ class _ListDepartemenState extends State<ListDepartemen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text("ID Departemen"),
+                      const Text("ID Departemen"),
                       ElevatedButton(
                         onPressed: (){
 
-                        }, child: Text("Ubah")),
+                        }, child: const Text("Ubah")),
                     ],
                   ),
 
                    Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text("Nama Departemen"),
+                      const Text("Nama Departemen"),
                       ElevatedButton(
                         onPressed: (){
 
-                        }, child: Text("Hapus")),
+                        }, child: const Text("Hapus")),
                     ],
                   ),
                 ],

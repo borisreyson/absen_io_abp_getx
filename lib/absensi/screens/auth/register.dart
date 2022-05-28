@@ -12,14 +12,14 @@ class _FormRegisterState extends State<FormRegister> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Register"),
+        title: const Text("Register"),
         leading: Padding(
           padding: const EdgeInsets.only(left: 8.0),
           child: IconButton(
               onPressed: () {
                 Navigator.maybePop(context);
               },
-              icon: Icon(Icons.arrow_back_ios)),
+              icon: const Icon(Icons.arrow_back_ios)),
         ),
       ),
     );

@@ -1,7 +1,3 @@
-import 'dart:convert';
-import 'dart:math';
-import 'package:flutter/src/widgets/basic.dart';
-import 'package:http/http.dart' as http;
 
 class ApiRoster {
   List<Roster>? roster;
@@ -14,12 +10,6 @@ class ApiRoster {
       );   
     }
 
-  static Future<ApiRoster> getRoster(String? nik, String bulan, String tahun) async {
-    var url = Uri.parse("https://lp.abpjobsite.com/api/roster/kerja/karyawan?nik=$nik&tahun=$tahun&bulan=$bulan");
-    var apiWeb = await http.get(url);
-    var objekJson = json.decode(apiWeb.body); 
-    return ApiRoster.fromJson(objekJson);   
-  }
 }
 
 class Roster {

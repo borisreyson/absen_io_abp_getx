@@ -15,7 +15,7 @@ class Upload {
         res: object['res'],
         tidakDikenal: object['tidak_dikenal']);
   }
-  static Future<Upload> uploadApi(String nik, String status, File file,String lat,String lng,String id_roster) async {
+  static Future<Upload> uploadApi(String nik, String status, File file,String lat,String lng,String idRoster) async {
     Map<String, dynamic>? data;
     String tgl = "";
     String jam = "";
@@ -28,7 +28,7 @@ class Upload {
     request.fields['status'] = status;
     request.fields['lat'] = lat;
     request.fields['lng'] = lng;
-    request.fields['id_roster'] = id_roster;
+    request.fields['id_roster'] = idRoster;
 
     String filename = nik + "_" + status + DateTime.now().toString() + ".jpg";
 

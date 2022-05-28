@@ -1,4 +1,5 @@
 import 'dart:io' show Platform;
+import 'package:face_id_plus/absensi/api/provider.dart';
 import 'package:face_id_plus/absensi/model/all_absen.dart';
 import 'package:face_id_plus/absensi/model/last_absen.dart';
 import 'package:flutter/foundation.dart';
@@ -14,12 +15,20 @@ class AdminListAbsen extends StatefulWidget {
 }
 
 class _AdminListAbsenState extends State<AdminListAbsen> {
+  late AbsenProvider _provider;
   Widget loader = const Center(child: CircularProgressIndicator());
   int _selectedNavbar = 0;
   bool futureUpdate = true;
   String apiStatus = "Masuk";
   String tanggal = DateTime.now().toString();
   final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    _provider = AbsenProvider();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -156,7 +165,6 @@ class _AdminListAbsenState extends State<AdminListAbsen> {
               var size = MediaQuery.of(context).size;
               if (Platform.isAndroid) {
                 itemHeight = (size.height - kToolbarHeight - 24) / 2.5;
-                
               } else if (Platform.isIOS) {
                 itemHeight = (size.height - kToolbarHeight - 24) / 2.08;
               }
@@ -172,8 +180,7 @@ class _AdminListAbsenState extends State<AdminListAbsen> {
                   crossAxisCount: 2,
                   childAspectRatio: (itemWidth / itemHeight),
                   scrollDirection: Axis.vertical,
-                  children:
-                      absensiList.map((e) => absensiWidget(e)).toList());
+                  children: absensiList.map((e) => absensiWidget(e)).toList());
             default:
               return loader;
           }
@@ -295,7 +302,7 @@ class _AdminListAbsenState extends State<AdminListAbsen> {
   }
 
   Future<AllAbsen> lihatAbsenAPI(String status, String tanggal) async {
-    AllAbsen listAbsen = await AllAbsen.adminAbsenApi(status, tanggal);
+    AllAbsen listAbsen = await _provider.adminAbsenApi(status, tanggal);
     return listAbsen;
   }
 }

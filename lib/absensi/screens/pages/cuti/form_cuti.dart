@@ -80,11 +80,11 @@ class _FormCutiState extends State<FormCuti> {
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Container(
+              child: SizedBox(
                 width: 160,
                 child: DropdownButtonFormField<String>(
                     value: _cuti,
-                    style: TextStyle(color: Colors.black),
+                    style: const TextStyle(color: Colors.black),
                     decoration: const InputDecoration(
                         border: OutlineInputBorder(
                             borderRadius:
@@ -97,7 +97,7 @@ class _FormCutiState extends State<FormCuti> {
                         child: Text(a),
                       );
                     }).toList(),
-                    hint: Text("--Pilih Cuti--"),
+                    hint: const Text("--Pilih Cuti--"),
                     onChanged: (String? b) {
                       setState(() {
                         _cuti = b;
@@ -131,6 +131,7 @@ class _FormCutiState extends State<FormCuti> {
                               _daritgl.text = _daritanggal;
                             },
                             readOnly: true,
+                            // ignore: deprecated_member_use
                             cursorColor: Theme.of(context).cursorColor,
                             decoration: const InputDecoration(
                               border: OutlineInputBorder(
@@ -152,7 +153,7 @@ class _FormCutiState extends State<FormCuti> {
                               return null;
                             }),
                       ),
-                      SizedBox(width: 10),
+                      const SizedBox(width: 10),
                       SizedBox(
                         width: 160,
                         child: TextFormField(
@@ -171,6 +172,7 @@ class _FormCutiState extends State<FormCuti> {
                               _sampaitgl.text = _sampaitanggal;
                             },
                             readOnly: true,
+                            // ignore: deprecated_member_use
                             cursorColor: Theme.of(context).cursorColor,
                             decoration: const InputDecoration(
                               border: OutlineInputBorder(
@@ -199,11 +201,12 @@ class _FormCutiState extends State<FormCuti> {
             ),
             Container(
               width: double.infinity,
-              padding: EdgeInsets.all(10),
+              padding: const EdgeInsets.all(10),
               child: TextFormField(
                   minLines: 6,
                   keyboardType: TextInputType.multiline,
                   maxLines: 15,
+                  // ignore: deprecated_member_use
                   cursorColor: Theme.of(context).cursorColor,
                   decoration: const InputDecoration(
                       border: OutlineInputBorder(
@@ -248,7 +251,7 @@ class _FormCutiState extends State<FormCuti> {
                       //   }
                       // }
                     },
-                    child: Text(
+                    child: const Text(
                       "AJUKAN CUTI",
                       style:
                           TextStyle(fontSize: 16, fontWeight: FontWeight.bold),

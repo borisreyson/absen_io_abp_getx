@@ -1,6 +1,6 @@
 import 'dart:async';
+import 'package:face_id_plus/absensi/api/provider.dart';
 import 'package:face_id_plus/absensi/model/face_login_model.dart';
-import 'package:face_id_plus/absensi/landing/intro.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
@@ -13,6 +13,7 @@ class FormLogin extends StatefulWidget {
 }
 
 class _FormLoginState extends State<FormLogin> {
+  late AbsenProvider _provider;
   final GlobalKey<ScaffoldState> _globalKey = GlobalKey<ScaffoldState>();
   final _formKey = GlobalKey<FormState>();
   late FocusNode _usernameFocus, _passwordFocus;
@@ -27,6 +28,7 @@ class _FormLoginState extends State<FormLogin> {
       RoundedLoadingButtonController();
   @override
   void initState() {
+    _provider = AbsenProvider();
     _passwordVisible = true;
     getPref(context);
     _usernameFocus = FocusNode();
@@ -42,118 +44,6 @@ class _FormLoginState extends State<FormLogin> {
     super.dispose();
   }
 
-  _onLogin(BuildContext context) async {
-    final form = _formKey.currentState;
-    if (form!.validate()) {
-      _roundedController.start();
-      form.save();
-      String username = _username;
-      String password = _password;
-      FaceModel.loginApiFace(username, password).then((value) {
-        faceModel = value;
-        if (faceModel != null) {
-          if (faceModel!.datalogin == null) {
-            _usernameFocus.requestFocus();
-            Future.delayed(const Duration(milliseconds: 1000), () {
-              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                  content: Text("Username/ Nik Atau Password Salah!!")));
-              _roundedController.error();
-              _usernameController.clear();
-              _passwordController.clear();
-              Future.delayed(const Duration(milliseconds: 1000), () {
-                _roundedController.reset();
-              });
-            });
-          } else {
-            Datalogin datalogin = faceModel!.datalogin!;
-            setPref(
-                1,
-                datalogin.nik!,
-                datalogin.nama!,
-                datalogin.departemen!,
-                datalogin.devisi,
-                datalogin.jabatan,
-                datalogin.flag.toString(),
-                datalogin.showAbsen,
-                datalogin.perusahaan.toString());
-            Future.delayed(const Duration(milliseconds: 1000), () {
-              _roundedController.success();
-              Future.delayed(const Duration(milliseconds: 1000), () async {
-              await Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (BuildContext context) => const SliderIntro()),
-                    );
-              });
-            });
-          }
-        } else {
-          _usernameFocus.requestFocus();
-          Future.delayed(const Duration(milliseconds: 1000), () {
-            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                content: Text("Username/ Nik Atau Password Salah!!")));
-            _roundedController.error();
-            _usernameController.clear();
-            _passwordController.clear();
-            Future.delayed(const Duration(milliseconds: 1000), () {
-              _roundedController.reset();
-            });
-          });
-        }
-      });
-    } else {
-      Future.delayed(const Duration(milliseconds: 1000), () {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content: Text("Username/Nik Atau Password Tidak Boleh Kosong!!")));
-        _usernameFocus.requestFocus();
-        _roundedController.reset();
-      });
-    }
-  }
-
-  setPref(
-      int login,
-      String? nik,
-      String? nama,
-      String? departemen,
-      String? jabatan,
-      String? devisi,
-      String? flag,
-      int? showAbsen,
-      String? perusahaan) async {
-    if (kDebugMode) {
-      print("showAbsen $showAbsen");
-    }
-    sharedPref = await SharedPreferences.getInstance();
-    sharedPref?.setInt("isLogin", login);
-    sharedPref?.setString("nik", nik!);
-    sharedPref?.setString("nama", nama!);
-    sharedPref?.setString("departemen", departemen!);
-    sharedPref?.setString("devisi", devisi!);
-    sharedPref?.setString("jabatan", jabatan!);
-    sharedPref?.setString("flag", flag!);
-    sharedPref?.setInt("show_absen", showAbsen!);
-    sharedPref?.setString("perusahaan", perusahaan!);
-  }
-
-  getPref(BuildContext context) async {
-    sharedPref = await SharedPreferences.getInstance();
-    isLogin = sharedPref?.getInt("isLogin");
-    if (isLogin == 1) {
-      Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(
-              builder: (BuildContext context) => const SliderIntro()),
-          (context) => false);
-    }
-  }
-
-  void toggleVisible() {
-    setState(() {
-      _passwordVisible = !_passwordVisible;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -167,8 +57,7 @@ class _FormLoginState extends State<FormLogin> {
             color: Color(0xff000000),
           ),
           onTap: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => const SliderIntro()));
+            Navigator.pop(context, false);
           },
         ),
       ),
@@ -271,5 +160,103 @@ class _FormLoginState extends State<FormLogin> {
             )),
       )),
     );
+  }
+
+  _onLogin(BuildContext context) async {
+    final form = _formKey.currentState;
+    if (form!.validate()) {
+      _roundedController.start();
+      form.save();
+      String username = _username;
+      String password = _password;
+      _provider.loginApiFace(username, password).then((value) async {
+        faceModel = value;
+        if (faceModel != null) {
+          if (faceModel!.datalogin == null) {
+            _usernameFocus.requestFocus();
+            Future.delayed(const Duration(milliseconds: 1000), () {
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                  content: Text("Username/ Nik Atau Password Salah!!")));
+              _roundedController.error();
+              _usernameController.clear();
+              _passwordController.clear();
+              Future.delayed(const Duration(milliseconds: 1000), () {
+                _roundedController.reset();
+              });
+            });
+          } else {
+            Datalogin datalogin = faceModel!.datalogin!;
+            await setPref(
+                1,
+                datalogin.nik!,
+                datalogin.nama!,
+                datalogin.departemen!,
+                datalogin.devisi,
+                datalogin.jabatan,
+                datalogin.flag.toString(),
+                datalogin.showAbsen,
+                datalogin.perusahaan.toString());
+            _roundedController.success();
+            Navigator.pop(context, true);
+          }
+        } else {
+          _usernameFocus.requestFocus();
+          Future.delayed(const Duration(milliseconds: 1000), () {
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                content: Text("Username/ Nik Atau Password Salah!!")));
+            _roundedController.error();
+            _usernameController.clear();
+            _passwordController.clear();
+            Future.delayed(const Duration(milliseconds: 1000), () {
+              _roundedController.reset();
+            });
+          });
+        }
+      });
+    } else {
+      Future.delayed(const Duration(milliseconds: 1000), () {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text("Username/Nik Atau Password Tidak Boleh Kosong!!")));
+        _usernameFocus.requestFocus();
+        _roundedController.reset();
+      });
+    }
+  }
+
+  setPref(
+      int login,
+      String? nik,
+      String? nama,
+      String? departemen,
+      String? jabatan,
+      String? devisi,
+      String? flag,
+      int? showAbsen,
+      String? perusahaan) async {
+    if (kDebugMode) {
+      print("showAbsen $showAbsen");
+    }
+    sharedPref = await SharedPreferences.getInstance();
+    await sharedPref?.setInt("isLogin", login);
+    await sharedPref?.setString("nik", nik!);
+    await sharedPref?.setString("nama", nama!);
+    await sharedPref?.setString("departemen", departemen!);
+    await sharedPref?.setString("devisi", devisi!);
+    await sharedPref?.setString("jabatan", jabatan!);
+    await sharedPref?.setString("flag", flag!);
+    await sharedPref?.setInt("show_absen", showAbsen!);
+    await sharedPref?.setString("perusahaan", perusahaan!);
+  }
+
+  getPref(BuildContext context) async {
+    sharedPref = await SharedPreferences.getInstance();
+    isLogin = sharedPref?.getInt("isLogin");
+    if (isLogin == 1) {}
+  }
+
+  void toggleVisible() {
+    setState(() {
+      _passwordVisible = !_passwordVisible;
+    });
   }
 }

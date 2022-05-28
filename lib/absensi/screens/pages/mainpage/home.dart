@@ -1,14 +1,17 @@
+// ignore_for_file: library_prefixes, non_constant_identifier_names, duplicate_ignore
+
 import 'dart:async';
 import 'dart:io' show Platform;
 import 'dart:typed_data';
+import 'package:face_id_plus/absensi/api/provider.dart';
 import 'package:face_id_plus/absensi/model/last_absen.dart';
 import 'package:face_id_plus/absensi/model/map_area.dart';
 import 'package:face_id_plus/absensi/model/tigahariabsen.dart';
 import 'package:face_id_plus/absensi/screens/pages/absensi/detail_absen_profile.dart';
-import 'package:face_id_plus/absensi/screens/pages/absensi/kamera/masuk.dart';
-import 'package:face_id_plus/absensi/screens/pages/absensi/kamera/pulang.dart';
-import 'package:face_id_plus/absensi/screens/pages/area.dart';
-import 'package:face_id_plus/absensi/screens/pages/page_menu.dart';
+import 'package:face_id_plus/absensi/screens/pages/kamera/masuk.dart';
+import 'package:face_id_plus/absensi/screens/pages/kamera/pulang.dart';
+import 'package:face_id_plus/absensi/screens/pages/maps/area.dart';
+import 'package:face_id_plus/absensi/screens/pages/profile/page_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -27,6 +30,7 @@ class HomePageAndroid extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePageAndroid> {
+  late AbsenProvider _provider;
   static const CameraPosition _kGooglePlex =
       CameraPosition(target: LatLng(-0.5634222, 117.0139606), zoom: 14.2746);
   final _map_controller = Completer();
@@ -40,18 +44,17 @@ class _HomePageState extends State<HomePageAndroid> {
   bool lokasiPalsu = false;
   double _diluarAbp = 0.0;
   int? isLogin = 0, showAbsen = 0;
+  // ignore: non_constant_identifier_names
   String? nama, nik, _jam_kerja, kode_roster, jamPulang, jamMasuk, id_roster;
   double? _masuk = 0.0, _pulang = 0.0;
-  late handler.PermissionStatus _permissionStatus;
-  late final handler.Permission _permission = handler.Permission.location;
   late BitmapDescriptor customIcon;
   ui.Codec? codec;
   late Set<Marker> markers = {};
   late Marker marker;
-  final markerID = MarkerId("abpenergy");
+  final markerID = const MarkerId("abpenergy");
   Uint8List? markerIcon;
-  StreamController<bool> _getLokasi = StreamController.broadcast();
-  StreamController<String> _streamClock = StreamController.broadcast();
+  final StreamController<bool> _getLokasi = StreamController.broadcast();
+  final StreamController<String> _streamClock = StreamController.broadcast();
   Timer? _timer, _timerClock;
   String startClock = "00:00:00";
   int jamS = 0, menitS = 0, detikS = 0;
@@ -63,6 +66,7 @@ class _HomePageState extends State<HomePageAndroid> {
   JamServer? jam_server;
   @override
   void initState() {
+    _provider = AbsenProvider();
     getPref(context);
     setCustomMapPin();
     DateFormat fmt = DateFormat("dd MMMM yyyy");
@@ -80,7 +84,7 @@ class _HomePageState extends State<HomePageAndroid> {
     return Scaffold(
       appBar: AppBar(
         leading: InkWell(
-          splashColor: const Color(0xfff8f8f8f8),
+          splashColor: const Color(0xfff8f8f8),
           child: const Icon(
             Icons.arrow_back_ios_new,
             color: Color(0xffffffff),
@@ -140,7 +144,7 @@ class _HomePageState extends State<HomePageAndroid> {
             }
             return _headerContent(pointAbp);
           } else {
-            return Center(
+            return const Center(
               child: CircularProgressIndicator(),
             );
           }
@@ -233,7 +237,7 @@ class _HomePageState extends State<HomePageAndroid> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    "$startClock",
+                    startClock,
                     style: const TextStyle(
                         color: Color(0xFF8C6A03),
                         fontWeight: FontWeight.bold,
@@ -315,7 +319,7 @@ class _HomePageState extends State<HomePageAndroid> {
         fillColor: Colors.green.withOpacity(0.25)));
 
     return Container(
-      margin: EdgeInsets.only(top: 215),
+      margin: const EdgeInsets.only(top: 215),
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height - 200,
       child: (serviceEnable)
@@ -326,13 +330,9 @@ class _HomePageState extends State<HomePageAndroid> {
                   mapType: MapType.normal,
                   onMapCreated: (GoogleMapController controller) async {
                     _map_controller.complete(controller);
-                    _googleMapController = await controller;
-                    if (_googleMapController != null) {
-                      if (markerID != null) {
-                        _googleMapController.showMarkerInfoWindow(markerID);
-                      }
-                      streamLokasi();
-                    }
+                    _googleMapController = controller;
+                    _googleMapController.showMarkerInfoWindow(markerID);
+                    streamLokasi();
                   },
                   polygons: Set<Polygon>.of(_polygons),
                   markers: markers,
@@ -348,7 +348,6 @@ class _HomePageState extends State<HomePageAndroid> {
             )
           : enableGPS(),
     );
-    ;
   }
 
   Widget btnListAbsen() {
@@ -356,7 +355,7 @@ class _HomePageState extends State<HomePageAndroid> {
         padding: const EdgeInsets.only(bottom: 30, left: 10),
         child: Align(
             alignment: Alignment.bottomLeft,
-            child: Container(
+            child: SizedBox(
               width: 77,
               height: 160,
               child: InkWell(
@@ -419,7 +418,7 @@ class _HomePageState extends State<HomePageAndroid> {
             return Stack(
               children: [
                 Card(
-                  margin: EdgeInsets.only(top: 40),
+                  margin: const EdgeInsets.only(top: 40),
                   color: Colors.white,
                   child: Padding(
                     padding: const EdgeInsets.only(top: 20, left: 8, right: 8),
@@ -454,7 +453,7 @@ class _HomePageState extends State<HomePageAndroid> {
           }
         }
         return Card(
-          margin: EdgeInsets.only(top: 40),
+          margin: const EdgeInsets.only(top: 40),
           child: loader,
           color: Colors.white,
         );
@@ -566,9 +565,9 @@ class _HomePageState extends State<HomePageAndroid> {
                 closeStream();
                 streamLokasi();
               },
-              customBorder: CircleBorder(),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
+              customBorder: const CircleBorder(),
+              child: const Padding(
+                padding: EdgeInsets.all(8.0),
                 child: Icon(Icons.gps_fixed),
               ),
             )),
@@ -866,61 +865,59 @@ class _HomePageState extends State<HomePageAndroid> {
   loadLastAbsen(String _nik) async {
     _diluarAbp = 1.0;
     // outside = false;
-    var lastAbsen = await LastAbsen.apiAbsenTigaHari(_nik);
-    if (lastAbsen != null) {
-      _jam_kerja = lastAbsen.jamKerja;
-      kode_roster = lastAbsen.kodeRoster;
-      id_roster = "${lastAbsen.idRoster}";
-      if (lastAbsen.lastAbsen != null) {
-        var absenTerakhir = lastAbsen.lastAbsen;
-        jamAbsen = lastAbsen.presensiMasuk;
-        jamAbsenPulang = lastAbsen.presensiPulang;
-        if (absenTerakhir == "Masuk") {
-          if (lastAbsen.lastNew == "Pulang") {
-            outside = false;
-            _masuk = 1.0;
-            _enMasuk = true;
-            _enPulang = false;
-            _pulang = 0.0;
-            jamPulang = "${jamAbsenPulang?.jam}";
-            jamMasuk = "";
-          } else {
-            jamMasuk = "${jamAbsen?.jam}";
-            jamPulang = "${jamAbsenPulang?.jam}";
-            outside = false;
-            _enMasuk = false;
-            _enPulang = true;
-            _masuk = 0.0;
-            _pulang = 1.0;
-          }
-        } else if (absenTerakhir == "Pulang") {
+    var lastAbsen = await _provider.apiAbsenTigaHari(_nik);
+    _jam_kerja = lastAbsen.jamKerja;
+    kode_roster = lastAbsen.kodeRoster;
+    id_roster = "${lastAbsen.idRoster}";
+    if (lastAbsen.lastAbsen != null) {
+      var absenTerakhir = lastAbsen.lastAbsen;
+      jamAbsen = lastAbsen.presensiMasuk;
+      jamAbsenPulang = lastAbsen.presensiPulang;
+      if (absenTerakhir == "Masuk") {
+        if (lastAbsen.lastNew == "Pulang") {
+          outside = false;
+          _masuk = 1.0;
+          _enMasuk = true;
+          _enPulang = false;
+          _pulang = 0.0;
+          jamPulang = "${jamAbsenPulang?.jam}";
+          jamMasuk = "";
+        } else {
           jamMasuk = "${jamAbsen?.jam}";
           jamPulang = "${jamAbsenPulang?.jam}";
           outside = false;
-          _enMasuk = true;
-          _enPulang = false;
-          _masuk = 1.0;
-          _pulang = 0.0;
+          _enMasuk = false;
+          _enPulang = true;
+          _masuk = 0.0;
+          _pulang = 1.0;
         }
-      } else {
-        jamMasuk = "";
-        jamPulang = "";
-        _enMasuk = true;
+      } else if (absenTerakhir == "Pulang") {
+        jamMasuk = "${jamAbsen?.jam}";
+        jamPulang = "${jamAbsenPulang?.jam}";
         outside = false;
+        _enMasuk = true;
         _enPulang = false;
         _masuk = 1.0;
         _pulang = 0.0;
       }
-      if (lastAbsen.jamServer != null) {
-        setState(() {
-          jam_server = lastAbsen.jamServer;
-        });
-        jamS = int.parse("${jam_server?.jam}");
-        menitS = int.parse("${jam_server?.menit}");
-        detikS = int.parse("${jam_server?.detik}");
-        // startClock = "${jamS.toString().padLeft(2,"0")}:${menitS.toString().padLeft(2,"0")}:${detikS.toString().padLeft(2,"0")}";
-        streamJam();
-      }
+    } else {
+      jamMasuk = "";
+      jamPulang = "";
+      _enMasuk = true;
+      outside = false;
+      _enPulang = false;
+      _masuk = 1.0;
+      _pulang = 0.0;
+    }
+    if (lastAbsen.jamServer != null) {
+      setState(() {
+        jam_server = lastAbsen.jamServer;
+      });
+      jamS = int.parse("${jam_server?.jam}");
+      menitS = int.parse("${jam_server?.menit}");
+      detikS = int.parse("${jam_server?.detik}");
+      // startClock = "${jamS.toString().padLeft(2,"0")}:${menitS.toString().padLeft(2,"0")}:${detikS.toString().padLeft(2,"0")}";
+      streamJam();
     }
   }
 
@@ -950,27 +947,24 @@ class _HomePageState extends State<HomePageAndroid> {
     _timerClock?.cancel();
     createJamStream();
     _streamClock.add(doJam());
-    _timerClock = Timer.periodic(Duration(seconds: 1), (timer) {
+    _timerClock = Timer.periodic(const Duration(seconds: 1), (timer) {
       _streamClock.add(doJam());
     });
   }
 
   createJamStream() {
     _streamClock.stream.listen((String jam) {
-      if (jam != null) {
-        if (mounted) {
-          setState(() {
-            startClock = jam;
-          });
-        }
+      if (mounted) {
+        setState(() {
+          startClock = jam;
+        });
       }
     });
   }
 
   Future<List<MapAreModel>> _loadArea() async {
     await cekGps();
-    _permissionStatus = await _permission.status;
-    var area = await MapAreModel.mapAreaApi("0");
+    var area = await _provider.mapAreaApi("0");
     return area;
   }
 
@@ -1015,7 +1009,7 @@ class _HomePageState extends State<HomePageAndroid> {
 
   void setCustomMapPin() async {
     markerIcon = await getBytesFromAsset('assets/images/abp_60x60.png', 60);
-    customIcon = await BitmapDescriptor.fromBytes(markerIcon!);
+    customIcon = BitmapDescriptor.fromBytes(markerIcon!);
     marker = Marker(
       markerId: markerID,
       position: const LatLng(-0.5634222, 117.0139606),
@@ -1040,7 +1034,7 @@ class _HomePageState extends State<HomePageAndroid> {
   streamLokasi() async {
     createStream();
     _getLokasi.add(await locatePosition());
-    _timer = Timer.periodic(Duration(seconds: 2), (timer) async {
+    _timer = Timer.periodic(const Duration(seconds: 2), (timer) async {
       _getLokasi.add(await locatePosition());
     });
   }
@@ -1081,7 +1075,7 @@ class _HomePageState extends State<HomePageAndroid> {
   }
 
   izinTidakAda() async {
-    var lokasi = await handler.Permission.locationWhenInUse;
+    var lokasi = handler.Permission.locationWhenInUse;
     var status = await lokasi.status;
     if (status == handler.PermissionStatus.granted) {
       statusLokasi = true;

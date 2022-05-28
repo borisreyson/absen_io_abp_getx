@@ -1,5 +1,8 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 
@@ -30,7 +33,11 @@ class NetworkCheck {
 
             InternetStatus = "Connected to the Internet";
             contentmessage = "Connected to the Internet";
-            print('Data connection is available.');
+            if (kDebugMode) {
+              if (kDebugMode) {
+                print('Data connection is available.');
+              }
+            }
             Navigator.maybePop(context);
             // _showDialog(InternetStatus, contentmessage, context);
             net = status;

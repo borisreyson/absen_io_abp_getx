@@ -1,5 +1,3 @@
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 class FaceModel {
   bool? success = false;
@@ -11,14 +9,7 @@ class FaceModel {
       datalogin:(object['dataLogin']!=null)?Datalogin.fromJson(object['dataLogin']):null
     );
   }
-  static Future<FaceModel?> loginApiFace(
-      String username, String password) async {
-    String apiUrl = "https://lp.abpjobsite.com/api/login/face";
-    var apiResult = await http.post(Uri.parse(apiUrl),
-        body: {"username": username, "password": password});
-    var jsonObject = json.decode(apiResult.body);
-      return FaceModel.fromJson(jsonObject);
-  }
+  
 }
 
 class Datalogin {

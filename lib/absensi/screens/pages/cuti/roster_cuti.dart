@@ -57,10 +57,10 @@ class _RosterCutiState extends State<RosterCuti> {
                           context,
                           MaterialPageRoute(
                             builder: (BuildContext context) => const ListRoster()));
-                        }, child: Text("List Roster")
+                        }, child: const Text("List Roster")
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 20,
                     ),
                     Expanded(
@@ -70,7 +70,7 @@ class _RosterCutiState extends State<RosterCuti> {
                           context,
                           MaterialPageRoute(
                             builder: (BuildContext context) => const FormCuti()));
-                        }, child: Text("Pengajuan Cuti")
+                        }, child: const Text("Pengajuan Cuti")
                       ),
                     ),
                   ],
