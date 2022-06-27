@@ -7,7 +7,7 @@ import 'app/routes/app_pages.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  final navigasi = Get.put(NavigasiController(), permanent: true);
+  Get.put(NavigasiController(), permanent: true);
   runApp(
     GetMaterialApp(
       debugShowCheckedModeBanner: false,

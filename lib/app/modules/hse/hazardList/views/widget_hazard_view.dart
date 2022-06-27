@@ -1,0 +1,395 @@
+import 'package:face_id_plus/app/data/models/data_hazard.dart';
+import 'package:face_id_plus/app/routes/app_pages.dart';
+import 'package:flutter/material.dart';
+
+import 'package:get/get.dart';
+import 'package:intl/intl.dart';
+
+class WidgetHazardView extends GetView {
+  // ignore: prefer_typing_uninitialized_variables
+  final Data data;
+  final String? _rule;
+  final String username;
+  final String? option;
+  final int? disetujui;
+  final Function onRefresh;
+  const WidgetHazardView(this.data, this._rule, this.onRefresh,
+      {required this.username, this.option, this.disetujui, Key? key})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final Color _success = Colors.green.shade700;
+    final Color _danger = Colors.red.shade700;
+
+    const TextStyle _colorText = TextStyle(color: Colors.white);
+
+    var fmt = DateFormat("dd MMMM yyyy");
+    String? __status;
+    if (data.userValid == null) {
+      __status = "Belum Disetujui";
+    } else if (data.userValid != null &&
+        (data.optionFlag == 1 || data.optionFlag == null)) {
+      __status = "Disetujui";
+    } else if (data.optionFlag == 0) {
+      __status = "Dibatalkan";
+    }
+
+    return Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        elevation: 10,
+        margin: const EdgeInsets.only(bottom: 20, left: 20, right: 20),
+        child: InkWell(
+          onTap: () async {
+            await Get.toNamed(Routes.DETAIL_HAZARD,
+                arguments: {"detail": data});
+          },
+          child: Column(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                color: (data.statusPerbaikan != "SELESAI") ? _danger : _success,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Text(
+                      "${data.jamHazard}",
+                      style: _colorText,
+                    ),
+                    Text(fmt.format(DateTime.parse(data.tglHazard!)),
+                        style: _colorText)
+                  ],
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.all(10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Column(
+                      children: [
+                        const Text("Perusahaan"),
+                        Text("${data.perusahaan}"),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        const Text("Lokasi"),
+                        Text("${data.lokasiHazard}"),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                color: (data.statusPerbaikan != "SELESAI") ? _danger : _success,
+                padding: const EdgeInsets.all(10),
+                child: const Center(
+                    child: Text(
+                  "Deskripsi",
+                  style: _colorText,
+                )),
+              ),
+              Container(
+                margin: const EdgeInsets.only(top: 20, bottom: 20),
+                width: MediaQuery.of(context).size.width,
+                padding: const EdgeInsets.only(left: 10, right: 10),
+                child: Center(child: Text("${data.deskripsi}")),
+              ),
+              Container(
+                color: (data.statusPerbaikan != "SELESAI") ? _danger : _success,
+                width: MediaQuery.of(context).size.width,
+                padding: const EdgeInsets.all(10),
+                child: Center(
+                    child: Text(
+                  "${data.statusPerbaikan}",
+                  style: _colorText,
+                )),
+              ),
+              Container(
+                padding: const EdgeInsets.all(10),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      "Dibuat",
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Text("${data.namaLengkap}"),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    const Text("Penanggung Jawab",
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold)),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Text("${data.namaPJ}"),
+                  ],
+                ),
+              ),
+              Container(
+                color: (__status == "Disetujui") ? _success : _danger,
+                width: MediaQuery.of(context).size.width,
+                padding: const EdgeInsets.all(10),
+                child: Center(
+                    child: Text(
+                  "$__status",
+                  style: _colorText,
+                )),
+              ),
+              Visibility(
+                visible: (data.keteranganAdmin != null)
+                    ? (__status == "Dibatalkan")
+                        ? true
+                        : false
+                    : false,
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  padding: const EdgeInsets.all(10),
+                  child: Center(
+                      child: Text(
+                    "${data.keteranganAdmin}",
+                  )),
+                ),
+              ),
+              aksiBtn(__status, context),
+            ],
+          ),
+        ));
+  }
+
+  Widget aksiBtn(String? __status, context) {
+    return Visibility(
+      visible: (_rule != null) ? true : false,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          //Persetujuan
+          Visibility(
+            visible: (_rule!.contains("admin_hse"))
+                ? (__status == "Disetujui" || __status == "Dibatalkan")
+                    ? false
+                    : (option == "all")
+                        ? true
+                        : false
+                : false,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                ElevatedButton(
+                    onPressed: () async {
+                      // bool alert = await Constants().showAlert(
+                      //   context,
+                      //   judul: "Setujui Hazard",
+                      //   del: true,
+                      //   msg: "Apakah anda yakin?",
+                      //   fBtn: "Ya, Setujui",
+                      //   sBtn: "Batal",
+                      // );
+                      // if (alert) {
+                      //   Constants().showAlert(context,
+                      //       dismiss: false, loading: true, enBtn: false);
+                      //   var verify = HazardVerify();
+                      //   verify.uid = data.uid;
+                      //   verify.keterangan = "";
+                      //   verify.username = username;
+                      //   verify.option = 1;
+                      //   await HazardProvider()
+                      //       .verifyHazard(verify)
+                      //       .then((res) async {
+                      //     if (res != null) {
+                      //       if (res.success!) {
+                      //         await onRefresh(s: true);
+                      //         Navigator.pop(context);
+                      //       }
+                      //     }
+                      //   });
+                      // }
+                    },
+                    child: const Text("Setujui"),
+                    style: ElevatedButton.styleFrom(
+                        primary: Colors.green.shade700)),
+                ElevatedButton(
+                    onPressed: () async {
+                      // var alert = await Constants().showFormAlert(
+                      //   context,
+                      //   judul: "Keterangan Pembatalan",
+                      //   label: "Keterangan Pembatalan",
+                      //   fBtn: "Ya, Batalkan",
+                      //   sBtn: "Batal",
+                      // );
+                      // if (alert[0]) {
+                      //   Constants().showAlert(context,
+                      //       dismiss: false, loading: true, enBtn: false);
+                      //   var verify = HazardVerify();
+                      //   verify.keterangan = alert[1];
+                      //   verify.uid = data.uid;
+                      //   verify.username = username;
+                      //   verify.option = 0;
+                      //   await HazardProvider()
+                      //       .verifyHazard(verify)
+                      //       .then((res) async {
+                      //     if (res != null) {
+                      //       if (res.success!) {
+                      //         await onRefresh(s: true);
+                      //         Navigator.pop(context);
+                      //       }
+                      //     }
+                      //   });
+                      // }
+                    },
+                    child: const Text("Batalkan"),
+                    style: ElevatedButton.styleFrom(primary: Colors.redAccent)),
+              ],
+            ),
+          ),
+          //Administrator
+          Visibility(
+            visible: (!_rule!.contains("administrator"))
+                ? false
+                : (option == "all")
+                    ? true
+                    : false,
+            child: ElevatedButton(
+                style: ElevatedButton.styleFrom(primary: Colors.redAccent),
+                onPressed: () async {
+                  // bool alert = await Constants().showAlert(context,
+                  //     judul: "Hapus Hazard Report",
+                  //     del: true,
+                  //     msg: "Apakah anda yakin?",
+                  //     fBtn: "Ya, Hapus",
+                  //     sBtn: "Tidak");
+                  // if (alert) {
+                  //   Constants().showAlert(context,
+                  //       dismiss: false, loading: true, enBtn: false);
+
+                  //   await HazardProvider()
+                  //       .deleteHazard(data.uid)
+                  //       .then((res) {
+                  //     if (res != null) {
+                  //       if (res.success) {
+                  //         Navigator.pop(context, "suceess");
+                  //         onRefresh(s: true);
+                  //       } else {
+                  //         Navigator.pop(context);
+                  //         Constants().showAlert(context,
+                  //             judul: "Error",
+                  //             enBtn: true,
+                  //             msg: "Gagal Menghapus!");
+                  //       }
+                  //     } else {
+                  //       Navigator.pop(context);
+                  //       Constants().showAlert(context,
+                  //           judul: "Error",
+                  //           enBtn: true,
+                  //           msg: "Gagal Menghapus!");
+                  //     }
+                  //   });
+                  // }
+                },
+                child: const Text("Hapus")),
+          ),
+
+          Row(
+            mainAxisAlignment: (data.statusPerbaikan != "SELESAI")
+                ? (disetujui != 2)
+                    ? MainAxisAlignment.center
+                    : MainAxisAlignment.spaceAround
+                : MainAxisAlignment.center,
+            children: [
+              //User
+              Visibility(
+                visible: (option == "all")
+                    ? false
+                    : (disetujui == 2)
+                        ? true
+                        : false,
+                child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(primary: Colors.orange),
+                    onPressed: () async {
+                      // bool alert = await Constants().showAlert(context,
+                      //     judul: "Rubah Hazard Report",
+                      //     del: true,
+                      //     msg: "Apakah anda yakin?",
+                      //     fBtn: "Ya, Rubah",
+                      //     sBtn: "Tidak");
+                      // if (alert) {
+                      //   Constants().showAlert(context,
+                      //       dismiss: false, loading: true, enBtn: false);
+
+                      //   bool stat = await Constants().goTo(
+                      //       () => RubahHazard(
+                      //             detail: data,
+                      //           ),
+                      //       context);
+                      //   if (stat) {
+                      //     Navigator.pop(context, stat);
+                      //     onRefresh(s: stat);
+                      //   } else {
+                      //     Navigator.pop(context, stat);
+                      //   }
+                      // }
+                    },
+                    child: const Text("Rubah")),
+              ),
+              (option == "all")
+                  ? Visibility(
+                      visible: false,
+                      child: Container(),
+                    )
+                  : (data.statusPerbaikan != "SELESAI")
+                      ? ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              primary: const Color.fromARGB(255, 68, 59, 162)),
+                          onPressed: () async {
+                            // bool alert = await Constants().showAlert(context,
+                            //     judul: "Update Hazard Report",
+                            //     del: true,
+                            //     msg: "Apakah anda yakin?",
+                            //     fBtn: "Ya, Update Hazard",
+                            //     sBtn: "Tidak");
+                            // if (alert) {
+                            //   Constants().showAlert(context,
+                            //       dismiss: false, loading: true, enBtn: false);
+
+                            //   bool stat = await Constants().goTo(
+                            //       () => RubahStatus(
+                            //             detail: data,
+                            //           ),
+                            //       context);
+                            //   if (stat) {
+                            //     Navigator.pop(context, stat);
+                            //     onRefresh(s: true);
+                            //   } else {
+                            //     Navigator.pop(context);
+                            //   }
+                            // }
+                          },
+                          child: const Text("Update Hazard"))
+                      : Visibility(
+                          visible: false,
+                          child: Container(),
+                        ),
+            ],
+          ),
+
+          //Jarak
+          Visibility(
+              visible: (option != "all"),
+              child: const SizedBox(
+                height: 20,
+              ))
+        ],
+      ),
+    );
+  }
+}
