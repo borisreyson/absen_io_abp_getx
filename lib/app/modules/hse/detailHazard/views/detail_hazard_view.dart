@@ -58,7 +58,7 @@ class DetailHazardView extends GetView<DetailHazardController> {
     );
   }
 
-  Widget _listWidget(data, context) {
+  Widget _listWidget(Data data, context) {
     return ListView(
       children: [
         _loadImage(data),
@@ -73,15 +73,15 @@ class DetailHazardView extends GetView<DetailHazardController> {
         (data.updateBukti != null)
             ? _gambarPerbaikan(data, context)
             : Container(),
-        (data.idKemungkinanSesudah != null)
-            ? _rkemSetelah(data, context)
-            : Container(),
-        (data.idKeparahanSesudah != null)
-            ? _rKepSesudah(data, context)
-            : Container(),
-        (data.idKemungkinanSesudah != null)
-            ? _totalResikoSesudah(data, context)
-            : Container(),
+        Visibility(
+            visible: (data.statusPerbaikan == "SELESAI"),
+            child: _rkemSetelah(data, context)),
+        Visibility(
+            visible: (data.statusPerbaikan == "SELESAI"),
+            child: _rKepSesudah(data, context)),
+        Visibility(
+            visible: (data.statusPerbaikan == "SELESAI"),
+            child: _totalResikoSesudah(data, context)),
         _penanggungJawab(data, context),
       ],
     );

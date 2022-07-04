@@ -5,6 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
+import '../../../../data/models/hazard_model.dart';
+import '../../../../data/providers/provider.dart';
+import '../../../../data/utils/constants.dart';
+
 class WidgetHazardView extends GetView {
   // ignore: prefer_typing_uninitialized_variables
   final Data data;
@@ -161,13 +165,13 @@ class WidgetHazardView extends GetView {
                   )),
                 ),
               ),
-              aksiBtn(__status, context),
+              aksiBtn(__status),
             ],
           ),
         ));
   }
 
-  Widget aksiBtn(String? __status, context) {
+  Widget aksiBtn(String? __status) {
     return Visibility(
       visible: (_rule != null) ? true : false,
       child: Column(
@@ -187,65 +191,63 @@ class WidgetHazardView extends GetView {
               children: [
                 ElevatedButton(
                     onPressed: () async {
-                      // bool alert = await Constants().showAlert(
-                      //   context,
-                      //   judul: "Setujui Hazard",
-                      //   del: true,
-                      //   msg: "Apakah anda yakin?",
-                      //   fBtn: "Ya, Setujui",
-                      //   sBtn: "Batal",
-                      // );
-                      // if (alert) {
-                      //   Constants().showAlert(context,
-                      //       dismiss: false, loading: true, enBtn: false);
-                      //   var verify = HazardVerify();
-                      //   verify.uid = data.uid;
-                      //   verify.keterangan = "";
-                      //   verify.username = username;
-                      //   verify.option = 1;
-                      //   await HazardProvider()
-                      //       .verifyHazard(verify)
-                      //       .then((res) async {
-                      //     if (res != null) {
-                      //       if (res.success!) {
-                      //         await onRefresh(s: true);
-                      //         Navigator.pop(context);
-                      //       }
-                      //     }
-                      //   });
-                      // }
+                      bool alert = await Constants().showAlert(
+                        judul: "Setujui Hazard",
+                        del: true,
+                        msg: "Apakah anda yakin?",
+                        fBtn: "Ya, Setujui",
+                        sBtn: "Batal",
+                      );
+                      if (alert) {
+                        Constants().showAlert(
+                            dismiss: false, loading: true, enBtn: false);
+                        var verify = HazardVerify();
+                        verify.uid = data.uid;
+                        verify.keterangan = "";
+                        verify.username = username;
+                        verify.option = 1;
+                        await HazardProvider()
+                            .verifyHazard(verify)
+                            .then((res) async {
+                          if (res != null) {
+                            if (res.success!) {
+                              await onRefresh(s: true);
+                              Get.back();
+                            }
+                          }
+                        });
+                      }
                     },
                     child: const Text("Setujui"),
                     style: ElevatedButton.styleFrom(
                         primary: Colors.green.shade700)),
                 ElevatedButton(
                     onPressed: () async {
-                      // var alert = await Constants().showFormAlert(
-                      //   context,
-                      //   judul: "Keterangan Pembatalan",
-                      //   label: "Keterangan Pembatalan",
-                      //   fBtn: "Ya, Batalkan",
-                      //   sBtn: "Batal",
-                      // );
-                      // if (alert[0]) {
-                      //   Constants().showAlert(context,
-                      //       dismiss: false, loading: true, enBtn: false);
-                      //   var verify = HazardVerify();
-                      //   verify.keterangan = alert[1];
-                      //   verify.uid = data.uid;
-                      //   verify.username = username;
-                      //   verify.option = 0;
-                      //   await HazardProvider()
-                      //       .verifyHazard(verify)
-                      //       .then((res) async {
-                      //     if (res != null) {
-                      //       if (res.success!) {
-                      //         await onRefresh(s: true);
-                      //         Navigator.pop(context);
-                      //       }
-                      //     }
-                      //   });
-                      // }
+                      var alert = await Constants().showFormAlert(
+                        judul: "Keterangan Pembatalan",
+                        label: "Keterangan Pembatalan",
+                        fBtn: "Ya, Batalkan",
+                        sBtn: "Batal",
+                      );
+                      if (alert[0]) {
+                        Constants().showAlert(
+                            dismiss: false, loading: true, enBtn: false);
+                        var verify = HazardVerify();
+                        verify.keterangan = alert[1];
+                        verify.uid = data.uid;
+                        verify.username = username;
+                        verify.option = 0;
+                        await HazardProvider()
+                            .verifyHazard(verify)
+                            .then((res) async {
+                          if (res != null) {
+                            if (res.success!) {
+                              await onRefresh(s: true);
+                              Get.back();
+                            }
+                          }
+                        });
+                      }
                     },
                     child: const Text("Batalkan"),
                     style: ElevatedButton.styleFrom(primary: Colors.redAccent)),
@@ -262,39 +264,37 @@ class WidgetHazardView extends GetView {
             child: ElevatedButton(
                 style: ElevatedButton.styleFrom(primary: Colors.redAccent),
                 onPressed: () async {
-                  // bool alert = await Constants().showAlert(context,
-                  //     judul: "Hapus Hazard Report",
-                  //     del: true,
-                  //     msg: "Apakah anda yakin?",
-                  //     fBtn: "Ya, Hapus",
-                  //     sBtn: "Tidak");
-                  // if (alert) {
-                  //   Constants().showAlert(context,
-                  //       dismiss: false, loading: true, enBtn: false);
+                  bool alert = await Constants().showAlert(
+                      judul: "Hapus Hazard Report",
+                      del: true,
+                      msg: "Apakah anda yakin?",
+                      fBtn: "Ya, Hapus",
+                      sBtn: "Tidak");
+                  if (alert) {
+                    Constants()
+                        .showAlert(dismiss: false, loading: true, enBtn: false);
 
-                  //   await HazardProvider()
-                  //       .deleteHazard(data.uid)
-                  //       .then((res) {
-                  //     if (res != null) {
-                  //       if (res.success) {
-                  //         Navigator.pop(context, "suceess");
-                  //         onRefresh(s: true);
-                  //       } else {
-                  //         Navigator.pop(context);
-                  //         Constants().showAlert(context,
-                  //             judul: "Error",
-                  //             enBtn: true,
-                  //             msg: "Gagal Menghapus!");
-                  //       }
-                  //     } else {
-                  //       Navigator.pop(context);
-                  //       Constants().showAlert(context,
-                  //           judul: "Error",
-                  //           enBtn: true,
-                  //           msg: "Gagal Menghapus!");
-                  //     }
-                  //   });
-                  // }
+                    await HazardProvider().deleteHazard(data.uid).then((res) {
+                      if (res != null) {
+                        if (res.success) {
+                          Get.back(result: "suceess");
+                          onRefresh(s: true);
+                        } else {
+                          Get.back();
+                          Constants().showAlert(
+                              judul: "Error",
+                              enBtn: true,
+                              msg: "Gagal Menghapus!");
+                        }
+                      } else {
+                        Get.back();
+                        Constants().showAlert(
+                            judul: "Error",
+                            enBtn: true,
+                            msg: "Gagal Menghapus!");
+                      }
+                    });
+                  }
                 },
                 child: const Text("Hapus")),
           ),
@@ -316,28 +316,25 @@ class WidgetHazardView extends GetView {
                 child: ElevatedButton(
                     style: ElevatedButton.styleFrom(primary: Colors.orange),
                     onPressed: () async {
-                      // bool alert = await Constants().showAlert(context,
-                      //     judul: "Rubah Hazard Report",
-                      //     del: true,
-                      //     msg: "Apakah anda yakin?",
-                      //     fBtn: "Ya, Rubah",
-                      //     sBtn: "Tidak");
-                      // if (alert) {
-                      //   Constants().showAlert(context,
-                      //       dismiss: false, loading: true, enBtn: false);
+                      bool alert = await Constants().showAlert(
+                          judul: "Rubah Hazard Report",
+                          del: true,
+                          msg: "Apakah anda yakin?",
+                          fBtn: "Ya, Rubah",
+                          sBtn: "Tidak");
+                      if (alert) {
+                        Constants().showAlert(
+                            dismiss: false, loading: true, enBtn: false);
+                        var stat = await Get.toNamed(Routes.RUBAH_HAZARD,
+                            arguments: {"detail": data});
 
-                      //   bool stat = await Constants().goTo(
-                      //       () => RubahHazard(
-                      //             detail: data,
-                      //           ),
-                      //       context);
-                      //   if (stat) {
-                      //     Navigator.pop(context, stat);
-                      //     onRefresh(s: stat);
-                      //   } else {
-                      //     Navigator.pop(context, stat);
-                      //   }
-                      // }
+                        if (stat) {
+                          Get.back(result: stat);
+                          onRefresh(s: stat);
+                        } else {
+                          Get.back(result: stat);
+                        }
+                      }
                     },
                     child: const Text("Rubah")),
               ),
@@ -351,28 +348,24 @@ class WidgetHazardView extends GetView {
                           style: ElevatedButton.styleFrom(
                               primary: const Color.fromARGB(255, 68, 59, 162)),
                           onPressed: () async {
-                            // bool alert = await Constants().showAlert(context,
-                            //     judul: "Update Hazard Report",
-                            //     del: true,
-                            //     msg: "Apakah anda yakin?",
-                            //     fBtn: "Ya, Update Hazard",
-                            //     sBtn: "Tidak");
-                            // if (alert) {
-                            //   Constants().showAlert(context,
-                            //       dismiss: false, loading: true, enBtn: false);
-
-                            //   bool stat = await Constants().goTo(
-                            //       () => RubahStatus(
-                            //             detail: data,
-                            //           ),
-                            //       context);
-                            //   if (stat) {
-                            //     Navigator.pop(context, stat);
-                            //     onRefresh(s: true);
-                            //   } else {
-                            //     Navigator.pop(context);
-                            //   }
-                            // }
+                            bool alert = await Constants().showAlert(
+                                judul: "Update Hazard Report",
+                                del: true,
+                                msg: "Apakah anda yakin?",
+                                fBtn: "Ya, Update Hazard",
+                                sBtn: "Tidak");
+                            if (alert) {
+                              Constants().showAlert(
+                                  dismiss: false, loading: true, enBtn: false);
+                              var stat = await Get.toNamed(Routes.RUBAH_STATUS,
+                                  arguments: {"detail": data});
+                              if (stat) {
+                                Get.back(result: stat);
+                                onRefresh(s: true);
+                              } else {
+                                Get.back(result: stat);
+                              }
+                            }
                           },
                           child: const Text("Update Hazard"))
                       : Visibility(

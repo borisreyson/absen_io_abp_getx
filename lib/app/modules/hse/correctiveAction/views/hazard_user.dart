@@ -37,6 +37,11 @@ class HazardUser extends GetView {
                     color: const Color.fromARGB(255, 238, 153, 8),
                     child: InkWell(
                       onTap: () async {
+                        await Get.toNamed(Routes.HAZARD_USER, parameters: {
+                          "option": "user",
+                          "disetujui": "0",
+                          "judul": "Hazard Report"
+                        });
                         controller.getPref();
                       },
                       child: ListTile(
@@ -44,8 +49,7 @@ class HazardUser extends GetView {
                             child: Text(
                           "Waiting",
                           style: TextStyle(
-                              color: Color.fromARGB(255, 255, 255, 255),
-                              fontWeight: FontWeight.bold),
+                              color: Colors.white, fontWeight: FontWeight.bold),
                         )),
                         subtitle: Center(
                             child: Text(
@@ -65,6 +69,11 @@ class HazardUser extends GetView {
                     color: const Color.fromARGB(255, 14, 142, 19),
                     child: InkWell(
                       onTap: () async {
+                        await Get.toNamed(Routes.HAZARD_USER, parameters: {
+                          "option": "user",
+                          "disetujui": "1",
+                          "judul": "Hazard Report"
+                        });
                         controller.getPref();
                       },
                       child: ListTile(
@@ -94,7 +103,7 @@ class HazardUser extends GetView {
                         await Get.toNamed(Routes.HAZARD_USER, parameters: {
                           "option": "user",
                           "disetujui": "2",
-                          "judul": "Seluruh Hazard Report"
+                          "judul": "Hazard Report"
                         });
                         controller.getPref();
                       },

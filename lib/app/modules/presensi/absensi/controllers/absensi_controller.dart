@@ -263,6 +263,7 @@ class AbsensiController extends GetxController {
 
   closeStream() {
     googleMapController.dispose();
+    _getLokasi.close();
     _timer?.cancel();
   }
 

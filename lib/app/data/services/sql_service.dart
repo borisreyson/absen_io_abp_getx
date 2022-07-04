@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 
 import '../models/detail_keparahan_model.dart';
 import '../models/detail_pengendalian_model.dart';
+import '../models/device_update_model.dart';
 import '../models/kemungkinan_model.dart';
 import '../models/keparahan_model.dart';
 import '../models/lokasi_model.dart';
@@ -11,6 +12,7 @@ import '../models/pengendalian.dart';
 import '../models/perusahaan_model.dart';
 import '../models/users_model.dart';
 import '../repository/repository_api.dart';
+
 class ApiService {
   Future kemungkinanGet() async {
     await KemungkinanRepository().fetchAll().then((data) async {
@@ -220,6 +222,49 @@ class ApiService {
             data.sect = e.sect;
             data.namaPerusahaan = e.namaPerusahaan;
             var res = await UsersService().save(data);
+            if (kDebugMode) {
+              print("Users $res");
+            }
+          }
+        }
+      }
+    });
+  }
+
+  Future deviceUpdateGet(idDevice) async {
+    await DeviceUpdateRepository().getDeviceBy(idDevice).then((data) async {
+      print("data $data");
+      if (data != null) {
+        if (data.deviceUpdate != null) {
+          var _data = data.deviceUpdate;
+          for (var e in _data!) {
+            var data = DeviceUpdate();
+            data.idDevice = idDevice;
+            data.idUpdate = e.idUpdate;
+            data.tipe = e.tipe;
+            data.timeUpdate = e.timeUpdate;
+            var res = await DeviceUpdateService().save(data);
+            if (kDebugMode) {
+              print("deviceUpdateGet $res");
+            }
+          }
+        }
+      }
+    });
+  }
+
+  Future deviceInit() async {
+    await DeviceUpdateRepository().fetchAll().then((data) async {
+      if (data != null) {
+        if (data.deviceUpdate != null) {
+          var _data = data.deviceUpdate;
+          for (var e in _data!) {
+            var data = DeviceUpdate();
+            data.idUpdate = e.idUpdate;
+            data.idDevice = e.idDevice;
+            data.tipe = e.tipe;
+            data.timeUpdate = e.timeUpdate;
+            var res = await DeviceUpdateService().save(data);
             if (kDebugMode) {
               print("Users $res");
             }

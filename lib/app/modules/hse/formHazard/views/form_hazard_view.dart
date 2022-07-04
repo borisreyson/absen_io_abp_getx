@@ -19,40 +19,43 @@ import '../controllers/form_hazard_controller.dart';
 class FormHazardView extends GetView<FormHazardController> {
   @override
   Widget build(BuildContext context) {
-    return Obx(() => Form(
-          key: controller.formKey,
-          autovalidateMode: controller.autovalidateMode,
-          child: Stack(
-            children: [
-              Background(
-                topPrimary: const Color(0xff115923),
-                topSecondary: const Color(0xff2B8C44),
-                bottomPrimary: const Color.fromARGB(255, 191, 112, 27),
-                bottomSecondary: const Color(0xffBF3E21),
-                bgColor: Colors.grey.shade400,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 60.0),
-                child: ListView(
-                  children: [
-                    dataTemuan(context),
-                    deskBahaya(),
-                    resikoSebelum(),
-                    katBahaya(),
-                    tindakanPerbaikan(),
-                    statusPerbaikan(),
-                    perbaikanWidget(),
-                    optionPJ(),
-                    (controller.pjOption == 1) ? pjAuto() : pjManual(context),
-                    const SizedBox(
-                      height: 40,
-                    )
-                  ],
+    return Obx(() => Scaffold(
+          resizeToAvoidBottomInset: true,
+          body: Form(
+            key: controller.formKey,
+            autovalidateMode: controller.autovalidateMode,
+            child: Stack(
+              children: [
+                Background(
+                  topPrimary: const Color(0xff115923),
+                  topSecondary: const Color(0xff2B8C44),
+                  bottomPrimary: const Color.fromARGB(255, 191, 112, 27),
+                  bottomSecondary: const Color(0xffBF3E21),
+                  bgColor: Colors.grey.shade400,
                 ),
-              ),
-              backButton(context),
-              btnAksi(),
-            ],
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 60.0),
+                  child: ListView(
+                    children: [
+                      dataTemuan(context),
+                      deskBahaya(),
+                      resikoSebelum(),
+                      katBahaya(),
+                      tindakanPerbaikan(),
+                      statusPerbaikan(context),
+                      perbaikanWidget(),
+                      optionPJ(),
+                      (controller.pjOption == 1) ? pjAuto() : pjManual(context),
+                      const SizedBox(
+                        height: 40,
+                      )
+                    ],
+                  ),
+                ),
+                backButton(context),
+                btnAksi(),
+              ],
+            ),
           ),
         ));
   }
@@ -215,9 +218,9 @@ class FormHazardView extends GetView<FormHazardController> {
                       TextFormField(
                         onTap: () async {
                           controller.dt = DateTime.now();
-                          controller.jamHazard = controller.dt;
+                          controller.jamHazard.value = controller.dt;
                           var jam = await controller.seletTime(
-                              context, controller.jamHazard!);
+                              context, controller.jamHazard.value);
                           if (jam != null) {
                             controller.jamController.text =
                                 "${jam.hour.toString().padLeft(2, '0')} : ${jam.minute.toString().padLeft(2, '0')}";
@@ -254,7 +257,7 @@ class FormHazardView extends GetView<FormHazardController> {
                               await Get.toNamed(Routes.LOKASI_HAZARD);
                           if (lokasi != null) {
                             controller.lokasi.text = "${lokasi.lokasi}";
-                            controller.idLokasi = lokasi.idLok;
+                            controller.idLokasi.value = lokasi.idLok!;
                           }
                         },
                         controller: controller.lokasi,
@@ -460,12 +463,13 @@ class FormHazardView extends GetView<FormHazardController> {
                           Kemungkinan data =
                               await Get.toNamed(Routes.KEMUNGKINAN);
                           if (data != null) {
-                            controller.nilaiKmSebelum = data.nilai!;
-                            if (controller.nilaiKpSebelum != null) {
-                              controller.loadMetrik(controller.nilaiKmSebelum,
-                                  controller.nilaiKpSebelum);
+                            controller.nilaiKmSebelum.value = data.nilai!;
+                            if (controller.nilaiKpSebelum.value > 0) {
+                              controller.loadMetrik(
+                                  controller.nilaiKmSebelum.value,
+                                  controller.nilaiKpSebelum.value);
                             }
-                            controller.idKmSebelum = data.idKemungkinan;
+                            controller.idKmSebelum.value = data.idKemungkinan!;
                             controller.kemungkinan.text = "${data.kemungkinan}";
                           }
                         },
@@ -523,12 +527,13 @@ class FormHazardView extends GetView<FormHazardController> {
                         onTap: () async {
                           Keparahan data = await Get.toNamed(Routes.KEPARAHAN);
                           if (data != null) {
-                            controller.nilaiKpSebelum = data.nilai!;
-                            if (controller.nilaiKmSebelum != null) {
-                              controller.loadMetrik(controller.nilaiKmSebelum,
-                                  controller.nilaiKpSebelum);
+                            controller.nilaiKpSebelum.value = data.nilai!;
+                            if (controller.nilaiKmSebelum.value != null) {
+                              controller.loadMetrik(
+                                  controller.nilaiKmSebelum.value,
+                                  controller.nilaiKpSebelum.value);
                             }
-                            controller.idKpSebelum = data.idKeparahan;
+                            controller.idKpSebelum.value = data.idKeparahan!;
                             controller.keparahan.text = "${data.keparahan}";
                           }
                         },
@@ -560,18 +565,27 @@ class FormHazardView extends GetView<FormHazardController> {
               ],
             ),
           ),
-          // metrikWidget(controller.resiko.value)
+          (controller.nilaiKmSebelum.value > 0 &&
+                  controller.nilaiKpSebelum.value > 0)
+              ? metrikWidget(controller.resikoSebelum.value)
+              : Container(),
         ],
       ),
     );
   }
 
   Widget metrikWidget(MetrikResiko data) {
+    var bgColor = int.parse("0xffffffff");
+    var txtColor = int.parse("0xffffffff");
+    if (data.bgColor != null && data.txtColor != null) {
+      bgColor = int.parse(data.bgColor!.replaceAll("#", "0xff"));
+      txtColor = int.parse(data.txtColor!.replaceAll("#", "0xff"));
+    }
     return Container(
       margin: const EdgeInsets.only(top: 10),
       width: Get.width,
       child: Material(
-        color: Color(int.parse(data.bgColor!.replaceAll("#", "0xff"))),
+        color: Color(bgColor),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         elevation: 10,
         child: Padding(
@@ -582,24 +596,21 @@ class FormHazardView extends GetView<FormHazardController> {
               Text(
                 "${data.kodeBahaya}",
                 style: TextStyle(
-                  color:
-                      Color(int.parse(data.txtColor!.replaceAll("#", "0xff"))),
+                  color: Color(txtColor),
                   fontWeight: FontWeight.bold,
                 ),
               ),
               Text(
                 "${data.kategori}",
                 style: TextStyle(
-                  color:
-                      Color(int.parse(data.txtColor!.replaceAll("#", "0xff"))),
+                  color: Color(txtColor),
                   fontWeight: FontWeight.bold,
                 ),
               ),
               Text(
                 "${data.min} - ${data.max}",
                 style: TextStyle(
-                  color:
-                      Color(int.parse(data.txtColor!.replaceAll("#", "0xff"))),
+                  color: Color(txtColor),
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -645,17 +656,17 @@ class FormHazardView extends GetView<FormHazardController> {
                 ),
                 RadioListTile(
                   value: 1,
-                  groupValue: controller.kta,
+                  groupValue: controller.kta.value,
                   onChanged: (value) {
-                    controller.kta = int.parse("$value");
+                    controller.kta.value = int.parse("$value");
                   },
                   title: const Text("KONDISI TIDAK AMAN"),
                 ),
                 RadioListTile(
                   value: 2,
-                  groupValue: controller.kta,
+                  groupValue: controller.kta.value,
                   onChanged: (value) {
-                    controller.kta = int.parse("$value");
+                    controller.kta.value = int.parse("$value");
                   },
                   title: const Text("TINDAKAN TIDAK AMAN"),
                 ),
@@ -672,7 +683,7 @@ class FormHazardView extends GetView<FormHazardController> {
                         onTap: () async {
                           Hirarki data = await Get.toNamed(Routes.PENGENDALIAN);
                           if (data != null) {
-                            controller.idPengendalian = data.idHirarki;
+                            controller.idPengendalian.value = data.idHirarki!;
                             controller.pengendalian.text =
                                 "${data.namaPengendalian}";
                           }
@@ -784,7 +795,7 @@ class FormHazardView extends GetView<FormHazardController> {
     );
   }
 
-  Widget statusPerbaikan() {
+  Widget statusPerbaikan(context) {
     return Container(
       margin: const EdgeInsets.only(left: 20, right: 20, top: 10),
       child: Column(
@@ -880,6 +891,90 @@ class FormHazardView extends GetView<FormHazardController> {
                           validator: (value) {
                             if (value!.isEmpty) {
                               return 'Tanggal Tenggat Wajib Di Isi';
+                            }
+                            return null;
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: (controller.perbaikanInt.value == 1) ? true : false,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        TextFormField(
+                          onTap: () async {
+                            var tgl = await controller.selectDate(
+                                context, controller.tglHazardSelesai.value);
+                            if (tgl != null) {
+                              controller.tglSelesai.text =
+                                  controller.fmt.format(tgl);
+                            }
+                          },
+                          autofocus: false,
+                          readOnly: true,
+                          controller: controller.tglSelesai,
+                          textInputAction: TextInputAction.go,
+                          decoration: InputDecoration(
+                            enabledBorder: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: controller.warna)),
+                            border: const OutlineInputBorder(),
+                            focusedBorder: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: controller.warna)),
+                            labelStyle: TextStyle(color: controller.warna),
+                            labelText: "Tanggal Selesai",
+                            hintText: "Tanggal Selesai",
+                          ),
+                          onSaved: (value) {},
+                          onFieldSubmitted: (term) {},
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'Tanggal Selesai Wajib Di Isi';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        TextFormField(
+                          onTap: () async {
+                            var jam = await controller.seletTime(
+                                context, controller.jamHazardSelesai.value);
+                            if (jam != null) {
+                              controller.jamSelesai.text =
+                                  "${jam.hour.toString().padLeft(2, '0')} : ${jam.minute.toString().padLeft(2, '0')}";
+                            }
+                          },
+                          autofocus: false,
+                          readOnly: true,
+                          controller: controller.jamSelesai,
+                          textInputAction: TextInputAction.go,
+                          decoration: InputDecoration(
+                            enabledBorder: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: controller.warna)),
+                            border: const OutlineInputBorder(),
+                            focusedBorder: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: controller.warna)),
+                            labelStyle: TextStyle(color: controller.warna),
+                            labelText: "Jam Selesai",
+                            hintText: "Jam Selesai",
+                          ),
+                          onSaved: (value) {},
+                          onFieldSubmitted: (term) {},
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'Jam Selesai Wajib Di Isi';
                             }
                             return null;
                           },
@@ -1039,16 +1134,16 @@ class FormHazardView extends GetView<FormHazardController> {
                     children: [
                       TextFormField(
                         onTap: () async {
-                          Kemungkinan? data =
+                          Kemungkinan data =
                               await Get.toNamed(Routes.KEMUNGKINAN);
                           if (data != null) {
-                            controller.nilaiKmSesudah = data.nilai!;
-                            if (controller.nilaiKpSesudah != null) {
+                            controller.nilaiKmSesudah.value = data.nilai!;
+                            if (controller.nilaiKpSesudah.value > 0) {
                               controller.loadMetrikSesudah(
-                                  controller.nilaiKmSesudah,
-                                  controller.nilaiKpSesudah);
+                                  controller.nilaiKmSesudah.value,
+                                  controller.nilaiKpSesudah.value);
                             }
-                            controller.idKmSesudah = data.idKemungkinan;
+                            controller.idKmSesudah.value = data.idKemungkinan!;
                             controller.kemungkinanSesudah.text =
                                 "${data.kemungkinan}";
                           }
@@ -1104,15 +1199,15 @@ class FormHazardView extends GetView<FormHazardController> {
                     children: [
                       TextFormField(
                         onTap: () async {
-                          Keparahan? data = await Get.toNamed(Routes.KEPARAHAN);
+                          Keparahan data = await Get.toNamed(Routes.KEPARAHAN);
                           if (data != null) {
-                            controller.nilaiKpSesudah = data.nilai!;
-                            if (controller.nilaiKmSesudah != null) {
+                            controller.nilaiKpSesudah.value = data.nilai!;
+                            if (controller.nilaiKmSesudah > 0) {
                               controller.loadMetrikSesudah(
-                                  controller.nilaiKmSesudah,
-                                  controller.nilaiKpSesudah);
+                                  controller.nilaiKmSesudah.value,
+                                  controller.nilaiKpSesudah.value);
                             }
-                            controller.idKpSesudah = data.idKeparahan;
+                            controller.idKpSesudah.value = data.idKeparahan!;
                             controller.keparahanSesudah.text =
                                 "${data.keparahan}";
                           }
@@ -1146,18 +1241,26 @@ class FormHazardView extends GetView<FormHazardController> {
               ],
             ),
           ),
-          // metrikWidgetSesudah(controller.resiko.value)
+          (controller.idKmSesudah > 0 && controller.idKpSesudah > 0)
+              ? metrikWidgetSesudah(controller.resikoSesudah.value)
+              : Container(),
         ],
       ),
     );
   }
 
   Widget metrikWidgetSesudah(MetrikResiko data) {
+    var bgColor = int.parse("0xffffffff");
+    var txtColor = int.parse("0xffffffff");
+    if (data.bgColor != null && data.txtColor != null) {
+      bgColor = int.parse(data.bgColor!.replaceAll("#", "0xff"));
+      txtColor = int.parse(data.txtColor!.replaceAll("#", "0xff"));
+    }
     return Container(
       margin: const EdgeInsets.only(top: 10),
       width: Get.width,
       child: Material(
-        color: Color(int.parse(data.bgColor!.replaceAll("#", "0xff"))),
+        color: Color(bgColor),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         elevation: 10,
         child: Padding(
@@ -1168,24 +1271,21 @@ class FormHazardView extends GetView<FormHazardController> {
               Text(
                 "${data.kodeBahaya}",
                 style: TextStyle(
-                  color:
-                      Color(int.parse(data.txtColor!.replaceAll("#", "0xff"))),
+                  color: Color(txtColor),
                   fontWeight: FontWeight.bold,
                 ),
               ),
               Text(
                 "${data.kategori}",
                 style: TextStyle(
-                  color:
-                      Color(int.parse(data.txtColor!.replaceAll("#", "0xff"))),
+                  color: Color(txtColor),
                   fontWeight: FontWeight.bold,
                 ),
               ),
               Text(
                 "${data.min} - ${data.max}",
                 style: TextStyle(
-                  color:
-                      Color(int.parse(data.txtColor!.replaceAll("#", "0xff"))),
+                  color: Color(txtColor),
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -1393,8 +1493,8 @@ class FormHazardView extends GetView<FormHazardController> {
                                 width: 100,
                               )
                             : const Icon(
-                                Icons.person,
-                                size: 100,
+                                Icons.person_add_alt_sharp,
+                                size: 80,
                               ),
                       )),
                 ),

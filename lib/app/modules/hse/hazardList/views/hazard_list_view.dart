@@ -26,13 +26,13 @@ class HazardListView extends GetView<HazardListController> {
                 color: Colors.white,
               ),
             ),
-            IconButton(
-              onPressed: () async {},
-              icon: const Icon(
-                Icons.add,
-                color: Colors.white,
-              ),
-            )
+            // IconButton(
+            //   onPressed: () async {},
+            //   icon: const Icon(
+            //     Icons.add,
+            //     color: Colors.white,
+            //   ),
+            // )
           ],
           elevation: 0,
           backgroundColor:
@@ -40,7 +40,7 @@ class HazardListView extends GetView<HazardListController> {
         ),
         body: _getData(),
         bottomNavigationBar: _navBar(),
-        floatingActionButton: _floatingAction(),
+        // floatingActionButton: _floatingAction(),
         backgroundColor:
             controller.colorList.elementAt(controller.selectedIndex.value),
       ),
@@ -55,11 +55,20 @@ class HazardListView extends GetView<HazardListController> {
       enablePullUp: controller.pullUp.value,
       onRefresh: controller.onRefresh,
       onLoading: controller.onLoading,
+      header: WaterDropMaterialHeader(
+        backgroundColor: Colors.white,
+        color: controller.colorList.elementAt(controller.selectedIndex.value),
+      ),
       child: ListView(
         children: controller.data
-            .map((data) => WidgetHazardView(
-                data, controller.rule.value, controller.onRefresh,
-                username: controller.username.value))
+            .map((e) => WidgetHazardView(
+                  e,
+                  controller.rule.value,
+                  controller.reload,
+                  username: controller.username.value,
+                  disetujui: controller.disetujui.value,
+                  option: controller.option.value,
+                ))
             .toList(),
       ),
     );
@@ -181,10 +190,13 @@ class HazardListView extends GetView<HazardListController> {
       color: controller.hseColor,
       elevation: 10,
       child: InkWell(
-          onTap: () {
+          onTap: () async {
+            controller.pullRefresh.requestRefresh();
             controller.page = 1;
             controller.data.clear();
+            await controller.fetchData();
             Get.back();
+            controller.pullRefresh.refreshCompleted();
           },
           child: Padding(
             padding: const EdgeInsets.all(20.0),

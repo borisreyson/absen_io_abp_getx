@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'dart:developer';
+import 'package:face_id_plus/app/data/models/device_update_model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get_connect.dart';
 import '../models/all_hazard_model.dart';
@@ -28,8 +30,7 @@ import '../utils/constants.dart';
 class Provider extends GetConnect {
   Future<FaceModel?> loginApiFace(LoginABP loginABP) async {
     String apiUrl = "https://lp.abpjobsite.com/api/login/face";
-    var apiResult = await http.post(Uri.parse(apiUrl),
-        body: loginABP.toJson());
+    var apiResult = await http.post(Uri.parse(apiUrl), body: loginABP.toJson());
     var jsonObject = json.decode(apiResult.body);
     return FaceModel.fromJson(jsonObject);
   }
@@ -44,7 +45,8 @@ class Provider extends GetConnect {
     return await post(
         "https://lp.abpjobsite.com/api/v1/login", loginABP.toJson());
   }
-  Future<AbsenList> listAbsensiUser({String? nik, String? status,page}) async {
+
+  Future<AbsenList> listAbsensiUser({String? nik, String? status, page}) async {
     String apiUrl =
         "https://abpjobsite.com/api/android/get/list/absen?nik=$nik&status=$status&page=$page";
     var apiResult = await http.get(Uri.parse(apiUrl));
@@ -52,6 +54,7 @@ class Provider extends GetConnect {
     var absenList = AbsenList.fromJson(jsonObject);
     return absenList;
   }
+
   Future<ApiRoster> getRoster(String? nik, String bulan, String tahun) async {
     var url = Uri.parse(
         "https://lp.abpjobsite.com/api/roster/kerja/karyawan?nik=$nik&tahun=$tahun&bulan=$bulan");
@@ -72,6 +75,7 @@ class AllHazardProvider {
     return decoJson;
   }
 }
+
 class KemungkinanProvider {
   Future<KemungkinanResiko?> getKemungkinan() async {
     var api = await http
@@ -115,8 +119,8 @@ class PerusahaanProvider {
 
 class LokasiProvider {
   Future<LokasiModel?> getLokasi() async {
-    var api = await http
-        .get(Uri.parse("${Constants.mainUrl}android/api/lokasi/get"));
+    var api =
+        await http.get(Uri.parse("${Constants.mainUrl}android/api/lokasi/get"));
     var jsonObject = json.decode(api.body);
     var decoJson = LokasiModel.fromJson(jsonObject);
     return decoJson;
@@ -135,8 +139,8 @@ class DetKeparahanProvider {
 
 class PengendalianProvider {
   Future<PengendalianModel?> getPengendalian() async {
-    var api = await http.get(
-        Uri.parse("${Constants.mainUrl}hse/admin/hiraiki/pengendalian"));
+    var api = await http
+        .get(Uri.parse("${Constants.mainUrl}hse/admin/hiraiki/pengendalian"));
     var jsonObject = json.decode(api.body);
     var decoJson = PengendalianModel.fromJson(jsonObject);
     return decoJson;
@@ -147,8 +151,8 @@ class PengendalianProvider {
 
 class DetPengendalianProvider {
   Future<DetPengendalianModel?> getDetPengendalian() async {
-    var api = await http.get(Uri.parse(
-        "${Constants.mainUrl}hse/admin/hiraiki/pengendalian/detail"));
+    var api = await http.get(
+        Uri.parse("${Constants.mainUrl}hse/admin/hiraiki/pengendalian/detail"));
     var jsonObject = json.decode(api.body);
     var decoJson = DetPengendalianModel.fromJson(jsonObject);
     return decoJson;
@@ -190,9 +194,10 @@ class HazardProvider {
         "${_dt.second}".padLeft(2, "0") +
         "_${idDevice}_penanggung_jawab.jpg";
 
-    Uri uri = Uri.parse(baseUrl);
+    Uri uri = Uri.parse("https://lp.abpjobsite.com/api/v1/hazard");
 
-    var request = http.MultipartRequest("POST", uri);
+    var request = http.MultipartRequest('POST', uri);
+
     request.files.add(http.MultipartFile.fromBytes(
         'fileToUpload', await data.fileToUpload!.readAsBytes(),
         filename: _filename));
@@ -217,11 +222,35 @@ class HazardProvider {
     request.fields['tglTenggat'] = "${data.tglTenggat}";
     request.fields['user_input'] = "${data.userInput}";
 
+    log("res ${data.fileToUpload}");
+    log("res ${data.fileToUploadPJ}");
+    log("res ${_filename}");
+    log("res ${_pjFoto}");
+    log("res ${data.perusahaan}");
+    log("res ${data.tglHazard}");
+    log("res ${data.jamHazard}");
+    log("res ${data.lokasi}");
+    log("res ${data.lokasiDetail}");
+    log("res ${data.deskripsi}");
+    log("res ${data.kemungkinan}");
+    log("res ${data.keparahan}");
+    log("res ${data.katBahaya}");
+    log("res ${data.pengendalian}");
+    log("res ${data.tindakan}");
+    log("res ${data.namaPJ}");
+    log("res ${data.nikPJ}");
+    log("res ${data.status}");
+    log("res ${data.tglTenggat}");
+    log("res ${data.userInput}");
+
     var response = await request.send();
+    log("res ${response.statusCode}");
 
     await for (String s in response.stream.transform(utf8.decoder)) {
+      print("errorPost ${s.toString()}");
       _res = jsonDecode(s);
     }
+
     return ResultHazardPost.fromJson(
       _res!,
     );
@@ -304,7 +333,7 @@ class HazardProvider {
         "${_dt.second}".padLeft(2, "0") +
         "_${idDevice}_selesai.jpg";
 
-    Uri uri = Uri.parse("${baseUrl}update");
+    Uri uri = Uri.parse("https://lp.abpjobsite.com/api/v1/hazard/update");
 
     var request = http.MultipartRequest("POST", uri);
 
@@ -379,7 +408,7 @@ class HazardProvider {
     // Uri uri = Uri.parse(
     //     "https://abpjobsite.com/android/api/hse/list/hazard/report/online?username=$username&page=$page&dari=$dari&sampai=$sampai&user_valid=$disetujui");
     Uri uri = Uri.parse(
-        "${baseUrl}user?username=$username&page=$page&dari=$dari&sampai=$sampai&user_valid=$disetujui");
+        "https://lp.abpjobsite.com/api/v1/hazard/user?username=$username&page=$page&dari=$dari&sampai=$sampai&user_valid=$disetujui");
     var api = await http.get(uri);
 
     var jsonObject = json.decode(api.body);
@@ -510,29 +539,50 @@ class BeritaProvider {
     var objekJson = json.decode(apiWeb.body);
     return berita.BeritaModel.fromJson(objekJson);
   }
+}
 
-  // Future<TambahBuletin?> buletinTambah(ListBuletin listBuletin) async {
-  //   var data = listBuletin.toJson();
-  //   var url = Uri.parse("${Constants.baseUrl}api/save/buletin");
-  //   var apiResult = await http.post(url, body: data);
-  //   var jsonObject = json.decode(apiResult.body);
-  //   return TambahBuletin.fromJson(jsonObject);
-  // }
+class DeviceUpdateProvider {
+  Future<DeviceUpdateModel?> getDevice() async {
+    var api = await http
+        .get(Uri.parse("https://lp.abpjobsite.com/api/v1/device/update"));
+    var jsonObject = json.decode(api.body);
+    var decoJson = DeviceUpdateModel.fromJson(jsonObject);
+    return decoJson;
+  }
 
-  // Future<TambahBuletin?> updateBuletin(
-  //     int idInfo, ListBuletin listBuletin) async {
-  //   var data = listBuletin.toJson();
-  //   var url = Uri.parse("${Constants.baseUrl}api/save/buletin?id_info=$idInfo");
-  //   var apiResult = await http.put(url, body: data);
-  //   var jsonObject = json.decode(apiResult.body);
-  //   return TambahBuletin.fromJson(jsonObject);
-  // }
+  Future<DeviceUpdateModel?> getDeviceBy(idDevice) async {
+    var api = await http.get(Uri.parse(
+        "https://lp.abpjobsite.com/api/v1/device/update?idDevice=$idDevice"));
+    var jsonObject = json.decode(api.body);
+    var decoJson = DeviceUpdateModel.fromJson(jsonObject);
+    return decoJson;
+  }
 
-  // Future<TambahBuletin?> deleteBuletin(int idInfo) async {
-  //   var url = Uri.parse("${Constants.baseUrl}api/save/buletin?idInfo=$idInfo");
-  //   var apiResult = await http.delete(url);
-  //   var jsonObject = json.decode(apiResult.body);
-  //   return TambahBuletin.fromJson(jsonObject);
-  // }
-  
+  Future<DeviceUpdateModel?> getDeviceIn(idDevice, tipe) async {
+    var api = await http.get(
+        Uri.parse(
+            "https://lp.abpjobsite.com/api/v1/device/update/by?idDevice=$idDevice"),
+        headers: {"tipe": json.encode(tipe)});
+    var jsonObject = json.decode(api.body);
+    var decoJson = DeviceUpdateModel.fromJson(jsonObject);
+    return decoJson;
+  }
+
+  Future<DeviceUpdateModel?> getDeviceTipe(idDevice, tipe) async {
+    var api = await http.post(
+        Uri.parse("https://lp.abpjobsite.com/api/v1/device/update/by"),
+        body: {"idDevice": idDevice, "tipe": json.encode(tipe)});
+    var jsonObject = json.decode(api.body);
+    var decoJson = DeviceUpdateModel.fromJson(jsonObject);
+    return decoJson;
+  }
+
+  Future<DeviceUpdateResult> insertDeviceUpdate(idDevice, tipe) async {
+    var api = await http.post(
+        Uri.parse("https://lp.abpjobsite.com/api/v1/device/update"),
+        body: {"idDevice": idDevice, "tipe": json.encode(tipe)});
+    var jsonObject = json.decode(api.body);
+    var decoJson = DeviceUpdateResult.fromJson(jsonObject);
+    return decoJson;
+  }
 }

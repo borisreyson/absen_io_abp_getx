@@ -32,8 +32,14 @@ import '../modules/hse/perusahaan/bindings/perusahaan_binding.dart';
 import '../modules/hse/perusahaan/views/perusahaan_view.dart';
 import '../modules/hse/profileAbp/bindings/profile_abp_binding.dart';
 import '../modules/hse/profileAbp/views/profile_abp_view.dart';
+import '../modules/hse/rubahBahaya/bindings/rubah_bahaya_binding.dart';
+import '../modules/hse/rubahBahaya/views/rubah_bahaya_view.dart';
 import '../modules/hse/rubahHazard/bindings/rubah_hazard_binding.dart';
 import '../modules/hse/rubahHazard/views/rubah_hazard_view.dart';
+import '../modules/hse/rubahKTA/bindings/rubah_k_t_a_binding.dart';
+import '../modules/hse/rubahKTA/views/rubah_k_t_a_view.dart';
+import '../modules/hse/rubahStatus/bindings/rubah_status_binding.dart';
+import '../modules/hse/rubahStatus/views/rubah_status_view.dart';
 import '../modules/login/bindings/login_binding.dart';
 import '../modules/login/views/login_view.dart';
 import '../modules/menuAbp/bindings/menu_abp_binding.dart';
@@ -265,6 +271,21 @@ class AppPages {
       name: _Paths.PERUSAHAAN,
       page: () => PerusahaanView(),
       binding: PerusahaanBinding(),
+    ),
+    GetPage(
+      name: _Paths.RUBAH_STATUS,
+      page: () => RubahStatusView(),
+      binding: RubahStatusBinding(),
+    ),
+    GetPage(
+      name: _Paths.RUBAH_BAHAYA,
+      page: () => RubahBahayaView(),
+      binding: RubahBahayaBinding(),
+    ),
+    GetPage(
+      name: _Paths.RUBAH_K_T_A,
+      page: () => RubahKTAView(),
+      binding: RubahKTABinding(),
     ),
   ];
 }

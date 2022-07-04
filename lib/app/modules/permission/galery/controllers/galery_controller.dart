@@ -1,3 +1,4 @@
+import 'package:face_id_plus/app/routes/app_pages.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart' as handler;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -49,6 +50,6 @@ class GaleryController extends GetxController {
   saveIntro() async {
     var pref = await SharedPreferences.getInstance();
     await pref.setBool(Constants.intro, true);
-    Get.offAllNamed('/home');
+    Get.offAllNamed(Routes.HOME);
   }
 }

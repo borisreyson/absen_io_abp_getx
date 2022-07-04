@@ -3,6 +3,7 @@ import 'package:sqflite/sqflite.dart';
 import '../../sqlite_db/db_helper.dart';
 import '../models/detail_keparahan_model.dart';
 import '../models/detail_pengendalian_model.dart';
+import '../models/device_update_model.dart';
 import '../models/kemungkinan_model.dart';
 import '../models/keparahan_model.dart';
 import '../models/lokasi_model.dart';
@@ -580,6 +581,81 @@ class RepositoryUsers {
     var res = await conn!.rawQuery("SELECT * FROM $table");
     for (var e in res) {
       data.add(UsersList.fromJson(e));
+    }
+    return data;
+  }
+
+  deleteAll(table) async {
+    var conn = await db;
+    var res = await conn?.delete(table);
+    return res;
+  }
+}
+
+class RepositoryDeviceUpdate {
+  late DbHelper _dbHelper;
+  RepositoryDeviceUpdate() {
+    _dbHelper = DbHelper();
+  }
+
+  static Database? _db;
+  Future<Database?> get db async {
+    if (_db != null) {
+      return _db;
+    } else {
+      _db = await _dbHelper.setDatabase();
+      return _db;
+    }
+  }
+
+  insert(table, DeviceUpdate data) async {
+    var conn = await db;
+    var qRes = await conn!.rawQuery(
+        "SELECT count(*) FROM $table WHERE idDevice = '${data.idDevice}' and tipe ='${data.tipe}'");
+    var res = Sqflite.firstIntValue(qRes);
+    if (res != null) {
+      if (res > 0) {
+        if (qRes[0]['timeUpdate'] != data.timeUpdate) {
+          return await conn.update(table, data.toJson(),
+              where: "idDevice = ?", whereArgs: [data.idDevice]);
+        }
+        return 0;
+      } else {
+        return await conn.insert(table, data.toJson());
+      }
+    } else {
+      return await conn.insert(table, data.toJson());
+    }
+  }
+
+  Future<List<DeviceUpdate>> getById({String? table, String? idDevice}) async {
+    var conn = await db;
+    List<DeviceUpdate> data = [];
+    var res = await conn!
+        .rawQuery("SELECT * FROM $table WHERE idDevice ='$idDevice'");
+    for (var e in res) {
+      data.add(DeviceUpdate.fromJson(e));
+    }
+    return data;
+  }
+
+  Future<List<DeviceUpdate>> cariNama({String? table, idDevice}) async {
+    var conn = await db;
+    List<DeviceUpdate> data = [];
+    var res = await conn!.rawQuery(
+        "SELECT * FROM $table WHERE idDevice LIKE '%" + idDevice + "%'");
+    for (var e in res) {
+      data.add(DeviceUpdate.fromJson(e));
+    }
+    return data;
+  }
+
+  Future<List<DeviceUpdate>> getAll({String? table}) async {
+    var conn = await db;
+    List<DeviceUpdate> data = [];
+    var res = await conn!.rawQuery("SELECT * FROM $table");
+    for (var e in res) {
+      data.add(DeviceUpdate.fromJson(e));
     }
     return data;
   }

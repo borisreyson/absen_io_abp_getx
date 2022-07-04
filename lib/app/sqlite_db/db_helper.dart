@@ -7,7 +7,7 @@ import '../data/utils/constants.dart';
 
 class DbHelper {
   static const _dbName = "midevDB";
-  static const _dbVersion = 2;
+  static const _dbVersion = 3;
   Future<Database> setDatabase() async {
     var dir = await getApplicationDocumentsDirectory();
     var path = join(dir.path, _dbName);
@@ -39,6 +39,7 @@ class DbHelper {
     Table().pengendalian(_db);
     Table().detPengendalian(_db);
     Table().users(_db);
+    Table().deviceUpdate(_db);
 
     await _db.commit();
   }
@@ -54,6 +55,7 @@ class DbHelper {
       Constants.pengendalianTb,
       Constants.detPengendalianTb,
       Constants.usersTb,
+      Constants.deviceUpdatTb,
     ];
     for (var e in _tb) {
       var sql = "DROP TABLE IF EXISTS $e";

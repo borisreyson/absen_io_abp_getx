@@ -23,14 +23,16 @@ class CorrectiveActionView extends GetView<CorrectiveActionController> {
             actions: [
               Center(child: Text(controller.tglSekarang.value)),
               IconButton(
-                  onPressed: () {
-                    controller.getRepository();
+                  onPressed: () async {
+                    controller.isLoading.value = true;
+                    controller.profile.value.dataUser = null;
+                    await controller.getRepository();
                   },
                   icon: const Icon(Icons.refresh))
             ],
             leading: IconButton(
                 onPressed: () {
-                  Navigator.pop(context);
+                  Get.back();
                 },
                 icon: const Icon(
                   Icons.arrow_back_ios_new,
@@ -56,26 +58,36 @@ class CorrectiveActionView extends GetView<CorrectiveActionController> {
                   borderRadius: BorderRadius.circular(100)),
               child: Padding(
                 padding: const EdgeInsets.all(4.0),
-                child: ClipRRect(
-                    borderRadius: BorderRadius.circular(100),
-                    child: (controller.fotoProfile != null)
-                        ? CachedNetworkImage(
-                            height: 80,
-                            fit: BoxFit.fill,
-                            imageUrl: controller.fotoProfile!,
-                          )
-                        : const Image(
-                            image: AssetImage('assets/images/ic_abp.png'),
-                            height: 40,
-                          )),
+                child: SizedBox(
+                  width: 80,
+                  child: ClipRRect(
+                      borderRadius: BorderRadius.circular(100),
+                      child: (controller.fotoProfile != null)
+                          ? CachedNetworkImage(
+                              height: 80,
+                              fit: BoxFit.fill,
+                              imageUrl: controller.fotoProfile!,
+                              placeholder: (context, url) => const Center(
+                                child: CupertinoActivityIndicator(radius: 40),
+                              ),
+                            )
+                          : const Image(
+                              image: AssetImage('assets/images/ic_abp.png'),
+                              height: 40,
+                            )),
+                ),
               )),
         ),
         Center(
-          child: Text(
-            "${controller.profile.value.dataUser?.namaLengkap}",
-            style: const TextStyle(
-                color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
-          ),
+          child: (controller.profile.value.dataUser != null)
+              ? Text(
+                  "${controller.profile.value.dataUser?.namaLengkap}",
+                  style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16),
+                )
+              : const CupertinoActivityIndicator(),
         ),
         Card(
           elevation: 20,
@@ -103,7 +115,7 @@ class CorrectiveActionView extends GetView<CorrectiveActionController> {
                     color: controller.hazardMenu),
               ),
               Text(
-                (profile.dataHazard != null) ? "${profile.dataHazard}" : '0',
+                (!controller.isLoading.value) ? "${profile.dataHazard}" : '0',
                 style: TextStyle(
                   color: controller.hazardMenu,
                   fontSize: 20,
@@ -114,6 +126,7 @@ class CorrectiveActionView extends GetView<CorrectiveActionController> {
                     primary: const Color.fromARGB(255, 143, 24, 16)),
                 onPressed: () async {
                   await Get.toNamed(Routes.FORM_HAZARD);
+                  controller.getPref();
                 },
                 child: const Text(
                   "Buat Hazard",
@@ -131,12 +144,12 @@ class CorrectiveActionView extends GetView<CorrectiveActionController> {
                     color: controller.hazardMenu),
               ),
               Text(
-                (profile.datInspeksi != null) ? "${profile.datInspeksi}" : '0',
+                (!controller.isLoading.value) ? "${profile.datInspeksi}" : '0',
                 style: TextStyle(color: controller.hazardMenu, fontSize: 20),
               ),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                    primary: Color.fromARGB(255, 175, 121, 5)),
+                    primary: const Color.fromARGB(255, 175, 121, 5)),
                 onPressed: () {},
                 child: const Text(
                   "Buat Inspeksi",
@@ -155,16 +168,38 @@ class CorrectiveActionView extends GetView<CorrectiveActionController> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          _hazard(data),
+          (controller.profile.value.dataUser != null)
+              ? _hazard(data)
+              : const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Center(
+                    child: CupertinoActivityIndicator(
+                      color: Colors.white,
+                      radius: 30,
+                    ),
+                  ),
+                ),
           (controller.profile.value.dataUser != null)
               ? _hazardKeSaya(controller.profile.value.dataUser!, data)
-              : const Center(
-                  child: CupertinoActivityIndicator(),
+              : const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Center(
+                    child: CupertinoActivityIndicator(
+                      color: Colors.white,
+                      radius: 30,
+                    ),
+                  ),
                 ),
           (controller.profile.value.dataUser != null)
               ? _hazardSeluruh(controller.profile.value.dataUser!, data)
-              : const Center(
-                  child: CupertinoActivityIndicator(),
+              : const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Center(
+                    child: CupertinoActivityIndicator(
+                      color: Colors.white,
+                      radius: 30,
+                    ),
+                  ),
                 ),
         ],
       ),

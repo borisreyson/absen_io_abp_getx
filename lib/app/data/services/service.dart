@@ -1,5 +1,6 @@
 import '../models/detail_keparahan_model.dart';
 import '../models/detail_pengendalian_model.dart';
+import '../models/device_update_model.dart';
 import '../models/kemungkinan_model.dart';
 import '../models/keparahan_model.dart';
 import '../models/lokasi_model.dart';
@@ -204,6 +205,33 @@ class UsersService {
 
   deletAll() async {
     var res = await _repository.deleteAll(Constants.usersTb);
+    return res;
+  }
+}
+
+class DeviceUpdateService {
+  late RepositoryDeviceUpdate _repository;
+  DeviceUpdateService() {
+    _repository = RepositoryDeviceUpdate();
+  }
+
+  save(_data) async {
+    return await _repository.insert(Constants.deviceUpdatTb, _data);
+  }
+
+  Future<List<DeviceUpdate>> getAll() async {
+    var res = await _repository.getAll(table: Constants.deviceUpdatTb);
+    return res;
+  }
+
+  Future<List<DeviceUpdate>> getBy({String? idDevice}) async {
+    var res = await _repository.getById(
+        table: Constants.deviceUpdatTb, idDevice: idDevice);
+    return res;
+  }
+
+  deletAll() async {
+    var res = await _repository.deleteAll(Constants.deviceUpdatTb);
     return res;
   }
 }

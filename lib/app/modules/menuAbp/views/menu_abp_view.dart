@@ -28,6 +28,10 @@ class MenuAbpView extends GetView<MenuAbpController> {
                   IconButton(
                       onPressed: () async {
                         var res = await Get.toNamed(Routes.PROFILE_ABP);
+                        if (res) {
+                          controller.isLoading.value = true;
+                          await controller.getPref();
+                        }
                       },
                       icon: const Icon(
                         Icons.menu_rounded,

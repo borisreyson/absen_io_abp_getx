@@ -1,11 +1,24 @@
+import 'package:face_id_plus/app/data/models/lokasi_model.dart';
+import 'package:face_id_plus/app/data/utils/constants.dart';
 import 'package:get/get.dart';
 
-class LokasiHazardController extends GetxController {
-  //TODO: Implement LokasiHazardController
+import '../../../../data/repository/repository_sqlite.dart';
 
-  final count = 0.obs;
+class LokasiHazardController extends GetxController {
+  final repository = ReporsitoryLokasi();
+  final data = <Lokasi>[].obs;
+  final isLoading = true.obs;
+
   @override
-  void onInit() {
+  void onInit() async {
+    await repository.getAll(table: Constants.lokasiTb).then((result) {
+      if (result != null) {
+        for (var element in result) {
+          print("element ${element.desLokasi}");
+          data.add(element);
+        }
+      }
+    }).whenComplete(() => isLoading.value = false);
     super.onInit();
   }
 
@@ -16,5 +29,4 @@ class LokasiHazardController extends GetxController {
 
   @override
   void onClose() {}
-  void increment() => count.value++;
 }

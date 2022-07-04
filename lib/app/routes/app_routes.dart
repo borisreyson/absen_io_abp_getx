@@ -37,6 +37,9 @@ abstract class Routes {
   static const PENGENDALIAN = _Paths.PENGENDALIAN;
   static const LOKASI_HAZARD = _Paths.LOKASI_HAZARD;
   static const PERUSAHAAN = _Paths.PERUSAHAAN;
+  static const RUBAH_STATUS = _Paths.RUBAH_STATUS;
+  static const RUBAH_BAHAYA = _Paths.RUBAH_BAHAYA;
+  static const RUBAH_K_T_A = _Paths.RUBAH_K_T_A;
 }
 
 abstract class _Paths {
@@ -77,4 +80,7 @@ abstract class _Paths {
   static const PENGENDALIAN = '/pengendalian';
   static const LOKASI_HAZARD = '/lokasi-hazard';
   static const PERUSAHAAN = '/perusahaan';
+  static const RUBAH_STATUS = '/rubah-status';
+  static const RUBAH_BAHAYA = '/rubah-bahaya';
+  static const RUBAH_K_T_A = '/rubah-k-t-a';
 }

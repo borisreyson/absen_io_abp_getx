@@ -18,6 +18,7 @@ class CorrectiveActionController extends GetxController {
       username = ''.obs,
       rule = ''.obs,
       tglSekarang = ''.obs;
+  final isLoading = true.obs;
   String? fotoProfile;
   var dt = DateTime.now();
   var fmt = DateFormat('dd MMMM yyyy');
@@ -57,6 +58,7 @@ class CorrectiveActionController extends GetxController {
   }
 
   getRepository() async {
+    isLoading.value = true;
     await userRepository.fetchUserProfile(username).then((value) {
       if (value != null) {
         profile.value = value;
@@ -66,7 +68,9 @@ class CorrectiveActionController extends GetxController {
       if (value != null) {
         userCounter.value = value;
       }
+    }).whenComplete(() {
+      tglSekarang.value = fmt.format(dt);
+      isLoading.value = false;
     });
-    tglSekarang.value = fmt.format(dt);
   }
 }

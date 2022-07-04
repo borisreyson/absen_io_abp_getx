@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:face_id_plus/app/routes/app_pages.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -9,29 +10,32 @@ import '../controllers/rubah_hazard_controller.dart';
 class RubahHazardView extends GetView<RubahHazardController> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 221, 219, 219),
-      appBar: AppBar(
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context, true);
-          },
-          icon: const Icon(
-            Icons.arrow_back_ios_new,
-            color: Colors.white,
-          ),
-        ),
-        actions: [
-          IconButton(
+    return Obx(
+      () => Scaffold(
+        resizeToAvoidBottomInset: true,
+        backgroundColor: const Color.fromARGB(255, 221, 219, 219),
+        appBar: AppBar(
+          leading: IconButton(
             onPressed: () {
-              controller.reload(context);
+              Get.back(result: true);
             },
-            icon: const Icon(Icons.replay_circle_filled_rounded),
-          )
-        ],
-        title: const Text("Rubah Hazard"),
+            icon: const Icon(
+              Icons.arrow_back_ios_new,
+              color: Colors.white,
+            ),
+          ),
+          actions: [
+            IconButton(
+              onPressed: () {
+                controller.reload();
+              },
+              icon: const Icon(Icons.replay_circle_filled_rounded),
+            )
+          ],
+          title: const Text("Rubah Hazard"),
+        ),
+        body: _listWidget(context),
       ),
-      body: _listWidget(context),
     );
   }
 
@@ -39,7 +43,7 @@ class RubahHazardView extends GetView<RubahHazardController> {
     var data = controller.data.value;
     return ListView(
       children: [
-        _loadImage(),
+        _loadImage(context),
         _dataTemuan(data, context),
         _deskBahaya(data, context),
         _rkemSebelum(data, context),
@@ -49,63 +53,76 @@ class RubahHazardView extends GetView<RubahHazardController> {
         metodePengendalian(data, context),
         _tindakanPerbaikan(data, context),
         _statusPerbaikan(data, context),
-        (data.updateBukti != null)
+        (data.statusPerbaikan == "SELESAI")
             ? _gambarPerbaikan(data, context)
             : Container(),
-        (data.idKemungkinanSesudah != null)
+        (data.statusPerbaikan == "SELESAI") ? ketPerbakan(data) : Container(),
+        (data.statusPerbaikan == "SELESAI")
             ? _rkemSetelah(data, context)
             : Container(),
-        (data.idKeparahanSesudah != null)
+        (data.statusPerbaikan == "SELESAI")
             ? _rKepSesudah(data, context)
             : Container(),
-        (data.idKemungkinanSesudah != null)
-            ? _totalResikoSesudah(data, context)
+        (data.statusPerbaikan == "SELESAI")
+            ? _totalResikoSesudah()
             : Container(),
         _penanggungJawab(data, context),
       ],
     );
   }
 
-  Widget _loadImage() {
-    return SizedBox(
-        height: 300,
-        child: Stack(
-          children: [
-            const Card(
-                margin:
-                    EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 20),
-                elevation: 10,
-                child: Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Center(
-                      child: CupertinoActivityIndicator(
-                        radius: 30,
-                      ),
-                    ))),
-            Align(
-              alignment: Alignment.topRight,
-              child: Card(
-                elevation: 10,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(100),
-                ),
-                margin: const EdgeInsets.only(right: 20, top: 20),
-                child: InkWell(
-                    borderRadius: BorderRadius.circular(100),
-                    onTap: () {
-                      // buktiPicker();
-                    },
-                    child: const Padding(
-                      padding: EdgeInsets.all(6.0),
-                      child: Icon(
-                        Icons.mode_edit_outline_outlined,
-                        color: Color.fromARGB(255, 128, 125, 125),
-                      ),
-                    )),
-              ),
-            )
-          ],
-        ));
+  Widget _loadImage(context) {
+    return Stack(
+      children: [
+        Card(
+            margin:
+                const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 20),
+            elevation: 10,
+            child: SizedBox(
+              width: Get.width,
+              height: 300,
+              child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: (controller.bukti.value != null)
+                      ? CachedNetworkImage(
+                          imageUrl: controller.bukti.value!,
+                          fit: BoxFit.cover,
+                          placeholder: (contex, url) {
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          },
+                        )
+                      : const Center(
+                          child: CupertinoActivityIndicator(
+                            radius: 30,
+                          ),
+                        )),
+            )),
+        Align(
+          alignment: Alignment.topRight,
+          child: Card(
+            elevation: 10,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(100),
+            ),
+            margin: const EdgeInsets.only(right: 20, top: 20),
+            child: InkWell(
+                borderRadius: BorderRadius.circular(100),
+                onTap: () {
+                  controller.buktiPicker(context);
+                },
+                child: const Padding(
+                  padding: EdgeInsets.all(6.0),
+                  child: Icon(
+                    Icons.mode_edit_outline_outlined,
+                    color: Color.fromARGB(255, 128, 125, 125),
+                  ),
+                )),
+          ),
+        )
+      ],
+    );
   }
 
   Widget _dataTemuan(Data data, context) {
@@ -243,17 +260,13 @@ class RubahHazardView extends GetView<RubahHazardController> {
                 child: InkWell(
                     borderRadius: BorderRadius.circular(100),
                     onTap: () async {
-                      // bool status = await Constants().goTo(
-                      //     () => RubahBahaya(
-                      //           data: data,
-                      //           tipe: "bahaya",
-                      //         ),
-                      //     context);
-                      // if (status) {
-                      //   _reload();
-                      // } else {
-                      //   // Navigator.pop(context, false);
-                      // }
+                      bool status = await Get.toNamed(Routes.RUBAH_BAHAYA,
+                          arguments: {"data": data, "tipe": "bahaya"});
+                      if (status) {
+                        controller.reload();
+                      } else {
+                        // Get.back(result: false);
+                      }
                     },
                     child: const Padding(
                       padding: EdgeInsets.all(6.0),
@@ -302,7 +315,7 @@ class RubahHazardView extends GetView<RubahHazardController> {
               child: InkWell(
                   borderRadius: BorderRadius.circular(100),
                   onTap: () async {
-                    // controller.ubahKemungkinan("kemungkinan_sebelum");
+                    controller.ubahKemungkinan("kemungkinan_sebelum");
                   },
                   child: const Padding(
                     padding: EdgeInsets.all(6.0),
@@ -375,7 +388,7 @@ class RubahHazardView extends GetView<RubahHazardController> {
                 child: InkWell(
                     borderRadius: BorderRadius.circular(100),
                     onTap: () async {
-                      // ubahKeparahan("keparahan_sebelum");
+                      controller.ubahKeparahan("keparahan_sebelum");
                     },
                     child: const Padding(
                       padding: EdgeInsets.all(6.0),
@@ -491,7 +504,7 @@ class RubahHazardView extends GetView<RubahHazardController> {
                 child: InkWell(
                     borderRadius: BorderRadius.circular(100),
                     onTap: () {
-                      // ubahKategoriBahaya();
+                      controller.ubahKategoriBahaya();
                     },
                     child: const Padding(
                       padding: EdgeInsets.all(6.0),
@@ -544,7 +557,7 @@ class RubahHazardView extends GetView<RubahHazardController> {
                     child: InkWell(
                         borderRadius: BorderRadius.circular(100),
                         onTap: () {
-                          // ubahPengendalian();
+                          controller.ubahPengendalian();
                         },
                         child: const Padding(
                           padding: EdgeInsets.all(6.0),
@@ -597,19 +610,13 @@ class RubahHazardView extends GetView<RubahHazardController> {
                 child: InkWell(
                     borderRadius: BorderRadius.circular(100),
                     onTap: () async {
-                      // bool status = await Constants().goTo(
-                      //     () => RubahBahaya(
-                      //           data: data,
-                      //           tipe: "tindakan",
-                      //         ),
-                      //     context);
-                      // if (status) {
-                      //   if (widget.detail != null) {
-                      //     _reload();
-                      //   }
-                      // } else {
-                      //   // Navigator.pop(context, false);
-                      // }
+                      bool status = await Get.toNamed(Routes.RUBAH_BAHAYA,
+                          arguments: {"data": data, "tipe": "tindakan"});
+                      if (status) {
+                        controller.reload();
+                      } else {
+                        // Get.back(result: false);
+                      }
                     },
                     child: const Padding(
                       padding: EdgeInsets.all(6.0),
@@ -727,7 +734,6 @@ class RubahHazardView extends GetView<RubahHazardController> {
   }
 
   Widget _gambarPerbaikan(Data data, context) {
-    var urlImg = controller.baseImage + "update/${data.updateBukti}";
     return Card(
         color: Colors.blue,
         elevation: 10,
@@ -743,21 +749,22 @@ class RubahHazardView extends GetView<RubahHazardController> {
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: InkWell(
-                        onTap: () {
-                          // Constants().goTo(
-                          //     () => ImageView(image: state.urlImg),
-                          //     context);
-                        },
-                        child: CachedNetworkImage(
-                          imageUrl: urlImg,
-                          fit: BoxFit.fitWidth,
-                          placeholder: (contex, url) {
-                            return const Center(
-                              child: CircularProgressIndicator(),
-                            );
+                          onTap: () {
+                            // Constants().goTo(
+                            //     () => ImageView(image: state.urlImg),
+                            //     context);
                           },
-                        ),
-                      ),
+                          child: CachedNetworkImage(
+                            imageUrl: controller.updateBukti.value!,
+                            fit: BoxFit.fill,
+                            placeholder: (contex, url) {
+                              return const Center(
+                                child: CircularProgressIndicator(
+                                  color: Colors.white,
+                                ),
+                              );
+                            },
+                          )),
                     ),
                   ),
                   Align(
@@ -771,7 +778,7 @@ class RubahHazardView extends GetView<RubahHazardController> {
                       child: InkWell(
                           borderRadius: BorderRadius.circular(100),
                           onTap: () {
-                            // perbaikanPicker();
+                            controller.perbaikanPicker(context);
                           },
                           child: const Padding(
                             padding: EdgeInsets.all(6.0),
@@ -785,6 +792,64 @@ class RubahHazardView extends GetView<RubahHazardController> {
                 ],
               ))
         ]));
+  }
+
+  Widget ketPerbakan(Data data) {
+    return Column(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Container(
+          padding: const EdgeInsets.only(left: 10, right: 10),
+          margin: const EdgeInsets.only(bottom: 10, top: 10),
+          color: const Color.fromARGB(255, 5, 81, 144),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                "Keterangan Perbaikan",
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              Card(
+                elevation: 10,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(100),
+                ),
+                child: InkWell(
+                    borderRadius: BorderRadius.circular(100),
+                    onTap: () async {
+                      bool status = await Get.toNamed(Routes.RUBAH_BAHAYA,
+                          arguments: {"data": data, "tipe": "perbaikan"});
+                      if (status) {
+                        controller.reload();
+                      } else {
+                        // Get.back(result: false);
+                      }
+                    },
+                    child: const Padding(
+                      padding: EdgeInsets.all(6.0),
+                      child: Icon(
+                        Icons.mode_edit_outline_outlined,
+                        color: Color.fromARGB(255, 128, 125, 125),
+                      ),
+                    )),
+              )
+            ],
+          ),
+        ),
+        Card(
+          margin: const EdgeInsets.all(10),
+          child: Padding(
+            padding: const EdgeInsets.all(10),
+            child: Text("${data.keteranganUpdate}"),
+          ),
+        ),
+      ],
+    );
   }
 
   Widget _rkemSetelah(Data data, context) {
@@ -812,7 +877,7 @@ class RubahHazardView extends GetView<RubahHazardController> {
               child: InkWell(
                   borderRadius: BorderRadius.circular(100),
                   onTap: () async {
-                    // ubahKemungkinan("kemungkinan_sesudah");
+                    controller.ubahKemungkinan("kemungkinan_sesudah");
                   },
                   child: const Padding(
                     padding: EdgeInsets.all(6.0),
@@ -881,7 +946,7 @@ class RubahHazardView extends GetView<RubahHazardController> {
                 child: InkWell(
                     borderRadius: BorderRadius.circular(100),
                     onTap: () async {
-                      // ubahKeparahan("keparahan_sesudah");
+                      controller.ubahKeparahan("keparahan_sesudah");
                     },
                     child: const Padding(
                       padding: EdgeInsets.all(6.0),
@@ -928,16 +993,17 @@ class RubahHazardView extends GetView<RubahHazardController> {
     );
   }
 
-  Widget _totalResikoSesudah(Data data, context) {
+  Widget _totalResikoSesudah() {
     var resikoSesudah = controller.resikoSesudah.value;
     var txtColor = int.parse("0xffffffff");
     var bgColor = int.parse("0xffffffff");
-
-    txtColor = int.parse("0xff" + resikoSesudah.txtColor!.split("#")[1]);
-    bgColor = int.parse("0xff" + resikoSesudah.bgColor!.split("#")[1]);
+    if (resikoSesudah.txtColor != null && resikoSesudah.bgColor != null) {
+      txtColor = int.parse("0xff" + resikoSesudah.txtColor!.split("#")[1]);
+      bgColor = int.parse("0xff" + resikoSesudah.bgColor!.split("#")[1]);
+    }
     return Container(
         margin: const EdgeInsets.all(10),
-        width: MediaQuery.of(context).size.width,
+        width: Get.width,
         child: Card(
           elevation: 10,
           color: Color(bgColor),

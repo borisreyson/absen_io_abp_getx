@@ -11,10 +11,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../data/models/hazard_post.dart';
 import '../../../../data/models/metrik_resiko_model.dart';
 import '../../../../data/repository/repository_api.dart';
+import '../../../../data/services/service.dart';
 import '../../../../data/utils/constants.dart';
 
 class FormHazardController extends GetxController {
-  late HazardPostRepository repository;
+  final repository = HazardPostRepository();
   final formKey = GlobalKey<FormState>();
   final Color warna = const Color(0xFF591505);
   var imagePicker = ImagePicker();
@@ -42,28 +43,37 @@ class FormHazardController extends GetxController {
   final tglSelesai = TextEditingController();
   final jamSelesai = TextEditingController();
 
-  String? idDevice;
+  final idDevice = ''.obs;
   DateTime dt = DateTime.now();
   DateFormat fmt = DateFormat('dd MMMM yyyy');
   final tglHazard = DateTime.now().obs;
-  DateTime? jamHazard;
+  final jamHazard = DateTime.now().obs;
+
+  final tglHazardSelesai = DateTime.now().obs;
+  final jamHazardSelesai = DateTime.now().obs;
   final pengendalian = TextEditingController();
-  int kta = 0;
+
+  final kta = 0.obs;
   final perbaikanInt = 2.obs;
   final pjOption = 2.obs;
-  int? idKmSebelum,
-      idKpSebelum,
-      idKmSesudah,
-      idKpSesudah,
-      idLokasi,
-      idPengendalian,
-      nilaiKmSebelum,
-      nilaiKpSebelum,
-      nilaiKmSesudah,
-      nilaiKpSesudah;
-  String? username;
+
+  final idKmSebelum = 0.obs;
+  final idKpSebelum = 0.obs;
+  final idKmSesudah = 0.obs;
+  final idKpSesudah = 0.obs;
+  final idLokasi = 0.obs;
+  final idPengendalian = 0.obs;
+  final nilaiKmSebelum = 0.obs;
+  final nilaiKpSebelum = 0.obs;
+  final nilaiKmSesudah = 0.obs;
+  final nilaiKpSesudah = 0.obs;
+
+  final username = ''.obs;
+
   final AutovalidateMode autovalidateMode = AutovalidateMode.disabled;
-  final resiko = MetrikResiko().obs;
+
+  final resikoSebelum = MetrikResiko().obs;
+  final resikoSesudah = MetrikResiko().obs;
   List<String> pcikPerbaikan = [
     "SELESAI",
     "BELUM SELESAI",
@@ -71,9 +81,11 @@ class FormHazardController extends GetxController {
     "BERLANJUT"
   ];
   List<String> bahaya = ["KONDISI TIDAK AMAN", "TINDAKAN TIDAK AMAN"];
-
+  final metrikResiko = MetrikService();
   @override
   void onInit() {
+    initIdDevice();
+    getPref();
     tglHazard.value = dt;
     super.onInit();
   }
@@ -90,7 +102,7 @@ class FormHazardController extends GetxController {
     String? _idDevice;
     try {
       _idDevice = await PlatformDeviceId.getDeviceId;
-      idDevice = _idDevice;
+      idDevice.value = "$_idDevice";
     } on PlatformException {
       if (kDebugMode) {
         print("ERROR");
@@ -100,7 +112,7 @@ class FormHazardController extends GetxController {
 
   getPref() async {
     var pref = await SharedPreferences.getInstance();
-    username = pref.getString(Constants.username);
+    username.value = "${pref.getString(Constants.username)}";
   }
 
   pickerBtmSheet() {
@@ -215,10 +227,29 @@ class FormHazardController extends GetxController {
 
   loadMetrik(nilaiKM, nilaiKP) async {
     var total = nilaiKM * nilaiKP;
+    await metrikResiko.getBy(nilai: total).then((value) {
+      if (value != null) {
+        resikoSebelum.value = value;
+      }
+    }).whenComplete(() {
+      var date = DateTime.now();
+      if (int.parse(resikoSebelum.value.batas!) > 0) {
+        var batas = int.parse(resikoSebelum.value.batas!) / 24;
+        var tgl = DateTime(date.year, date.month, date.day + batas.toInt());
+        tenggat.text = fmt.format(tgl);
+      } else {
+        tenggat.text = fmt.format(date);
+      }
+    });
   }
 
   loadMetrikSesudah(nilaiKM, nilaiKP) async {
     var total = nilaiKM * nilaiKP;
+    await metrikResiko.getBy(nilai: total).then((value) {
+      if (value != null) {
+        resikoSesudah.value = value;
+      }
+    });
   }
 
   buktiPicker() async {
@@ -318,21 +349,21 @@ class FormHazardController extends GetxController {
     data.perusahaan = perusahaan.text;
     data.tglHazard = tglController.text;
     data.jamHazard = jamController.text;
-    data.lokasi = "$idLokasi";
+    data.lokasi = "${idLokasi.value}";
     data.lokasiDetail = detailLokasi.text;
     data.deskripsi = deskBahaya.text;
-    data.kemungkinan = "$idKmSebelum";
-    data.keparahan = "$idKpSebelum";
-    data.katBahaya = bahaya.elementAt(kta - 1);
-    data.pengendalian = "$idPengendalian";
+    data.kemungkinan = "${idKmSebelum.value}";
+    data.keparahan = "${idKpSebelum.value}";
+    data.katBahaya = bahaya.elementAt(kta.value - 1);
+    data.pengendalian = "${idPengendalian.value}";
     data.tindakan = tindakan.text;
     data.namaPJ = namaPj.text;
     data.nikPJ = nikPJ.text;
     data.status = pcikPerbaikan.elementAt(perbaikanInt.value - 1);
     data.tglTenggat = tenggat.text;
-    data.userInput = "$username";
+    data.userInput = "${username.value}";
     try {
-      await repository.postHazard(data, idDevice).then((res) {
+      await repository.postHazard(data, idDevice.value).then((res) {
         if (res != null) {
           if (res.success) {
             Get.back();
@@ -344,7 +375,7 @@ class FormHazardController extends GetxController {
       });
     } on HttpException {
       if (kDebugMode) {
-        print("$HttpException");
+        print("error $HttpException");
       }
       Get.back(result: false);
     }
@@ -371,7 +402,7 @@ class FormHazardController extends GetxController {
     data.keparahan = "$idKpSebelum";
     data.kemungkinanSesudah = "$idKmSesudah";
     data.keparahanSesudah = "$idKpSesudah";
-    data.katBahaya = bahaya.elementAt(kta - 1);
+    data.katBahaya = bahaya.elementAt(kta.value - 1);
     data.pengendalian = "$idPengendalian";
     data.tindakan = tindakan.text;
     data.namaPJ = namaPj.text;
@@ -383,7 +414,7 @@ class FormHazardController extends GetxController {
     data.userInput = "$username";
 
     try {
-      await repository.postHazardSelesai(data, idDevice).then((res) {
+      await repository.postHazardSelesai(data, idDevice.value).then((res) {
         if (res != null) {
           if (res.success) {
             Get.back();

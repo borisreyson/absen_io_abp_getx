@@ -2,6 +2,7 @@ import '../models/all_hazard_model.dart';
 import '../models/counter_hazard.dart';
 import '../models/detail_keparahan_model.dart';
 import '../models/detail_pengendalian_model.dart';
+import '../models/device_update_model.dart';
 import '../models/hazard_post.dart';
 import '../models/hazard_user.dart';
 import '../models/kemungkinan_model.dart';
@@ -161,5 +162,16 @@ class AllHazardRepository {
   Future<AllHazard?> fetchAllHazard(
       int disetujui, int page, String dari, String sampai) async {
     return _provider.getAllHazard(disetujui, page, dari, sampai);
+  }
+}
+
+class DeviceUpdateRepository {
+  final _provider = DeviceUpdateProvider();
+  Future<DeviceUpdateModel?> fetchAll() async {
+    return await _provider.getDevice();
+  }
+
+  Future<DeviceUpdateModel?> getDeviceBy(idDevice) async {
+    return await _provider.getDeviceBy(idDevice);
   }
 }

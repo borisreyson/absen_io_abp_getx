@@ -83,4 +83,15 @@ class Table {
               """;
     _db.execute(sql);
   }
+
+  deviceUpdate(Batch _db) {
+    var sql = """
+              CREATE TABLE ${Constants.deviceUpdatTb} 
+              (idUpdate INTEGER, 
+              idDevice TEXT, 
+              tipe  TEXT,
+              timeUpdate  TEXT)
+              """;
+    _db.execute(sql);
+  }
 }

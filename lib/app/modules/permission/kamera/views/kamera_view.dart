@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:face_id_plus/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -66,9 +67,9 @@ class KameraView extends GetView<KameraController> {
                               primary: const Color.fromARGB(255, 189, 11, 165)),
                           onPressed: () {
                             if (Platform.isIOS) {
-                              Get.offAllNamed('/galery');
+                              Get.offAllNamed(Routes.GALERY);
                             } else if (Platform.isAndroid) {
-                              Get.offAllNamed('/penyimpanan');
+                              Get.offAllNamed(Routes.PENIMPANAN);
                             }
                           },
                           icon: const Icon(Icons.chevron_right),

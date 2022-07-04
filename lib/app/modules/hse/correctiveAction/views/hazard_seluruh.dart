@@ -114,6 +114,11 @@ class HazardSeluruh extends GetView {
                       color: const Color.fromARGB(255, 186, 27, 15),
                       child: InkWell(
                         onTap: () async {
+                          await Get.toNamed(Routes.HAZARD_LIST, parameters: {
+                            "option": "all",
+                            "disetujui": "2",
+                            "judul": "Seluruh Hazard Report"
+                          });
                           controller.getPref();
                         },
                         child: ListTile(

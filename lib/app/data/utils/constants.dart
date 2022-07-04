@@ -23,6 +23,7 @@ class Constants {
   static const String pengendalianTb = "PENGENDALIAN";
   static const String detPengendalianTb = "DETAIL_PENGENDALIAN";
   static const String usersTb = "USERS";
+  static const String deviceUpdatTb = "DEVICE_UPDATE";
   static const Color green = Color(0xFF488C03);
 
   // ignore: non_constant_identifier_names
@@ -102,7 +103,7 @@ class Constants {
               ? SingleChildScrollView(
                   child: ListBody(
                     children: <Widget>[
-                      Text(msg),
+                      Center(child: Text(msg)),
                     ],
                   ),
                 )
@@ -135,8 +136,7 @@ class Constants {
     );
   }
 
-  showFormAlert(
-    BuildContext context, {
+  showFormAlert({
     String? judul,
     bool enBtn = true,
     bool dismiss = false,
@@ -146,19 +146,22 @@ class Constants {
     String? label = "Data",
     bool validate = true,
   }) {
-    return showDialog<void>(
-      context: context,
+    return Get.defaultDialog<void>(
       barrierDismissible: dismiss, // user must tap button!
-      builder: (BuildContext context) {
-        return CustomDialog(judul, dismiss, fBtn, sBtn, label, validate);
-      },
+      title: "$judul",
+      content: CustomDialog(
+        dismiss,
+        fBtn,
+        sBtn,
+        label,
+        validate,
+      ),
     );
   }
 }
 
 // ignore: must_be_immutable
 class CustomDialog extends StatefulWidget {
-  String? judul;
   bool enBtn = true;
   bool dismiss = false;
   Color? color;
@@ -166,8 +169,7 @@ class CustomDialog extends StatefulWidget {
   String? sBtn;
   String? label = "Data";
   bool validate = true;
-  CustomDialog(
-      this.judul, this.dismiss, this.fBtn, this.sBtn, this.label, this.validate,
+  CustomDialog(this.dismiss, this.fBtn, this.sBtn, this.label, this.validate,
       {Key? key})
       : super(key: key);
 
@@ -182,61 +184,65 @@ class _CustomDialogState extends State<CustomDialog> {
   final _formController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      title: Text("${widget.judul}"),
-      content: SingleChildScrollView(
-        child: SizedBox(
-          width: MediaQuery.of(context).size.width,
-          child: Form(
-            key: _formKey,
-            child: ListBody(
-              children: [
-                TextFormField(
-                  controller: _formController,
-                  maxLines: 5,
-                  textInputAction: TextInputAction.next,
-                  decoration: InputDecoration(
-                    enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: _warna)),
-                    border: const OutlineInputBorder(),
-                    focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: _warna)),
-                    labelStyle: TextStyle(color: _warna),
-                    alignLabelWithHint: true,
-                    labelText: "${widget.label}",
-                    hintText: "${widget.label}",
-                  ),
-                  focusNode: _formFocus,
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return '${widget.label} Wajib Di Isi';
-                    }
-                    return null;
-                  },
-                )
-              ],
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          SizedBox(
+            width: MediaQuery.of(context).size.width,
+            child: Form(
+              key: _formKey,
+              child: ListBody(
+                children: [
+                  TextFormField(
+                    controller: _formController,
+                    maxLines: 5,
+                    textInputAction: TextInputAction.next,
+                    decoration: InputDecoration(
+                      enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: _warna)),
+                      border: const OutlineInputBorder(),
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: _warna)),
+                      labelStyle: TextStyle(color: _warna),
+                      alignLabelWithHint: true,
+                      labelText: "${widget.label}",
+                      hintText: "${widget.label}",
+                    ),
+                    focusNode: _formFocus,
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return '${widget.label} Wajib Di Isi';
+                      }
+                      return null;
+                    },
+                  )
+                ],
+              ),
             ),
           ),
-        ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              TextButton(
+                onPressed: () async {
+                  if (_formKey.currentState!.validate()) {
+                    Get.back(result: [true, _formController.text]);
+                  } else {
+                    _formFocus.requestFocus();
+                  }
+                },
+                child: Text("${widget.fBtn}"),
+              ),
+              TextButton(
+                onPressed: () {
+                  Get.back(result: [false]);
+                },
+                child: Text("${widget.sBtn}"),
+              ),
+            ],
+          ),
+        ],
       ),
-      actions: [
-        TextButton(
-          onPressed: () async {
-            if (_formKey.currentState!.validate()) {
-              Navigator.pop(context, [true, _formController.text]);
-            } else {
-              _formFocus.requestFocus();
-            }
-          },
-          child: Text("${widget.fBtn}"),
-        ),
-        TextButton(
-          onPressed: () {
-            Navigator.pop(context, [false]);
-          },
-          child: Text("${widget.sBtn}"),
-        ),
-      ],
     );
   }
 }

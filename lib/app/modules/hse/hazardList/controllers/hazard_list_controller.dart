@@ -151,6 +151,40 @@ class HazardListController extends GetxController {
     if (s) {}
   }
 
+  fetchData() async {
+    await provider
+        .getAllHazard(
+      selectedIndex.value,
+      page,
+      fmt.format(dari.value),
+      fmt.format(sampai.value),
+    )
+        .then((result) {
+      if (result != null) {
+        lastPage = result.lastPage!;
+        if (page == lastPage) {
+          pullUp.value = false;
+        } else {
+          pullUp.value = true;
+        }
+        if (kDebugMode) {
+          print("halaman2 : $page : $lastPage");
+        }
+        if (result.to != null) {
+          toIndex = result.to!;
+        }
+        pullRefresh.loadComplete();
+        pullRefresh.refreshCompleted();
+        var dataRes = result.data;
+        if (dataRes != null) {
+          for (var element in dataRes) {
+            data.add(element);
+          }
+        }
+      }
+    });
+  }
+
   void onLoading() async {
     if (page < lastPage) {
       isLoading.value = true;

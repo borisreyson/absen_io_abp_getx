@@ -24,13 +24,13 @@ class HazardPJView extends GetView<HazardPJController> {
                 color: Colors.white,
               ),
             ),
-            IconButton(
-              onPressed: () async {},
-              icon: const Icon(
-                Icons.add,
-                color: Colors.white,
-              ),
-            )
+            // IconButton(
+            //   onPressed: () async {},
+            //   icon: const Icon(
+            //     Icons.add,
+            //     color: Colors.white,
+            //   ),
+            // )
           ],
           elevation: 0,
           backgroundColor:
@@ -38,7 +38,7 @@ class HazardPJView extends GetView<HazardPJController> {
         ),
         body: _getData(),
         bottomNavigationBar: _navBar(),
-        floatingActionButton: _floatingAction(),
+        // floatingActionButton: _floatingAction(),
         backgroundColor:
             controller.colorList.elementAt(controller.selectedIndex.value),
       ),
@@ -53,6 +53,10 @@ class HazardPJView extends GetView<HazardPJController> {
       enablePullUp: controller.pullUp.value,
       onRefresh: controller.onRefresh,
       onLoading: controller.onLoading,
+      header: WaterDropMaterialHeader(
+        backgroundColor: Colors.white,
+        color: controller.colorList.elementAt(controller.selectedIndex.value),
+      ),
       child: ListView(
         children: controller.data
             .map((data) => WidgetHazardView(
@@ -179,9 +183,13 @@ class HazardPJView extends GetView<HazardPJController> {
       color: controller.hseColor,
       elevation: 10,
       child: InkWell(
-          onTap: () {
+          onTap: () async {
+            controller.pullRefresh.requestRefresh();
             controller.page = 1;
             controller.data.clear();
+            await controller.fetchData();
+            controller.pullRefresh.loadComplete();
+            controller.pullRefresh.refreshCompleted();
             Get.back();
           },
           child: Padding(

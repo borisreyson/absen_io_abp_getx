@@ -32,6 +32,10 @@ class LoginController extends GetxController {
 
   @override
   void onClose() {}
+  toggleVisible() {
+    passwordVisible.value = !passwordVisible.value;
+  }
+
   doLogin() async {
     if (formKey.currentState!.validate()) {
       var loginABP = LoginABP();

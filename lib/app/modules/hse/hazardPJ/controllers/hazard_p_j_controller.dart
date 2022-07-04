@@ -84,7 +84,40 @@ class HazardPJController extends GetxController {
 
     super.onInit();
   }
-
+  fetchData()async{
+    await provider
+        .getHazardKeSaya(
+      nik.value,
+      selectedIndex.value,
+      page,
+      fmt.format(dari.value),
+      fmt.format(sampai.value),
+    )
+        .then((result) {
+      if (result != null) {
+        lastPage = result.lastPage!;
+        if (page == lastPage) {
+          pullUp.value = false;
+        } else {
+          pullUp.value = true;
+        }
+        if (kDebugMode) {
+          print("halaman2 : $page : $lastPage");
+        }
+        if (result.to != null) {
+          toIndex = result.to!;
+        }
+        pullRefresh.loadComplete();
+        pullRefresh.refreshCompleted();
+        var dataRes = result.data;
+        if (dataRes != null) {
+          for (var element in dataRes) {
+            data.add(element);
+          }
+        }
+      }
+    });
+  }
   @override
   void onReady() {
     super.onReady();
@@ -151,7 +184,40 @@ class HazardPJController extends GetxController {
   void reload({bool s = false}) async {
     data.clear();
     page = 1;
-    if (s) {}
+    if (s) {
+      await provider
+          .getHazardUser(
+        username.value,
+        selectedIndex.value,
+        page,
+        fmt.format(dari.value),
+        fmt.format(sampai.value),
+      )
+          .then((result) {
+        if (result != null) {
+          lastPage = result.lastPage!;
+          if (page == lastPage) {
+            pullUp.value = false;
+          } else {
+            pullUp.value = true;
+          }
+          if (kDebugMode) {
+            print("halaman2 : $page : $lastPage");
+          }
+          if (result.to != null) {
+            toIndex = result.to!;
+          }
+          pullRefresh.loadComplete();
+          pullRefresh.refreshCompleted();
+          var dataRes = result.data;
+          if (dataRes != null) {
+            for (var element in dataRes) {
+              data.add(element);
+            }
+          }
+        }
+      });
+    }
   }
 
   void onLoading() async {
