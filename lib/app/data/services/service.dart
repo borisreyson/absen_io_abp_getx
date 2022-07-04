@@ -219,6 +219,10 @@ class DeviceUpdateService {
     return await _repository.insert(Constants.deviceUpdatTb, _data);
   }
 
+  update(_data) async {
+    return await _repository.update(Constants.deviceUpdatTb, _data);
+  }
+
   Future<List<DeviceUpdate>> getAll() async {
     var res = await _repository.getAll(table: Constants.deviceUpdatTb);
     return res;

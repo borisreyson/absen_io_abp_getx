@@ -52,29 +52,45 @@ class MenuAbpController extends GetxController
         await deviceService
             .getBy(idDevice: "${idDevice.value}")
             .then((value) async {
+          print(" getBy ${value.length}");
+
           if (value.isNotEmpty) {
-            isLoading.value = false;
             var stringList = [];
             var stringTime = [];
-            value.forEach((element) {
+            for (var element in value) {
               stringList.add(element.tipe);
               stringTime.add(element.timeUpdate);
-            });
-
+            }
+            var z = 0;
             await provider
                 .getDeviceTipe(idDevice.value, stringList)
-                .then((value) {
+                .then((value) async {
               if (value != null) {
                 if (value.deviceUpdate != null) {
                   for (var element in value.deviceUpdate!) {
-                    if (stringTime.contains(element.timeUpdate)) {
-                      print(" true");
+                    if (stringTime.contains(element.timeUpdate) &&
+                        stringList.contains(element.tipe)) {
+                      print("true $z ${element.tipe}");
                     } else {
-                      print(" false");
+                      print(" false $z ${element.tipe}");
+                      await updateLokal(element.tipe);
+                      print(" false $z ${element.tipe} 1");
+
+                      var data = DeviceUpdate();
+                      data.idDevice = idDevice.value;
+                      data.idUpdate = element.idUpdate;
+                      data.tipe = element.tipe;
+                      data.timeUpdate = element.timeUpdate;
+                      var res = await DeviceUpdateService().update(data);
+                      if (kDebugMode) {
+                        print("deviceUpdateGet $res");
+                      }
                     }
+                    z++;
                   }
                 }
               }
+              isLoading.value = false;
             });
           } else {
             loadingService();
@@ -88,6 +104,8 @@ class MenuAbpController extends GetxController
   }
 
   loadingService() async {
+    listString.clear();
+
     await _service.kemungkinanGet();
     listString.add("kemungkinan");
     await _service.keparahanGet();
@@ -138,6 +156,58 @@ class MenuAbpController extends GetxController
       if (kDebugMode) {
         print("ERROR");
       }
+    }
+  }
+
+  updateLokal(tipe) async {
+    listString.clear();
+    switch (tipe) {
+      case "kemungkinan":
+        await _service.kemungkinanGet();
+        listString.add("kemungkinan");
+        print("tipe $tipe 1");
+        break;
+      case "keparahan":
+        await _service.keparahanGet();
+        listString.add("keparahan");
+        print("tipe $tipe 2");
+
+        break;
+      case "metrik":
+        await _service.metrikGet();
+        listString.add("metrik");
+        print("tipe $tipe 3");
+        break;
+      case "perusahaan":
+        await _service.perusahaanGet();
+        listString.add("perusahaan");
+        print("tipe $tipe 4");
+        break;
+      case "lokasi":
+        await _service.lokasiGet();
+        listString.add("lokasi");
+        print("tipe $tipe 5");
+        break;
+      case "detKeparahan":
+        await _service.detKeparahanGet();
+        listString.add("detKeparahan");
+        print("tipe $tipe 6");
+        break;
+      case "pengendalian":
+        await _service.pengendalianGet();
+        listString.add("pengendalian");
+        print("tipe $tipe 7");
+        break;
+      case "detPengendalian":
+        await _service.detPengendalianGet();
+        listString.add("detPengendalian");
+        print("tipe $tipe 8");
+        break;
+      case "user":
+        await _service.usersGet();
+        listString.add("user");
+        print("tipe $tipe 9");
+        break;
     }
   }
 }

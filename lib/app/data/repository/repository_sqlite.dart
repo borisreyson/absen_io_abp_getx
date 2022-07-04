@@ -628,6 +628,27 @@ class RepositoryDeviceUpdate {
     }
   }
 
+  update(table, DeviceUpdate data) async {
+    var conn = await db;
+    var qRes = await conn!.rawQuery(
+        "SELECT count(*) FROM $table WHERE idDevice = '${data.idDevice}' and tipe ='${data.tipe}'");
+    var res = Sqflite.firstIntValue(qRes);
+    if (res != null) {
+      if (res > 0) {
+        if (qRes[0]['timeUpdate'] != data.timeUpdate) {
+          return await conn.update(table, data.toJson(),
+              where: "idDevice = ? and tipe = ?",
+              whereArgs: [data.idDevice, data.tipe]);
+        }
+        return 0;
+      } else {
+        return await conn.insert(table, data.toJson());
+      }
+    } else {
+      return await conn.insert(table, data.toJson());
+    }
+  }
+
   Future<List<DeviceUpdate>> getById({String? table, String? idDevice}) async {
     var conn = await db;
     List<DeviceUpdate> data = [];
