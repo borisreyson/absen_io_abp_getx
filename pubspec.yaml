@@ -36,7 +36,7 @@ dependencies:
   intl: any
   intro_slider: any
   lazy_load_scrollview: any
-  location: any
+  location: ^4.4.0
   network_info_plus: any
   path_provider: any
   permission_handler: any

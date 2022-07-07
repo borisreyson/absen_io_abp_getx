@@ -1,0 +1,7 @@
+Executable : C:\Users\Yoga\AppData\Local\Android\sdk\cmake\3.18.1\bin\ninja.exe
+arguments : 
+-C
+C:\Users\Yoga\AndroidStudioProjects\absen_io_abp_getx\android\app\.cxx\Debug\4i1u5p1z\x86
+convertImage
+jvmArgs : 
+
