@@ -13,6 +13,8 @@ class Constants {
   static const String nik = "nik";
   static const String name = "name";
   static const String rule = "rule";
+  static const String departement = "departement";
+  static const String section = "section";
   static const String fotoProfile = "fotoProfile";
   static const String company= "company";
   static const String baseUrl = "https://lp.abpjobsite.com/";

@@ -1,11 +1,19 @@
+import 'package:face_id_plus/app/data/utils/constants.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class RkbController extends GetxController {
-  //TODO: Implement RkbController
+  final status = RxnString(null);
+  final nik = RxnString(null);
+  final nama = RxnString(null);
+  final section = RxnString(null);
+  final dept = RxnString(null);
+  final perusahaan = RxnString(null);
 
-  final count = 0.obs;
   @override
   void onInit() {
+    getPref();
+    status.value = Get.arguments['status'];
     super.onInit();
   }
 
@@ -19,5 +27,12 @@ class RkbController extends GetxController {
     super.onClose();
   }
 
-  void increment() => count.value++;
+  getPref() async {
+    var pref = await SharedPreferences.getInstance();
+    nik.value = pref.getString(Constants.nik);
+    nama.value = pref.getString(Constants.name);
+    section.value = pref.getString(Constants.section);
+    dept.value = pref.getString(Constants.departement);
+    perusahaan.value = pref.getString(Constants.company);
+  }
 }

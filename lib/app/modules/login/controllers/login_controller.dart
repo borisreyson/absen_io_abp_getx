@@ -71,6 +71,8 @@ class LoginController extends GetxController {
     await pref.setString(Constants.rule, user.rule!);
     await pref.setString(Constants.fotoProfile, user.photoProfile!);
     await pref.setString(Constants.company, "${user.perusahaan}");
+    await pref.setString(Constants.section, "${user.section}");
+    await pref.setString(Constants.departement, "${user.department}");
     Get.offAllNamed('/menu-abp');
   }
 }
