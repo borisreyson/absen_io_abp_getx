@@ -33,12 +33,12 @@ class LoginAbsenView extends GetView<LoginAbsenController> {
     );
   }
 
-  Widget loginForm(context, _controller) {
+  Widget loginForm(context, controller) {
     return Container(
       margin: const EdgeInsets.only(top: 10),
       padding: const EdgeInsets.all(10),
       child: Form(
-        key: _controller.formKey,
+        key: controller.formKey,
         child: ListView(
           children: [
             const Center(
@@ -60,17 +60,17 @@ class LoginAbsenView extends GetView<LoginAbsenController> {
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
                   keyboardType: TextInputType.number,
-                  focusNode: _controller.userFocus,
+                  focusNode: controller.userFocus,
                   textInputAction: TextInputAction.next,
                   decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                       labelText: "Username / NIK"),
                   onSaved: (value) {
-                    _controller.user.value = value!;
+                    controller.user.value = value!;
                   },
                   onFieldSubmitted: (term) {
-                    _controller.userFocus.unfocus();
-                    FocusScope.of(context).requestFocus(_controller.passFocus);
+                    controller.userFocus.unfocus();
+                    FocusScope.of(context).requestFocus(controller.passFocus);
                   },
                   validator: (value) {
                     final isValidateUsername = RegExp(r'^[a-zA-Z0-9]*$');
@@ -81,7 +81,7 @@ class LoginAbsenView extends GetView<LoginAbsenController> {
                     }
                     return null;
                   },
-                  controller: _controller.userController,
+                  controller: controller.userController,
                 ),
               ),
             ),
@@ -94,27 +94,27 @@ class LoginAbsenView extends GetView<LoginAbsenController> {
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
                   keyboardType: TextInputType.number,
-                  focusNode: _controller.passFocus,
-                  obscureText: !_controller.passwordVisible.value,
+                  focusNode: controller.passFocus,
+                  obscureText: !controller.passwordVisible.value,
                   textInputAction: TextInputAction.go,
                   decoration: InputDecoration(
                       border: const OutlineInputBorder(),
                       labelText: "Password",
                       hintText: "Password",
                       suffixIcon: IconButton(
-                          icon: !_controller.passwordVisible.value
+                          icon: !controller.passwordVisible.value
                               ? const Icon(Icons.visibility_off)
                               : const Icon(Icons.visibility),
                           onPressed: () {
-                            _controller.passFocus.unfocus();
-                            _controller.toggleVisible();
+                            controller.passFocus.unfocus();
+                            controller.toggleVisible();
                           })),
                   onSaved: (value) {
-                    _controller.pass = value!;
+                    controller.pass = value!;
                   },
                   onFieldSubmitted: (term) {
-                    _controller.passFocus.unfocus();
-                    _controller.doLogin();
+                    controller.passFocus.unfocus();
+                    controller.doLogin();
                   },
                   validator: (value) {
                     if (value!.isEmpty) {
@@ -122,7 +122,7 @@ class LoginAbsenView extends GetView<LoginAbsenController> {
                     }
                     return null;
                   },
-                  controller: _controller.passController,
+                  controller: controller.passController,
                 ),
               ),
             ),
@@ -153,7 +153,7 @@ class LoginAbsenView extends GetView<LoginAbsenController> {
             Visibility(
               visible: controller.akunDitemukan.value,
               child: RoundedLoadingButton(
-                color: Color.fromARGB(255, 121, 21, 14),
+                color: const Color.fromARGB(255, 121, 21, 14),
                 controller: controller.roundBtn,
                 onPressed: () {
                   controller.roundBtn.start();

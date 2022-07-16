@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:face_id_plus/app/data/models/device_update_model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get_connect.dart';
+import 'package:uuid/uuid.dart';
 import '../models/all_hazard_model.dart';
 import '../models/counter_hazard.dart';
 import '../models/data_hazard.dart';
@@ -28,6 +29,16 @@ import '../models/users_model.dart';
 import '../utils/constants.dart';
 
 class Provider extends GetConnect {
+  Future<AbsenList> apiListAbsenUser({String? nik, page}) async {
+    String apiUrl =
+        "https://lp.abpjobsite.com/api/v1/presensi/get/list/user?nik=$nik&page=$page";
+    var apiResult = await http.get(Uri.parse(apiUrl));
+    var jsonObject = json.decode(apiResult.body);
+    var absenList = AbsenList.fromJson(jsonObject);
+    absenList.listAbsen?.data?.forEach((element) {});
+    return absenList;
+  }
+
   Future<FaceModel?> loginApiFace(LoginABP loginABP) async {
     String apiUrl = "https://lp.abpjobsite.com/api/login/face";
     var apiResult = await http.post(Uri.parse(apiUrl), body: loginABP.toJson());
@@ -181,18 +192,14 @@ class HazardProvider {
   String baseUrl = "https://lp.abpjobsite.com/api/v1/hazard/";
 
   Future<ResultHazardPost?> postHazard(HazardPostModel data, idDevice) async {
-    Map<String, dynamic>? _res;
+    Map<String, dynamic>? res;
 
-    DateTime _dt = DateTime.now();
+    DateTime dt = DateTime.now();
 
-    String _filename = "${_dt.hour}".padLeft(2, "0") +
-        "${_dt.minute}".padLeft(2, "0") +
-        "${_dt.second}".padLeft(2, "0") +
-        "_${idDevice}_sebelum.jpg";
-    String _pjFoto = "${_dt.hour}".padLeft(2, "0") +
-        "${_dt.minute}".padLeft(2, "0") +
-        "${_dt.second}".padLeft(2, "0") +
-        "_${idDevice}_penanggung_jawab.jpg";
+    String filename =
+        "${"${dt.hour}".padLeft(2, "0")}${"${dt.minute}".padLeft(2, "0")}${"${dt.second}".padLeft(2, "0")}_${idDevice}_sebelum.jpg";
+    String pjFoto =
+        "${"${dt.hour}".padLeft(2, "0")}${"${dt.minute}".padLeft(2, "0")}${"${dt.second}".padLeft(2, "0")}_${idDevice}_penanggung_jawab.jpg";
 
     Uri uri = Uri.parse("https://lp.abpjobsite.com/api/v1/hazard");
 
@@ -200,10 +207,10 @@ class HazardProvider {
 
     request.files.add(http.MultipartFile.fromBytes(
         'fileToUpload', await data.fileToUpload!.readAsBytes(),
-        filename: _filename));
+        filename: filename));
     request.files.add(http.MultipartFile.fromBytes(
         'fileToUploadPJ', await data.fileToUploadPJ!.readAsBytes(),
-        filename: _pjFoto));
+        filename: pjFoto));
 
     request.fields['perusahaan'] = "${data.perusahaan}";
     request.fields['tgl_hazard'] = "${data.tglHazard}";
@@ -224,8 +231,8 @@ class HazardProvider {
 
     log("res ${data.fileToUpload}");
     log("res ${data.fileToUploadPJ}");
-    log("res ${_filename}");
-    log("res ${_pjFoto}");
+    log("res $filename");
+    log("res $pjFoto");
     log("res ${data.perusahaan}");
     log("res ${data.tglHazard}");
     log("res ${data.jamHazard}");
@@ -248,34 +255,28 @@ class HazardProvider {
 
     await for (String s in response.stream.transform(utf8.decoder)) {
       print("errorPost ${s.toString()}");
-      _res = jsonDecode(s);
+      res = jsonDecode(s);
     }
 
     return ResultHazardPost.fromJson(
-      _res!,
+      res!,
     );
   }
 
   Future<ResultHazardPost?> postHazardSelesai(
       HazardPostSelesaiModel data, idDevice) async {
-    Map<String, dynamic>? _res;
+    Map<String, dynamic>? res;
 
-    DateTime _dt = DateTime.now();
+    DateTime dt = DateTime.now();
 
-    String _filename = "${_dt.hour}".padLeft(2, "0") +
-        "${_dt.minute}".padLeft(2, "0") +
-        "${_dt.second}".padLeft(2, "0") +
-        "_${idDevice}_sebelum.jpg";
+    String filename =
+        "${"${dt.hour}".padLeft(2, "0")}${"${dt.minute}".padLeft(2, "0")}${"${dt.second}".padLeft(2, "0")}_${idDevice}_sebelum.jpg";
 
-    String _pjFoto = "${_dt.hour}".padLeft(2, "0") +
-        "${_dt.minute}".padLeft(2, "0") +
-        "${_dt.second}".padLeft(2, "0") +
-        "_${idDevice}_penanggung_jawab.jpg";
+    String pjFoto =
+        "${"${dt.hour}".padLeft(2, "0")}${"${dt.minute}".padLeft(2, "0")}${"${dt.second}".padLeft(2, "0")}_${idDevice}_penanggung_jawab.jpg";
 
-    String _fNameSelesai = "${_dt.hour}".padLeft(2, "0") +
-        "${_dt.minute}".padLeft(2, "0") +
-        "${_dt.second}".padLeft(2, "0") +
-        "_${idDevice}_selesai.jpg";
+    String fNameSelesai =
+        "${"${dt.hour}".padLeft(2, "0")}${"${dt.minute}".padLeft(2, "0")}${"${dt.second}".padLeft(2, "0")}_${idDevice}_selesai.jpg";
 
     Uri uri = Uri.parse("${baseUrl}selesai");
 
@@ -283,15 +284,15 @@ class HazardProvider {
 
     request.files.add(http.MultipartFile.fromBytes(
         'fileToUpload', await data.fileToUpload!.readAsBytes(),
-        filename: _filename));
+        filename: filename));
 
     request.files.add(http.MultipartFile.fromBytes(
         'fileToUploadPJ', await data.fileToUploadPJ!.readAsBytes(),
-        filename: _pjFoto));
+        filename: pjFoto));
 
     request.files.add(http.MultipartFile.fromBytes(
         'fileToUploadSelesai', await data.fileToUploadSelesai!.readAsBytes(),
-        filename: _fNameSelesai));
+        filename: fNameSelesai));
 
     request.fields['perusahaan'] = "${data.perusahaan}";
     request.fields['tgl_hazard'] = "${data.tglHazard}";
@@ -317,21 +318,19 @@ class HazardProvider {
     var response = await request.send();
 
     await for (String s in response.stream.transform(utf8.decoder)) {
-      _res = jsonDecode(s);
+      res = jsonDecode(s);
     }
-    return ResultHazardPost.fromJson(_res!);
+    return ResultHazardPost.fromJson(res!);
   }
 
   Future<ResultHazardPost?> postUpdateHazard(
       HazardUpdate data, idDevice) async {
-    Map<String, dynamic>? _res;
+    Map<String, dynamic>? res;
 
-    DateTime _dt = DateTime.now();
+    DateTime dt = DateTime.now();
 
-    String _filename = "${_dt.hour}".padLeft(2, "0") +
-        "${_dt.minute}".padLeft(2, "0") +
-        "${_dt.second}".padLeft(2, "0") +
-        "_${idDevice}_selesai.jpg";
+    String filename =
+        "${"${dt.hour}".padLeft(2, "0")}${"${dt.minute}".padLeft(2, "0")}${"${dt.second}".padLeft(2, "0")}_${idDevice}_selesai.jpg";
 
     Uri uri = Uri.parse("https://lp.abpjobsite.com/api/v1/hazard/update");
 
@@ -339,7 +338,7 @@ class HazardProvider {
 
     request.files.add(http.MultipartFile.fromBytes(
         'fileToUpload', await data.fileToUpload!.readAsBytes(),
-        filename: _filename));
+        filename: filename));
 
     request.fields['uid'] = "${data.uid}";
     request.fields['tgl_selesai'] = "${data.tglSelesai}";
@@ -351,9 +350,9 @@ class HazardProvider {
     var response = await request.send();
 
     await for (String s in response.stream.transform(utf8.decoder)) {
-      _res = jsonDecode(s);
+      res = jsonDecode(s);
     }
-    return ResultHazardPost.fromJson(_res!);
+    return ResultHazardPost.fromJson(res!);
   }
 
   Future<ResultHazardPost?> deleteHazard(uid) async {
@@ -433,14 +432,12 @@ class HazardProvider {
 
   Future<ResultHazardPost?> postGambarBukti(
       HazardGambarBukti data, idDevice) async {
-    Map<String, dynamic>? _res;
+    Map<String, dynamic>? res;
 
-    DateTime _dt = DateTime.now();
+    DateTime dt = DateTime.now();
 
-    String _filename = "${_dt.hour}".padLeft(2, "0") +
-        "${_dt.minute}".padLeft(2, "0") +
-        "${_dt.second}".padLeft(2, "0") +
-        "_${idDevice}_sebelum.jpg";
+    String filename =
+        "${"${dt.hour}".padLeft(2, "0")}${"${dt.minute}".padLeft(2, "0")}${"${dt.second}".padLeft(2, "0")}_${idDevice}_sebelum.jpg";
 
     Uri uri = Uri.parse("${baseUrl}rubah/gambar/temuan");
 
@@ -448,28 +445,26 @@ class HazardProvider {
 
     request.files.add(http.MultipartFile.fromBytes(
         'bukti_sebelum', await data.buktiSebelum!.readAsBytes(),
-        filename: _filename));
+        filename: filename));
 
     request.fields['uid'] = "${data.uid}";
 
     var response = await request.send();
 
     await for (String s in response.stream.transform(utf8.decoder)) {
-      _res = jsonDecode(s);
+      res = jsonDecode(s);
     }
-    return ResultHazardPost.fromJson(_res!);
+    return ResultHazardPost.fromJson(res!);
   }
 
   Future<ResultHazardPost?> postGambarPerbaikan(
       HazardGambarPerbaikan data, idDevice) async {
-    Map<String, dynamic>? _res;
+    Map<String, dynamic>? res;
 
-    DateTime _dt = DateTime.now();
+    DateTime dt = DateTime.now();
 
-    String _filename = "${_dt.hour}".padLeft(2, "0") +
-        "${_dt.minute}".padLeft(2, "0") +
-        "${_dt.second}".padLeft(2, "0") +
-        "_${idDevice}_selesai.jpg";
+    String filename =
+        "${"${dt.hour}".padLeft(2, "0")}${"${dt.minute}".padLeft(2, "0")}${"${dt.second}".padLeft(2, "0")}_${idDevice}_selesai.jpg";
 
     Uri uri = Uri.parse("${baseUrl}rubah/gambar/perbaikan");
 
@@ -477,16 +472,16 @@ class HazardProvider {
 
     request.files.add(http.MultipartFile.fromBytes(
         'bukti_selesai', await data.buktiSelesai!.readAsBytes(),
-        filename: _filename));
+        filename: filename));
 
     request.fields['uid'] = "${data.uid}";
 
     var response = await request.send();
 
     await for (String s in response.stream.transform(utf8.decoder)) {
-      _res = jsonDecode(s);
+      res = jsonDecode(s);
     }
-    return ResultHazardPost.fromJson(_res!);
+    return ResultHazardPost.fromJson(res!);
   }
 
   Future<Data?> getHazardDetail(
@@ -584,5 +579,33 @@ class DeviceUpdateProvider {
     var jsonObject = json.decode(api.body);
     var decoJson = DeviceUpdateResult.fromJson(jsonObject);
     return decoJson;
+  }
+}
+
+class DoPresensi {
+  Future<StatusAbsensi> takePresensi(PostAbsen data, String idDevice) async {
+    Map<String, dynamic>? res;
+    var uuid = const Uuid();
+
+    DateTime dt = DateTime.now();
+
+    String filename =
+        "${data.nik}_${"${dt.hour}".padLeft(2, "0")}${"${dt.minute}".padLeft(2, "0")}${"${dt.second}".padLeft(2, "0")}_${idDevice}_${data.status}_${uuid.v1()}.jpg";
+    var uri =
+        Uri.parse("https://lp.abpjobsite.com/api/v1/presensi/upload/absensi");
+    var request = http.MultipartRequest('POST', uri);
+
+    request.files.add(http.MultipartFile.fromBytes(
+        'fileToUpload', await data.fileToUpload!.readAsBytes(),
+        filename: filename));
+    request.fields['nik'] = "${data.nik}";
+    request.fields['lat'] = "${data.lat}";
+    request.fields['lng'] = "${data.lng}";
+
+    var response = await request.send();
+    await for (String s in response.stream.transform(utf8.decoder)) {
+      res = jsonDecode(s);
+    }
+    return StatusAbsensi.fromJson(res!);
   }
 }

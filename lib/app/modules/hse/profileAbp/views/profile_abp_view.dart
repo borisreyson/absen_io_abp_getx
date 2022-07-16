@@ -24,7 +24,7 @@ class ProfileAbpView extends GetView<ProfileAbpController> {
               bottomSecondary: Colors.red,
               bgColor: Colors.white),
           ListView(
-            children: [],
+            children: const [],
           ),
           Positioned(
               bottom: 20,

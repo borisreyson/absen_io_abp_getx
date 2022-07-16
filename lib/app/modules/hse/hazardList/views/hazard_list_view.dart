@@ -131,9 +131,9 @@ class HazardListView extends GetView<HazardListController> {
         });
   }
 
-  Widget _tglPick(String __title, _initial) {
-    var ___inital = _initial;
-    TextStyle _style =
+  Widget _tglPick(String title, initial) {
+    var inital = initial;
+    TextStyle style =
         const TextStyle(fontWeight: FontWeight.bold, color: Colors.white);
     return StatefulBuilder(
       builder: (context, stateSet) {
@@ -142,17 +142,17 @@ class HazardListView extends GetView<HazardListController> {
           elevation: 10,
           child: InkWell(
               onTap: () async {
-                var selected = await _selectDate(context, ___inital!);
+                var selected = await _selectDate(context, inital!);
                 if (selected != null) {
-                  if (__title == "Dari") {
+                  if (title == "Dari") {
                     stateSet(() {
                       controller.dari.value = selected;
-                      ___inital = selected;
+                      inital = selected;
                     });
-                  } else if (__title == "Sampai") {
+                  } else if (title == "Sampai") {
                     stateSet(() {
                       controller.sampai.value = selected;
-                      ___inital = selected;
+                      inital = selected;
                     });
                   }
                 }
@@ -163,13 +163,13 @@ class HazardListView extends GetView<HazardListController> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     Text(
-                      __title,
-                      style: _style,
+                      title,
+                      style: style,
                     ),
                     const SizedBox(
                       width: 20,
                     ),
-                    Text(controller.fmt.format(___inital!), style: _style),
+                    Text(controller.fmt.format(inital!), style: style),
                   ],
                 ),
               )),
@@ -184,7 +184,7 @@ class HazardListView extends GetView<HazardListController> {
   }
 
   Widget _submitWidgetDTrange() {
-    TextStyle _style =
+    TextStyle style =
         const TextStyle(fontWeight: FontWeight.bold, color: Colors.white);
     return Card(
       color: controller.hseColor,
@@ -205,7 +205,7 @@ class HazardListView extends GetView<HazardListController> {
               children: [
                 Text(
                   "Submit",
-                  style: _style,
+                  style: style,
                 ),
               ],
             ),

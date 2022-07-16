@@ -303,17 +303,15 @@ class RubahStatusView extends GetView<RubahStatusController> {
                         onTap: () async {
                           Kemungkinan data =
                               await Get.toNamed(Routes.KEMUNGKINAN);
-                          if (data != null) {
-                            controller.nilaiKmSesudah.value = data.nilai!;
-                            if (controller.nilaiKpSesudah.value > 0) {
-                              controller.loadMetrikSesudah(
-                                  controller.nilaiKmSesudah.value,
-                                  controller.nilaiKpSesudah.value);
-                            }
-                            controller.idKmSesudah.value = data.idKemungkinan!;
-                            controller.kemungkinanSesudah.text =
-                                "${data.kemungkinan}";
+                          controller.nilaiKmSesudah.value = data.nilai!;
+                          if (controller.nilaiKpSesudah.value > 0) {
+                            controller.loadMetrikSesudah(
+                                controller.nilaiKmSesudah.value,
+                                controller.nilaiKpSesudah.value);
                           }
+                          controller.idKmSesudah.value = data.idKemungkinan!;
+                          controller.kemungkinanSesudah.text =
+                              "${data.kemungkinan}";
                         },
                         controller: controller.kemungkinanSesudah,
                         autofocus: false,
@@ -367,17 +365,15 @@ class RubahStatusView extends GetView<RubahStatusController> {
                       TextFormField(
                         onTap: () async {
                           Keparahan data = await Get.toNamed(Routes.KEPARAHAN);
-                          if (data != null) {
-                            controller.nilaiKpSesudah.value = data.nilai!;
-                            if (controller.nilaiKmSesudah > 0) {
-                              controller.loadMetrikSesudah(
-                                  controller.nilaiKmSesudah.value,
-                                  controller.nilaiKpSesudah.value);
-                            }
-                            controller.idKpSesudah.value = data.idKeparahan!;
-                            controller.keparahanSesudah.text =
-                                "${data.keparahan}";
+                          controller.nilaiKpSesudah.value = data.nilai!;
+                          if (controller.nilaiKmSesudah > 0) {
+                            controller.loadMetrikSesudah(
+                                controller.nilaiKmSesudah.value,
+                                controller.nilaiKpSesudah.value);
                           }
+                          controller.idKpSesudah.value = data.idKeparahan!;
+                          controller.keparahanSesudah.text =
+                              "${data.keparahan}";
                         },
                         controller: controller.keparahanSesudah,
                         autofocus: false,

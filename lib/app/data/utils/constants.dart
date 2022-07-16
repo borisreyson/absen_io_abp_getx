@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -12,6 +14,7 @@ class Constants {
   static const String name = "name";
   static const String rule = "rule";
   static const String fotoProfile = "fotoProfile";
+  static const String company= "company";
   static const String baseUrl = "https://lp.abpjobsite.com/";
   static const String mainUrl = "https://abpjobsite.com/";
   static const String kemungkinanTb = "KEMUNGKINAN";
@@ -26,6 +29,10 @@ class Constants {
   static const String deviceUpdatTb = "DEVICE_UPDATE";
   static const Color green = Color(0xFF488C03);
 
+  late StreamSubscription subscriptionVps;
+  late StreamSubscription subscriptionServer;
+  late StreamSubscription subscriptionLokal;
+  late StreamSubscription subscriptionServerOnline;
   // ignore: non_constant_identifier_names
   sign_out(context) async {
     var pref = await SharedPreferences.getInstance();

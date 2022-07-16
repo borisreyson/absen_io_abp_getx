@@ -445,8 +445,8 @@ class RubahHazardView extends GetView<RubahHazardController> {
     var txtColor = int.parse("0xffffffff");
     var bgColor = int.parse("0xffffffff");
     if (resikoSebelum.txtColor != null && resikoSebelum.bgColor != null) {
-      txtColor = int.parse("0xff" + resikoSebelum.txtColor!.split("#")[1]);
-      bgColor = int.parse("0xff" + resikoSebelum.bgColor!.split("#")[1]);
+      txtColor = int.parse("0xff${resikoSebelum.txtColor!.split("#")[1]}");
+      bgColor = int.parse("0xff${resikoSebelum.bgColor!.split("#")[1]}");
     }
 
     return Container(
@@ -998,8 +998,8 @@ class RubahHazardView extends GetView<RubahHazardController> {
     var txtColor = int.parse("0xffffffff");
     var bgColor = int.parse("0xffffffff");
     if (resikoSesudah.txtColor != null && resikoSesudah.bgColor != null) {
-      txtColor = int.parse("0xff" + resikoSesudah.txtColor!.split("#")[1]);
-      bgColor = int.parse("0xff" + resikoSesudah.bgColor!.split("#")[1]);
+      txtColor = int.parse("0xff${resikoSesudah.txtColor!.split("#")[1]}");
+      bgColor = int.parse("0xff${resikoSesudah.bgColor!.split("#")[1]}");
     }
     return Container(
         margin: const EdgeInsets.all(10),
@@ -1034,7 +1034,7 @@ class RubahHazardView extends GetView<RubahHazardController> {
   }
 
   Widget _penanggungJawab(Data data, context) {
-    var urlImg = controller.baseImage + "penanggung_jawab/${data.fotoPJ}";
+    var urlImg = "${controller.baseImage}penanggung_jawab/${data.fotoPJ}";
     var titikDua = ": ";
     return Card(
       elevation: 10,

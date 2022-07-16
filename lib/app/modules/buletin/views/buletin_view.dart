@@ -9,10 +9,10 @@ class BuletinView extends GetView<BuletinController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('BuletinView'),
+        title: const Text('BuletinView'),
         centerTitle: true,
       ),
-      body: Center(
+      body: const Center(
         child: Text(
           'BuletinView is working',
           style: TextStyle(fontSize: 20),

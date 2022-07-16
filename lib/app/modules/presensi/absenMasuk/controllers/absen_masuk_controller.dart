@@ -1,17 +1,27 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:camera/camera.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:path_provider/path_provider.dart';
-import '../../../../data/models/last_absen_model.dart';
+import 'package:platform_device_id/platform_device_id.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../../../../data/models/device_update_model.dart';
+import '../../../../data/models/last_absen_models.dart';
+import '../../../../data/providers/provider.dart';
+import '../../../../data/utils/constants.dart';
 
 class AbsenMasukController extends GetxController {
+  final doAbsen = DoPresensi();
   final cameraInitialized = false.obs;
   late List<CameraDescription> cameras;
   CameraController? cameraController;
   int cameraPick = 1;
   int jamS = 0, menitS = 0, detikS = 0;
-  JamServer? serverJam;
+  final serverJam = JamServer().obs;
   final startClock = ''.obs;
   final StreamController<String> _streamClock = StreamController.broadcast();
   Timer? _timerClock;
@@ -21,21 +31,28 @@ class AbsenMasukController extends GetxController {
   XFile? savFile;
   var externalDirectory;
   final waiting = false.obs;
-
+  final nik = RxnString(null);
+  late LatLng lokasi;
+  final idDevice = RxnString(null);
+  final absenSukses = false.obs;
+  final gagal = false.obs;
   @override
-  void onInit() {
-    var data = Get.arguments;
-    serverJam = data;
+  void onInit() async {
+    var data = await Get.arguments;
+
+    serverJam.value = data['jam'] as JamServer;
+    lokasi = data['lokasi'] as LatLng;
+    getPref();
+
     super.onInit();
   }
 
   @override
   void onReady() {
-    jamS = int.parse("${serverJam?.jam}");
-    menitS = int.parse("${serverJam?.menit}");
-    detikS = int.parse("${serverJam?.detik}");
+    jamS = int.parse("${serverJam.value.jam}");
+    menitS = int.parse("${serverJam.value.menit}");
+    detikS = int.parse("${serverJam.value.detik}");
     streamJam();
-    initializeCamera();
     super.onReady();
   }
 
@@ -50,9 +67,11 @@ class AbsenMasukController extends GetxController {
       await cameraController?.initialize().then((_) async {
         cameraController?.buildPreview();
         cameraController?.setFlashMode(FlashMode.off);
+        cameraController?.setFocusMode(FocusMode.auto);
         cameraInitialized.value = true;
       });
     }
+    initCameras();
   }
 
   Future<void> initCameras() async {
@@ -105,15 +124,64 @@ class AbsenMasukController extends GetxController {
     externalDirectory = await getApplicationDocumentsDirectory();
     String directoryPath = '${externalDirectory.path}/FaceIdPlus';
     await Directory(directoryPath).create(recursive: true);
-    File _files = File(savFile!.path);
-    absensiMasuk(_files);
+    File files = File(savFile!.path);
+    absensiMasuk(files);
   }
 
   absensiMasuk(File files) async {
-    Get.snackbar("Success", "Absen Di Daftar!");
     visible.value = false;
     detect.value = true;
     waiting.value = false;
     isBusy.value = false;
+    PostAbsen data = PostAbsen();
+    data.fileToUpload = files;
+    data.nik = nik.value;
+    data.lat = "${lokasi.latitude}";
+    data.lng = "${lokasi.longitude}";
+    data.status = "Masuk";
+    await doAbsen.takePresensi(data, "${idDevice.value}").then((value) {
+      if (value != null) {
+        if (value.absensi) {
+          Get.snackbar(
+            "Success",
+            "Absen Di Daftar!",
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Colors.green,
+            colorText: Colors.white,
+          );
+          absenSukses.value = value.absensi;
+          gagal.value = false;
+        } else {
+          gagal.value = true;
+          absenSukses.value = value.absensi;
+        }
+      } else {
+        gagal.value = true;
+        absenSukses.value = value.absensi;
+      }
+    }).onError((error, stackTrace) {
+      gagal.value = true;
+      absenSukses.value = false;
+    });
+    print("absenSukses ${absenSukses.value}");
+  }
+
+  getPref() async {
+    var pref = await SharedPreferences.getInstance();
+    nik.value = pref.getString(Constants.nik);
+    initIdDevice();
+  }
+
+  initIdDevice() async {
+    try {
+      var id = await PlatformDeviceId.getDeviceId;
+      idDevice.value = "$id";
+      print("idDevice ${idDevice}");
+      initializeCamera();
+    } on PlatformException {
+      if (kDebugMode) {
+        print("ERROR");
+      }
+    }
   }
 }

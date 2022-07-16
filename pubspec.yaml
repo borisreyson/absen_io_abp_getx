@@ -24,10 +24,12 @@ dependencies:
   flutter_bloc: any
   flutter_datetime_picker:
     git: https://github.com/Realank/flutter_datetime_picker.git
+  flutter_launcher_icons: ^0.9.3
+  flutter_lints: ^2.0.1
   flutter_local_notifications: any
   flutter_slidable: any
   geolocator: any
-  get: 4.6.5
+  get: ^4.6.5
   google_maps_flutter: ^2.1.8
   http: ^0.13.4
   image: any
@@ -36,7 +38,7 @@ dependencies:
   intl: any
   intro_slider: any
   lazy_load_scrollview: any
-  location: any
+  location: ^4.3.0
   network_info_plus: any
   path_provider: any
   permission_handler: any
@@ -49,11 +51,9 @@ dependencies:
   sqflite: any
   table_calendar: any
   timer_builder: any
-  workmanager: any
+  uuid: ^3.0.6
 
 dev_dependencies:
-  flutter_launcher_icons: ^0.9.2
-  flutter_lints: ^1.0.4
   flutter_test:
     sdk: flutter
 

@@ -335,8 +335,8 @@ class DetailHazardView extends GetView<DetailHazardController> {
     var txtColor = int.parse("0xffffffFF");
     var bgColor = int.parse("0xffffffff");
     if (resiko.txtColor != null && resiko.bgColor != null) {
-      txtColor = int.parse("0xff" + resiko.txtColor!.split("#")[1]);
-      bgColor = int.parse("0xff" + resiko.bgColor!.split("#")[1]);
+      txtColor = int.parse("0xff${resiko.txtColor!.split("#")[1]}");
+      bgColor = int.parse("0xff${resiko.bgColor!.split("#")[1]}");
     }
     return Container(
         margin: const EdgeInsets.all(10),
@@ -707,8 +707,8 @@ class DetailHazardView extends GetView<DetailHazardController> {
     var bgColor = int.parse("0xffffffff");
     var resiko = controller.resikoSesudah.value;
     if (resiko.txtColor != null && resiko.bgColor != null) {
-      txtColor = int.parse("0xff" + resiko.txtColor!.split("#")[1]);
-      bgColor = int.parse("0xff" + resiko.bgColor!.split("#")[1]);
+      txtColor = int.parse("0xff${resiko.txtColor!.split("#")[1]}");
+      bgColor = int.parse("0xff${resiko.bgColor!.split("#")[1]}");
     }
     return Container(
         margin: const EdgeInsets.all(10),
@@ -743,7 +743,7 @@ class DetailHazardView extends GetView<DetailHazardController> {
   }
 
   Widget _penanggungJawab(Data data, context) {
-    var urlImg = controller.baseImage + "penanggung_jawab/${data.fotoPJ}";
+    var urlImg = "${controller.baseImage}penanggung_jawab/${data.fotoPJ}";
     var titikDua = ": ";
     return Card(
       elevation: 10,
@@ -836,14 +836,12 @@ class DetailHazardView extends GetView<DetailHazardController> {
       loading: true,
       enBtn: false,
     );
-    if (controller.data.value != null) {
-      var uid = controller.data.value.uid;
-      await controller.repository.getHazardDetail(uid).then((res) {
-        controller.bukti.value = controller.baseImage + "${res?.bukti}";
-        controller.updateBukti.value =
-            controller.baseImage + "update/${res?.updateBukti}";
-        Get.back(result: true);
-      });
-    }
+    var uid = controller.data.value.uid;
+    await controller.repository.getHazardDetail(uid).then((res) {
+      controller.bukti.value = "${controller.baseImage}${res?.bukti}";
+      controller.updateBukti.value =
+          "${controller.baseImage}update/${res?.updateBukti}";
+      Get.back(result: true);
+    });
   }
 }

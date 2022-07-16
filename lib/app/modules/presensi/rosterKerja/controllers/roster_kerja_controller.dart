@@ -34,7 +34,7 @@ class RosterKerjaController extends GetxController {
       await _provider
           .getRoster(nik, "$bulan".padLeft(2, "0"), "$tahun")
           .then((value) {
-        print("value ${bulan}");
+        print("value $bulan");
         var res = value.roster;
         if (res != null) {
           listRoster.addAll(res);

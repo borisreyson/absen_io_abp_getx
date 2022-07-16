@@ -10,6 +10,7 @@ import '../controllers/main_absen_controller.dart';
 
 class MainAbsenView extends GetView<MainAbsenController> {
   final navigasiTap = Get.find<NavigasiController>();
+  MainAbsenView({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -125,8 +126,10 @@ class MainAbsenView extends GetView<MainAbsenController> {
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(primary: Colors.green),
         child: const Text("Lanjut"),
-        onPressed: () {
-          Get.toNamed('/absensi');
+        onPressed: () async {
+          controller.isRunning.value = false;
+          await Get.toNamed('/absensi');
+          controller.reloadCekServer();
         },
       ),
     );
@@ -204,23 +207,23 @@ class MainAbsenView extends GetView<MainAbsenController> {
             ),
           ),
         ),
-        Card(
-          elevation: 10,
-          child: InkWell(
-            onTap: () {
-              Get.toNamed('/grafik-kehadiran');
-            },
-            child: Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Column(
-                children: const [
-                  Icon(Icons.area_chart_rounded),
-                  Text("Kehadiran"),
-                ],
-              ),
-            ),
-          ),
-        ),
+        // Card(
+        //   elevation: 10,
+        //   child: InkWell(
+        //     onTap: () {
+        //       Get.toNamed('/grafik-kehadiran');
+        //     },
+        //     child: Padding(
+        //       padding: const EdgeInsets.all(10.0),
+        //       child: Column(
+        //         children: const [
+        //           Icon(Icons.area_chart_rounded),
+        //           Text("Kehadiran"),
+        //         ],
+        //       ),
+        //     ),
+        //   ),
+        // ),
       ],
     );
   }

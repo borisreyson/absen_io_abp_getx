@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
+import 'package:face_id_plus/app/data/models/last_absen_models.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
@@ -8,7 +9,6 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../../../data/models/last_absen_model.dart';
 import '../../../../data/providers/last_absen_provider.dart';
 import '../../../../data/utils/constants.dart';
 
@@ -21,9 +21,8 @@ class AbsensiVPSController extends GetxController {
   var mapController = Completer();
   final StreamController<String> _streamClock = StreamController.broadcast();
   Timer? _timer, _timerClock;
-  final lastAbsen = LastAbsen().obs;
-  final masuk = Presensi().obs;
-  final pulang = Presensi().obs;
+  final lastAbsen = LastAbsenModels().obs;
+  final presensi = Presensi().obs;
   final isLogin = false.obs;
   String? nik;
   final jamS = 00.obs;
@@ -60,14 +59,9 @@ class AbsensiVPSController extends GetxController {
   }
 
   @override
-  void onReady() {
-    super.onReady();
-  }
-
-  @override
   void onClose() {}
   loadLastAbsen(nik, company) async {
-    await _provider.getLastAbsen(nik, company).then((LastAbsen? value) {
+    await _provider.getLastAbsen(nik, company).then((LastAbsenModels? value) {
       if (value != null) {
         lastAbsen.value = value;
         tanggal.value = fmt.format(DateTime.parse(value.tanggal!));
@@ -76,7 +70,7 @@ class AbsensiVPSController extends GetxController {
 
         if (value.mapArea != null) {
           for (var element in value.mapArea!) {
-            pointABP.add(LatLng(element!.lat!, element.lng!));
+            pointABP.add(LatLng(element.lat!, element.lng!));
           }
           for (var element in pointABP) {
             polygons.add(Polygon(
@@ -88,11 +82,8 @@ class AbsensiVPSController extends GetxController {
           }
         }
 
-        if (value.presensiMasuk != null) {
-          masuk.value = value.presensiMasuk!;
-        }
-        if (value.presensiPulang != null) {
-          pulang.value = value.presensiPulang!;
+        if (value.presensi != null) {
+          presensi.value = value.presensi!;
         }
         if (value.jamServer != null) {
           jamS.value = int.parse("${value.jamServer?.jam}");

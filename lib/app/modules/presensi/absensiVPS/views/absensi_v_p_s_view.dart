@@ -47,7 +47,7 @@ class AbsensiVPSView extends GetView<AbsensiVPSController> {
         body: Stack(
           children: [
             contentBody(context),
-            absenImage(),
+            // absenImage(),
           ],
         ),
       ),
@@ -135,9 +135,9 @@ class AbsensiVPSView extends GetView<AbsensiVPSController> {
       child: GoogleMap(
         initialCameraPosition: controller.kGooglePlex.value,
         mapType: MapType.normal,
-        onMapCreated: (GoogleMapController _controller) async {
-          controller.googleMapController = _controller;
-          controller.mapController.complete(_controller);
+        onMapCreated: (GoogleMapController c) async {
+          controller.googleMapController = c;
+          controller.mapController.complete(c);
           controller.streamLokasi();
         },
         markers: controller.markers,
@@ -149,102 +149,102 @@ class AbsensiVPSView extends GetView<AbsensiVPSController> {
     );
   }
 
-  Widget absenImage() {
-    return Positioned(
-      bottom: 10,
-      left: 10,
-      child: Column(
-        children: [
-          Visibility(
-            visible: (controller.masuk.value.status != null),
-            child: Padding(
-              padding: const EdgeInsets.all(4.0),
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadiusDirectional.circular(20),
-                  color: const Color.fromARGB(255, 8, 120, 11),
-                ),
-                padding: const EdgeInsets.all(6),
-                child: Row(
-                  children: [
-                    ClipOval(
-                      child: Container(
-                        color: Colors.grey.shade200,
-                        width: 60,
-                        height: 60,
-                        child: Image.network(
-                          "https://abpjobsite.com/face_id/${controller.nik}/${controller.masuk.value.gambar}",
-                          fit: BoxFit.fitWidth,
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "${controller.masuk.value.status}",
-                            style: const TextStyle(color: Colors.white),
-                          ),
-                          Text(
-                            "${controller.masuk.value.jam}",
-                            style: const TextStyle(color: Colors.white),
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            ),
-          ),
-          Visibility(
-            visible: (controller.pulang.value.status != null),
-            child: Padding(
-              padding: const EdgeInsets.all(4.0),
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadiusDirectional.circular(20),
-                  color: const Color.fromARGB(255, 177, 29, 18),
-                ),
-                padding: const EdgeInsets.all(6),
-                child: Row(
-                  children: [
-                    ClipOval(
-                      child: Container(
-                        color: Colors.grey.shade200,
-                        width: 50,
-                        height: 50,
-                        child: Image.network(
-                          "https://abpjobsite.com/face_id/${controller.nik}/${controller.pulang.value.gambar}",
-                          fit: BoxFit.fitWidth,
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "${controller.pulang.value.status}",
-                            style: const TextStyle(color: Colors.white),
-                          ),
-                          Text(
-                            "${controller.pulang.value.jam}",
-                            style: const TextStyle(color: Colors.white),
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            ),
-          )
-        ],
-      ),
-    );
-  }
+  // Widget absenImage() {
+  //   return Positioned(
+  //     bottom: 10,
+  //     left: 10,
+  //     child: Column(
+  //       children: [
+  //         Visibility(
+  //           visible: (controller.masuk.value.status != null),
+  //           child: Padding(
+  //             padding: const EdgeInsets.all(4.0),
+  //             child: Container(
+  //               decoration: BoxDecoration(
+  //                 borderRadius: BorderRadiusDirectional.circular(20),
+  //                 color: const Color.fromARGB(255, 8, 120, 11),
+  //               ),
+  //               padding: const EdgeInsets.all(6),
+  //               child: Row(
+  //                 children: [
+  //                   ClipOval(
+  //                     child: Container(
+  //                       color: Colors.grey.shade200,
+  //                       width: 60,
+  //                       height: 60,
+  //                       child: Image.network(
+  //                         "https://abpjobsite.com/face_id/${controller.nik}/${controller.masuk.value.gambar}",
+  //                         fit: BoxFit.fitWidth,
+  //                       ),
+  //                     ),
+  //                   ),
+  //                   Padding(
+  //                     padding: const EdgeInsets.all(8.0),
+  //                     child: Column(
+  //                       crossAxisAlignment: CrossAxisAlignment.start,
+  //                       children: [
+  //                         Text(
+  //                           "${controller.masuk.value.status}",
+  //                           style: const TextStyle(color: Colors.white),
+  //                         ),
+  //                         Text(
+  //                           "${controller.masuk.value.jam}",
+  //                           style: const TextStyle(color: Colors.white),
+  //                         ),
+  //                       ],
+  //                     ),
+  //                   )
+  //                 ],
+  //               ),
+  //             ),
+  //           ),
+  //         ),
+  //         Visibility(
+  //           visible: (controller.pulang.value.status != null),
+  //           child: Padding(
+  //             padding: const EdgeInsets.all(4.0),
+  //             child: Container(
+  //               decoration: BoxDecoration(
+  //                 borderRadius: BorderRadiusDirectional.circular(20),
+  //                 color: const Color.fromARGB(255, 177, 29, 18),
+  //               ),
+  //               padding: const EdgeInsets.all(6),
+  //               child: Row(
+  //                 children: [
+  //                   ClipOval(
+  //                     child: Container(
+  //                       color: Colors.grey.shade200,
+  //                       width: 50,
+  //                       height: 50,
+  //                       child: Image.network(
+  //                         "https://abpjobsite.com/face_id/${controller.nik}/${controller.pulang.value.gambar}",
+  //                         fit: BoxFit.fitWidth,
+  //                       ),
+  //                     ),
+  //                   ),
+  //                   Padding(
+  //                     padding: const EdgeInsets.all(8.0),
+  //                     child: Column(
+  //                       crossAxisAlignment: CrossAxisAlignment.start,
+  //                       children: [
+  //                         Text(
+  //                           "${controller.pulang.value.status}",
+  //                           style: const TextStyle(color: Colors.white),
+  //                         ),
+  //                         Text(
+  //                           "${controller.pulang.value.jam}",
+  //                           style: const TextStyle(color: Colors.white),
+  //                         ),
+  //                       ],
+  //                     ),
+  //                   )
+  //                 ],
+  //               ),
+  //             ),
+  //           ),
+  //         )
+  //       ],
+  //     ),
+  //   );
+  // }
 }

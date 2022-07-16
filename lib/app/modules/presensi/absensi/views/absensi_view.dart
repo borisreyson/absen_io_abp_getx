@@ -1,9 +1,11 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:face_id_plus/app/data/models/list_presensi_models.dart';
+import 'package:face_id_plus/app/routes/app_pages.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
-import '../../../../data/models/absentigahari_model.dart';
 import '../controllers/absensi_controller.dart';
 
 // ignore: must_be_immutable
@@ -120,10 +122,18 @@ class AbsensiView extends GetView<AbsensiController> {
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                             primary: const Color.fromARGB(255, 11, 143, 22)),
-                        onPressed: () async {
-                          var res = await Get.toNamed('/absen-masuk',
-                              arguments: controller.serverJam.value);
-                        },
+                        onPressed: (controller.absenTerakhir.value == "Masuk")
+                            ? () async {
+                                var res = await Get.toNamed(Routes.ABSEN_MASUK,
+                                    arguments: {
+                                      "jam": controller.serverJam.value,
+                                      "lokasi": controller.myLocation
+                                    });
+                                controller.closeStream();
+                                controller.getPref();
+                                controller.streamLokasi();
+                              }
+                            : null,
                         child: const Text("MASUK"),
                       ),
                     ),
@@ -134,10 +144,18 @@ class AbsensiView extends GetView<AbsensiController> {
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                             primary: const Color.fromARGB(255, 190, 36, 25)),
-                        onPressed: () async {
-                          var res = await Get.toNamed('/absen-pulang',
-                              arguments: controller.serverJam.value);
-                        },
+                        onPressed: (controller.absenTerakhir.value == "Pulang")
+                            ? () async {
+                                var res = await Get.toNamed(Routes.ABSEN_PULANG,
+                                    arguments: {
+                                      "jam": controller.serverJam.value,
+                                      "lokasi": controller.myLocation
+                                    });
+                                controller.closeStream();
+                                controller.getPref();
+                                controller.streamLokasi();
+                              }
+                            : null,
                         child: const Text("Pulang"),
                       ),
                     ),
@@ -160,15 +178,11 @@ class AbsensiView extends GetView<AbsensiController> {
 
   gogleMap(context) {
     return SizedBox(
-      height: MediaQuery.of(context).size.height / 1.5,
+      height: MediaQuery.of(context).size.height / 1.55,
       child: GoogleMap(
         initialCameraPosition: controller.kGooglePlex.value,
         mapType: MapType.normal,
-        onMapCreated: (GoogleMapController _controller) async {
-          controller.googleMapController = _controller;
-          controller.mapController.complete(_controller);
-          controller.streamLokasi();
-        },
+        onMapCreated: controller.onMapCreated,
         markers: controller.markers,
         polygons: Set<Polygon>.of(controller.polygons),
         myLocationEnabled: true,
@@ -193,7 +207,7 @@ class AbsensiView extends GetView<AbsensiController> {
         child: Column(
           children: [
             Visibility(
-              visible: (controller.masuk.value.status != null),
+              visible: (controller.presensi.value.checkin != null),
               child: Padding(
                 padding: const EdgeInsets.all(4.0),
                 child: Container(
@@ -209,8 +223,24 @@ class AbsensiView extends GetView<AbsensiController> {
                           color: Colors.grey.shade200,
                           width: 60,
                           height: 60,
-                          child: Image.network(
-                            "https://abpjobsite.com/face_id/${controller.nik}/${controller.masuk.value.gambar}",
+                          child: CachedNetworkImage(
+                            placeholder: (contex, url) {
+                              return const Center(
+                                child: CircularProgressIndicator(
+                                    color: Colors.white),
+                              );
+                            },
+                            errorWidget: (context, url, error) {
+                              return const Center(
+                                child: Icon(
+                                  Icons.broken_image_rounded,
+                                  size: 95,
+                                  color: Color.fromARGB(255, 235, 104, 95),
+                                ),
+                              );
+                            },
+                            imageUrl:
+                                "https://abpjobsite.com/face_id/${controller.nik}/${controller.presensi.value.faceIn}",
                             fit: BoxFit.fitWidth,
                           ),
                         ),
@@ -221,18 +251,20 @@ class AbsensiView extends GetView<AbsensiController> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "${controller.masuk.value.status}",
+                              (controller.presensi.value.checkin != null)
+                                  ? "Masuk"
+                                  : "Pulang",
                               style: const TextStyle(color: Colors.white),
                             ),
                             Text(
-                              (controller.masuk.value.tanggal != null)
+                              (controller.presensi.value.tanggal != null)
                                   ? fmt.format(DateTime.parse(
-                                      "${controller.masuk.value.tanggal}"))
+                                      "${controller.presensi.value.tanggal}"))
                                   : "",
                               style: const TextStyle(color: Colors.white),
                             ),
                             Text(
-                              "${controller.masuk.value.jam}",
+                              "${controller.presensi.value.checkin}",
                               style: const TextStyle(color: Colors.white),
                             ),
                           ],
@@ -244,13 +276,13 @@ class AbsensiView extends GetView<AbsensiController> {
               ),
             ),
             Visibility(
-              visible: (controller.pulang.value.status != null),
+              visible: (controller.presensi.value.checkout != null),
               child: Padding(
                 padding: const EdgeInsets.all(4.0),
                 child: Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadiusDirectional.circular(20),
-                    color: const Color.fromARGB(255, 177, 29, 18),
+                    color: Color.fromARGB(255, 120, 8, 8),
                   ),
                   padding: const EdgeInsets.all(6),
                   child: Row(
@@ -258,10 +290,26 @@ class AbsensiView extends GetView<AbsensiController> {
                       ClipOval(
                         child: Container(
                           color: Colors.grey.shade200,
-                          width: 50,
-                          height: 50,
-                          child: Image.network(
-                            "https://abpjobsite.com/face_id/${controller.nik}/${controller.pulang.value.gambar}",
+                          width: 60,
+                          height: 60,
+                          child: CachedNetworkImage(
+                            placeholder: (contex, url) {
+                              return const Center(
+                                child: CircularProgressIndicator(
+                                    color: Colors.white),
+                              );
+                            },
+                            errorWidget: (context, url, error) {
+                              return const Center(
+                                child: Icon(
+                                  Icons.broken_image_rounded,
+                                  size: 95,
+                                  color: Color.fromARGB(255, 235, 104, 95),
+                                ),
+                              );
+                            },
+                            imageUrl:
+                                "https://abpjobsite.com/face_id/${controller.nik}/${controller.presensi.value.faceOut}",
                             fit: BoxFit.fitWidth,
                           ),
                         ),
@@ -272,11 +320,20 @@ class AbsensiView extends GetView<AbsensiController> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "${controller.pulang.value.status}",
+                              (controller.presensi.value.checkout != null)
+                                  ? "Pulang"
+                                  : "Masuk",
                               style: const TextStyle(color: Colors.white),
                             ),
                             Text(
-                              "${controller.pulang.value.jam}",
+                              (controller.presensi.value.tanggal != null)
+                                  ? fmt.format(DateTime.parse(
+                                      "${controller.presensi.value.tanggal}"))
+                                  : "",
+                              style: const TextStyle(color: Colors.white),
+                            ),
+                            Text(
+                              "${controller.presensi.value.checkout}",
                               style: const TextStyle(color: Colors.white),
                             ),
                           ],
@@ -286,7 +343,7 @@ class AbsensiView extends GetView<AbsensiController> {
                   ),
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),
@@ -308,104 +365,204 @@ class AbsensiView extends GetView<AbsensiController> {
       future: controller.loadTigaHari(controller.nik.value),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.hasData) {
-          List<AbsenTigaHariModel> _absensi = snapshot.data;
-          if (_absensi.isNotEmpty) {
-            return Stack(
-              children: [
-                Card(
-                  margin: const EdgeInsets.only(top: 40),
-                  color: Colors.white,
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 20, left: 8, right: 8),
-                    child: ListView(
-                        children: _absensi
-                            .map((ab) => _cardAbsen(ab, context))
-                            .toList()),
+          ListPresensiModels absensi = snapshot.data;
+          if (absensi != null) {
+            List<ListPresensi>? presensi = absensi.listPresensi;
+            if (presensi!.isNotEmpty) {
+              print("presensi ${presensi}");
+
+              return Stack(
+                children: [
+                  Card(
+                    margin: const EdgeInsets.only(top: 40),
+                    color: Colors.white,
+                    child: Padding(
+                      padding:
+                          const EdgeInsets.only(top: 20, left: 8, right: 8),
+                      child: ListView(
+                          children: presensi
+                              .map((ab) => _cardAbsen(ab, context))
+                              .toList()),
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 15.0, right: 8.0),
-                  child: Align(
-                    alignment: Alignment.topCenter,
-                    child: Card(
-                        elevation: 20,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(150),
-                        ),
-                        child: InkWell(
-                          onTap: () {
-                            Navigator.pop(context);
-                          },
-                          customBorder: const CircleBorder(),
-                          child: const Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Icon(Icons.keyboard_arrow_down),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 15.0, right: 8.0),
+                    child: Align(
+                      alignment: Alignment.topCenter,
+                      child: Card(
+                          elevation: 20,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(150),
                           ),
-                        )),
-                  ),
-                )
-              ],
-            );
+                          child: InkWell(
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                            customBorder: const CircleBorder(),
+                            child: const Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Icon(Icons.keyboard_arrow_down),
+                            ),
+                          )),
+                    ),
+                  )
+                ],
+              );
+            } else {
+              return Container();
+            }
           }
         }
         return Card(
           margin: const EdgeInsets.only(top: 40),
-          child: loader,
           color: Colors.white,
+          child: loader,
         );
       },
     );
   }
 
-  Widget _cardAbsen(AbsenTigaHariModel _absen, context) {
+  Widget _cardAbsen(ListPresensi absen, context) {
     DateFormat fmt = DateFormat("dd MMMM yyyy");
-    var tgl = DateTime.parse("${_absen.tanggal}");
-    TextStyle _style = const TextStyle(fontSize: 12, color: Colors.white);
-    return Card(
-      elevation: 10,
-      shadowColor: Colors.black87,
-      color: (_absen.status == "Masuk") ? Colors.green : Colors.red,
-      child: InkWell(
-        onTap: () {},
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            imageResolve(_absen.gambar!),
-            Padding(
-              padding: const EdgeInsets.all(5.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(controller.nama.value, style: _style),
-                  Text("${_absen.status}", style: _style),
-                  Text(fmt.format(tgl), style: _style),
-                  Text("${_absen.jam}", style: _style),
-                  Text("${_absen.nik}", style: _style),
-                  Text("${_absen.lupa_absen}", style: _style),
-                ],
-              ),
-            )
-          ],
-        ),
-      ),
+    var tgl = DateTime.parse("${absen.tanggal}");
+    TextStyle style = const TextStyle(fontSize: 12, color: Colors.white);
+    return Column(
+      children: [
+        Card(
+          margin: EdgeInsets.only(bottom: 20),
+          elevation: 10,
+          shadowColor: Colors.black87,
+          color: Color.fromARGB(255, 203, 199, 199),
+          child: InkWell(
+            onTap: () {
+              Get.toNamed(Routes.DETAIL_ABSENSI, arguments: {"detail": absen});
+            },
+            child: Column(
+              children: [
+                const SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(100),
+                      child: imageResolve(
+                          "https://abpjobsite.com/face_id/${absen.nik}/${absen.faceIn}"),
+                    ),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(100),
+                      child: imageResolve(
+                          "https://abpjobsite.com/face_id/${absen.nik}/${absen.faceOut}"),
+                    )
+                  ],
+                ),
+                Text(
+                  fmt.format(tgl),
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  controller.nama.value,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    decoration: TextDecoration.underline,
+                  ),
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                Text(
+                  "${absen.nik}",
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Expanded(
+                        child: Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          color: Colors.green,
+                          child: Padding(
+                            padding: const EdgeInsets.all(5.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "Masuk",
+                                  style: style,
+                                ),
+                                Text(
+                                  "${absen.checkin}",
+                                  style: style,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          color: Colors.red,
+                          child: Padding(
+                            padding: const EdgeInsets.all(5.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "Pulang",
+                                  style: style,
+                                ),
+                                Text(
+                                  "${absen.checkout}",
+                                  style: style,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                )
+              ],
+            ),
+          ),
+        )
+      ],
     );
   }
 
   Widget imageResolve(String gambar) {
-    NetworkImage image = NetworkImage(gambar);
-    return Container(
-      margin: const EdgeInsets.only(right: 10),
-      width: 100,
-      height: 100,
-      decoration: BoxDecoration(
-          borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(5), bottomLeft: Radius.circular(5)),
-          image: DecorationImage(
-            image: image,
-            fit: BoxFit.fitWidth,
+    return CachedNetworkImage(
+      placeholder: (contex, url) {
+        return const Center(
+          child: CircularProgressIndicator(color: Colors.white),
+        );
+      },
+      errorWidget: (context, url, error) {
+        return const Center(
+          child: Icon(
+            Icons.broken_image_rounded,
+            size: 95,
+            color: Color.fromARGB(255, 235, 104, 95),
           ),
-          color: Colors.white),
+        );
+      },
+      imageUrl: gambar,
+      fit: BoxFit.cover,
+      height: 100,
+      width: 100,
     );
   }
 }

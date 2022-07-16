@@ -13,6 +13,7 @@ class HazardPJ extends GetView {
     required this.profile,
   }) : super(key: key);
 
+  @override
   final CorrectiveActionController controller;
   final DataUser profile;
   final CounterHazard data;
@@ -48,6 +49,11 @@ class HazardPJ extends GetView {
                       color: const Color.fromARGB(255, 238, 153, 8),
                       child: InkWell(
                         onTap: () async {
+                          await Get.toNamed(Routes.HAZARD_P_J, parameters: {
+                            "option": "saya",
+                            "disetujui": "2",
+                            "judul": "Hazard Report Ke Saya"
+                          });
                           controller.getPref();
                         },
                         child: ListTile(
@@ -76,6 +82,11 @@ class HazardPJ extends GetView {
                       color: const Color.fromARGB(255, 14, 142, 19),
                       child: InkWell(
                         onTap: () async {
+                          await Get.toNamed(Routes.HAZARD_P_J, parameters: {
+                            "option": "saya",
+                            "disetujui": "1",
+                            "judul": "Hazard Report Ke Saya"
+                          });
                           controller.getPref();
                         },
                         child: ListTile(

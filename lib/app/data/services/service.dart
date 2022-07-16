@@ -17,8 +17,8 @@ class KemungkinanService {
     _repository = ReporsitoryKemungkinan();
   }
 
-  save(_data) async {
-    return await _repository.insert(Constants.kemungkinanTb, _data);
+  save(data) async {
+    return await _repository.insert(Constants.kemungkinanTb, data);
   }
 
   Future<Kemungkinan> getBy({int? idKemungkinan}) async {
@@ -39,8 +39,8 @@ class KeparahanService {
     _repository = RepositoryKeparahan();
   }
 
-  save(_data) async {
-    return await _repository.insert(Constants.keparahanTb, _data);
+  save(data) async {
+    return await _repository.insert(Constants.keparahanTb, data);
   }
 
   Future<Keparahan> getBy({int? idKeparahan}) async {
@@ -61,8 +61,8 @@ class MetrikService {
     _repository = RepositoryMetrik();
   }
 
-  save(_data) async {
-    return await _repository.insert(Constants.metrikTb, _data);
+  save(data) async {
+    return await _repository.insert(Constants.metrikTb, data);
   }
 
   Future<MetrikResiko> getBy({int? nilai}) async {
@@ -83,8 +83,8 @@ class PerusahaanService {
     _repository = ReporsitoryPerusahaan();
   }
 
-  save(_data) async {
-    return await _repository.insert(Constants.perusahaanTb, _data);
+  save(data) async {
+    return await _repository.insert(Constants.perusahaanTb, data);
   }
 
   Future<Company> getBy({int? idPerusahaan}) async {
@@ -105,8 +105,8 @@ class LokasiService {
     _repository = ReporsitoryLokasi();
   }
 
-  save(_data) async {
-    return await _repository.insert(Constants.lokasiTb, _data);
+  save(data) async {
+    return await _repository.insert(Constants.lokasiTb, data);
   }
 
   Future<Lokasi> getBy({int? idLok}) async {
@@ -127,8 +127,8 @@ class DetaikKeparahanService {
     _repository = RepositoryDetKeparahan();
   }
 
-  save(_data) async {
-    return await _repository.insert(Constants.detKeparahanTb, _data);
+  save(data) async {
+    return await _repository.insert(Constants.detKeparahanTb, data);
   }
 
   Future<List<DetKeparahan>> getBy({int? idKep}) async {
@@ -149,8 +149,8 @@ class PengendalianService {
     _repository = RepositoryPengendalian();
   }
 
-  save(_data) async {
-    return await _repository.insert(Constants.pengendalianTb, _data);
+  save(data) async {
+    return await _repository.insert(Constants.pengendalianTb, data);
   }
 
   Future<List<Hirarki>> getBy({int? idHirarki}) async {
@@ -171,8 +171,8 @@ class DetailPengendalianService {
     _repository = RepositoryDetPengendalian();
   }
 
-  save(_data) async {
-    return await _repository.insert(Constants.detPengendalianTb, _data);
+  save(data) async {
+    return await _repository.insert(Constants.detPengendalianTb, data);
   }
 
   Future<List<DetHirarki>> getBy({int? idHirarki}) async {
@@ -193,8 +193,8 @@ class UsersService {
     _repository = RepositoryUsers();
   }
 
-  save(_data) async {
-    return await _repository.insert(Constants.usersTb, _data);
+  save(data) async {
+    return await _repository.insert(Constants.usersTb, data);
   }
 
   Future<List<UsersList>> getBy({int? idUser}) async {
@@ -215,12 +215,12 @@ class DeviceUpdateService {
     _repository = RepositoryDeviceUpdate();
   }
 
-  save(_data) async {
-    return await _repository.insert(Constants.deviceUpdatTb, _data);
+  save(data) async {
+    return await _repository.insert(Constants.deviceUpdatTb, data);
   }
 
-  update(_data) async {
-    return await _repository.update(Constants.deviceUpdatTb, _data);
+  update(data) async {
+    return await _repository.update(Constants.deviceUpdatTb, data);
   }
 
   Future<List<DeviceUpdate>> getAll() async {

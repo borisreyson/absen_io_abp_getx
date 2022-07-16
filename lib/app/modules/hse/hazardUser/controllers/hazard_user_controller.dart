@@ -195,9 +195,9 @@ class HazardUserController extends GetxController {
     onRefresh();
   }
 
-  Widget tglPick(String __title, _initial) {
-    var ___inital = _initial;
-    TextStyle _style =
+  Widget tglPick(String title, initial) {
+    var inital = initial;
+    TextStyle style =
         const TextStyle(fontWeight: FontWeight.bold, color: Colors.white);
     return StatefulBuilder(
       builder: (context, stateSet) {
@@ -206,17 +206,17 @@ class HazardUserController extends GetxController {
           elevation: 10,
           child: InkWell(
               onTap: () async {
-                var selected = await selectDate(context, ___inital!);
+                var selected = await selectDate(context, inital!);
                 if (selected != null) {
-                  if (__title == "Dari") {
+                  if (title == "Dari") {
                     stateSet(() {
                       dari.value = selected;
-                      ___inital = selected;
+                      inital = selected;
                     });
-                  } else if (__title == "Sampai") {
+                  } else if (title == "Sampai") {
                     stateSet(() {
                       sampai.value = selected;
-                      ___inital = selected;
+                      inital = selected;
                     });
                   }
                 }
@@ -227,13 +227,13 @@ class HazardUserController extends GetxController {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     Text(
-                      __title,
-                      style: _style,
+                      title,
+                      style: style,
                     ),
                     const SizedBox(
                       width: 20,
                     ),
-                    Text(fmt.format(___inital!), style: _style),
+                    Text(fmt.format(inital!), style: style),
                   ],
                 ),
               )),
@@ -243,7 +243,7 @@ class HazardUserController extends GetxController {
   }
 
   Widget submitWidgetDTrange() {
-    TextStyle _style =
+    TextStyle style =
         const TextStyle(fontWeight: FontWeight.bold, color: Colors.white);
     return Card(
       color: hseColor,
@@ -295,7 +295,7 @@ class HazardUserController extends GetxController {
               children: [
                 Text(
                   "Submit",
-                  style: _style,
+                  style: style,
                 ),
               ],
             ),

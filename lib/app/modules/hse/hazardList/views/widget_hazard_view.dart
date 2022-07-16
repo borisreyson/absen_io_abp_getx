@@ -23,20 +23,20 @@ class WidgetHazardView extends GetView {
 
   @override
   Widget build(BuildContext context) {
-    final Color _success = Colors.green.shade700;
-    final Color _danger = Colors.red.shade700;
+    final Color success = Colors.green.shade700;
+    final Color danger = Colors.red.shade700;
 
-    const TextStyle _colorText = TextStyle(color: Colors.white);
+    const TextStyle colorText = TextStyle(color: Colors.white);
 
     var fmt = DateFormat("dd MMMM yyyy");
-    String? __status;
+    String? status;
     if (data.userValid == null) {
-      __status = "Belum Disetujui";
+      status = "Belum Disetujui";
     } else if (data.userValid != null &&
         (data.optionFlag == 1 || data.optionFlag == null)) {
-      __status = "Disetujui";
+      status = "Disetujui";
     } else if (data.optionFlag == 0) {
-      __status = "Dibatalkan";
+      status = "Dibatalkan";
     }
 
     return Card(
@@ -54,16 +54,16 @@ class WidgetHazardView extends GetView {
             children: [
               Container(
                 padding: const EdgeInsets.all(10),
-                color: (data.statusPerbaikan != "SELESAI") ? _danger : _success,
+                color: (data.statusPerbaikan != "SELESAI") ? danger : success,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     Text(
                       "${data.jamHazard}",
-                      style: _colorText,
+                      style: colorText,
                     ),
                     Text(fmt.format(DateTime.parse(data.tglHazard!)),
-                        style: _colorText)
+                        style: colorText)
                   ],
                 ),
               ),
@@ -89,12 +89,12 @@ class WidgetHazardView extends GetView {
               ),
               Container(
                 width: MediaQuery.of(context).size.width,
-                color: (data.statusPerbaikan != "SELESAI") ? _danger : _success,
+                color: (data.statusPerbaikan != "SELESAI") ? danger : success,
                 padding: const EdgeInsets.all(10),
                 child: const Center(
                     child: Text(
                   "Deskripsi",
-                  style: _colorText,
+                  style: colorText,
                 )),
               ),
               Container(
@@ -104,13 +104,13 @@ class WidgetHazardView extends GetView {
                 child: Center(child: Text("${data.deskripsi}")),
               ),
               Container(
-                color: (data.statusPerbaikan != "SELESAI") ? _danger : _success,
+                color: (data.statusPerbaikan != "SELESAI") ? danger : success,
                 width: MediaQuery.of(context).size.width,
                 padding: const EdgeInsets.all(10),
                 child: Center(
                     child: Text(
                   "${data.statusPerbaikan}",
-                  style: _colorText,
+                  style: colorText,
                 )),
               ),
               Container(
@@ -141,18 +141,18 @@ class WidgetHazardView extends GetView {
                 ),
               ),
               Container(
-                color: (__status == "Disetujui") ? _success : _danger,
+                color: (status == "Disetujui") ? success : danger,
                 width: MediaQuery.of(context).size.width,
                 padding: const EdgeInsets.all(10),
                 child: Center(
                     child: Text(
-                  "$__status",
-                  style: _colorText,
+                  "$status",
+                  style: colorText,
                 )),
               ),
               Visibility(
                 visible: (data.keteranganAdmin != null)
-                    ? (__status == "Dibatalkan")
+                    ? (status == "Dibatalkan")
                         ? true
                         : false
                     : false,
@@ -165,13 +165,13 @@ class WidgetHazardView extends GetView {
                   )),
                 ),
               ),
-              aksiBtn(__status),
+              aksiBtn(status),
             ],
           ),
         ));
   }
 
-  Widget aksiBtn(String? __status) {
+  Widget aksiBtn(String? status) {
     return Visibility(
       visible: (_rule != null) ? true : false,
       child: Column(
@@ -180,7 +180,7 @@ class WidgetHazardView extends GetView {
           //Persetujuan
           Visibility(
             visible: (_rule!.contains("admin_hse"))
-                ? (__status == "Disetujui" || __status == "Dibatalkan")
+                ? (status == "Disetujui" || status == "Dibatalkan")
                     ? false
                     : (option == "all")
                         ? true
@@ -218,9 +218,9 @@ class WidgetHazardView extends GetView {
                         });
                       }
                     },
-                    child: const Text("Setujui"),
                     style: ElevatedButton.styleFrom(
-                        primary: Colors.green.shade700)),
+                        primary: Colors.green.shade700),
+                    child: const Text("Setujui")),
                 ElevatedButton(
                     onPressed: () async {
                       var alert = await Constants().showFormAlert(
@@ -249,8 +249,8 @@ class WidgetHazardView extends GetView {
                         });
                       }
                     },
-                    child: const Text("Batalkan"),
-                    style: ElevatedButton.styleFrom(primary: Colors.redAccent)),
+                    style: ElevatedButton.styleFrom(primary: Colors.redAccent),
+                    child: const Text("Batalkan")),
               ],
             ),
           ),

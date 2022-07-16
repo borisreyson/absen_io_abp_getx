@@ -15,19 +15,19 @@ import '../repository/repository_api.dart';
 
 class ApiService {
   Future kemungkinanGet() async {
-    await KemungkinanRepository().fetchAll().then((data) async {
-      if (data != null) {
-        if (data.kemungkinan != null) {
-          var _data = data.kemungkinan;
-          for (var e in _data!) {
-            var _kemungkinan = Kemungkinan();
-            _kemungkinan.idKemungkinan = e.idKemungkinan;
-            _kemungkinan.kemungkinan = e.kemungkinan;
-            _kemungkinan.keterangan = e.keterangan;
-            _kemungkinan.nilai = e.nilai;
-            _kemungkinan.flag = e.flag;
-            _kemungkinan.kemungkinanUpdate = e.kemungkinanUpdate;
-            var res = await KemungkinanService().save(_kemungkinan);
+    await KemungkinanRepository().fetchAll().then((_data) async {
+      if (_data != null) {
+        if (_data.kemungkinan != null) {
+          var data = _data.kemungkinan;
+          for (var e in data!) {
+            var kemungkinan = Kemungkinan();
+            kemungkinan.idKemungkinan = e.idKemungkinan;
+            kemungkinan.kemungkinan = e.kemungkinan;
+            kemungkinan.keterangan = e.keterangan;
+            kemungkinan.nilai = e.nilai;
+            kemungkinan.flag = e.flag;
+            kemungkinan.kemungkinanUpdate = e.kemungkinanUpdate;
+            var res = await KemungkinanService().save(kemungkinan);
             if (kDebugMode) {
               print("Kemungkinan $res");
             }
@@ -38,18 +38,18 @@ class ApiService {
   }
 
   Future keparahanGet() async {
-    await KeparahanRepository().fetchAll().then((data) async {
-      if (data != null) {
-        if (data.keparahan != null) {
-          var _data = data.keparahan;
-          for (var e in _data!) {
-            var _keparahan = Keparahan();
-            _keparahan.idKeparahan = e.idKeparahan;
-            _keparahan.keparahan = e.keparahan;
-            _keparahan.nilai = e.nilai;
-            _keparahan.flag = e.flag;
-            _keparahan.keparahanUpdate = e.keparahanUpdate;
-            var res = await KeparahanService().save(_keparahan);
+    await KeparahanRepository().fetchAll().then((_data) async {
+      if (_data != null) {
+        if (_data.keparahan != null) {
+          var data = _data.keparahan;
+          for (var e in data!) {
+            var keparahan = Keparahan();
+            keparahan.idKeparahan = e.idKeparahan;
+            keparahan.keparahan = e.keparahan;
+            keparahan.nilai = e.nilai;
+            keparahan.flag = e.flag;
+            keparahan.keparahanUpdate = e.keparahanUpdate;
+            var res = await KeparahanService().save(keparahan);
             if (kDebugMode) {
               print("Keparahan $res");
             }
@@ -60,23 +60,23 @@ class ApiService {
   }
 
   Future metrikGet() async {
-    await MetrikRepository().fetchAll().then((data) async {
-      if (data != null) {
-        if (data.metrikResiko != null) {
-          var _data = data.metrikResiko;
-          for (var e in _data!) {
-            var _metrik = MetrikResiko();
-            _metrik.batas = e.batas;
-            _metrik.bgColor = e.bgColor;
-            _metrik.flag = e.flag;
-            _metrik.idResiko = e.idResiko;
-            _metrik.kategori = e.kategori;
-            _metrik.kodeBahaya = e.kodeBahaya;
-            _metrik.max = e.max;
-            _metrik.min = e.min;
-            _metrik.tindakan = e.tindakan;
-            _metrik.txtColor = e.txtColor;
-            var res = await MetrikService().save(_metrik);
+    await MetrikRepository().fetchAll().then((_data) async {
+      if (_data != null) {
+        if (_data.metrikResiko != null) {
+          var data = _data.metrikResiko;
+          for (var e in data!) {
+            var metrik = MetrikResiko();
+            metrik.batas = e.batas;
+            metrik.bgColor = e.bgColor;
+            metrik.flag = e.flag;
+            metrik.idResiko = e.idResiko;
+            metrik.kategori = e.kategori;
+            metrik.kodeBahaya = e.kodeBahaya;
+            metrik.max = e.max;
+            metrik.min = e.min;
+            metrik.tindakan = e.tindakan;
+            metrik.txtColor = e.txtColor;
+            var res = await MetrikService().save(metrik);
             if (kDebugMode) {
               print("Metrik $res");
             }
@@ -87,17 +87,17 @@ class ApiService {
   }
 
   Future perusahaanGet() async {
-    await PerusahaanRepository().fetchAll().then((data) async {
-      if (data != null) {
-        if (data.company != null) {
-          var _data = data.company;
-          for (var e in _data!) {
-            var _perusahaan = Company();
-            _perusahaan.idPerusahaan = e.idPerusahaan;
-            _perusahaan.namaPerusahaan = e.namaPerusahaan;
-            _perusahaan.flag = e.flag;
-            _perusahaan.timeIn = e.timeIn;
-            var res = await PerusahaanService().save(_perusahaan);
+    await PerusahaanRepository().fetchAll().then((_data) async {
+      if (_data != null) {
+        if (_data.company != null) {
+          var data = _data.company;
+          for (var e in data!) {
+            var perusahaan = Company();
+            perusahaan.idPerusahaan = e.idPerusahaan;
+            perusahaan.namaPerusahaan = e.namaPerusahaan;
+            perusahaan.flag = e.flag;
+            perusahaan.timeIn = e.timeIn;
+            var res = await PerusahaanService().save(perusahaan);
             if (kDebugMode) {
               print("Perusahaan $res");
             }
@@ -108,11 +108,11 @@ class ApiService {
   }
 
   Future lokasiGet() async {
-    await LokasiRepository().fetchAll().then((data) async {
-      if (data != null) {
-        if (data.lokasi != null) {
-          var _data = data.lokasi;
-          for (var e in _data!) {
+    await LokasiRepository().fetchAll().then((_data) async {
+      if (_data != null) {
+        if (_data.lokasi != null) {
+          var data = _data.lokasi;
+          for (var e in data!) {
             var data = Lokasi();
             data.idLok = e.idLok;
             data.lokasi = e.lokasi;
@@ -130,11 +130,11 @@ class ApiService {
   }
 
   Future detKeparahanGet() async {
-    await DetKeparahanRepository().fetchAll().then((data) async {
-      if (data != null) {
-        if (data.detKeparahan != null) {
-          var _data = data.detKeparahan;
-          for (var e in _data!) {
+    await DetKeparahanRepository().fetchAll().then((_data) async {
+      if (_data != null) {
+        if (_data.detKeparahan != null) {
+          var data = _data.detKeparahan;
+          for (var e in data!) {
             var data = DetKeparahan();
             data.idDet = e.idDet;
             data.idKeparahan = e.idKeparahan;
@@ -152,11 +152,11 @@ class ApiService {
   }
 
   Future pengendalianGet() async {
-    await PengendalianRepository().fetchAll().then((data) async {
-      if (data != null) {
-        if (data.hirarki != null) {
-          var _data = data.hirarki;
-          for (var e in _data!) {
+    await PengendalianRepository().fetchAll().then((_data) async {
+      if (_data != null) {
+        if (_data.hirarki != null) {
+          var data = _data.hirarki;
+          for (var e in data!) {
             var data = Hirarki();
             data.idHirarki = e.idHirarki;
             data.idKet = e.idKet;
@@ -175,11 +175,11 @@ class ApiService {
   }
 
   Future detPengendalianGet() async {
-    await DetPengendalianRepository().fetchAll().then((data) async {
-      if (data != null) {
-        if (data.detHirarki != null) {
-          var _data = data.detHirarki;
-          for (var e in _data!) {
+    await DetPengendalianRepository().fetchAll().then((_data) async {
+      if (_data != null) {
+        if (_data.detHirarki != null) {
+          var data = _data.detHirarki;
+          for (var e in data!) {
             var data = DetHirarki();
             data.idHirarki = e.idHirarki;
             data.idKet = e.idKet;
@@ -197,11 +197,11 @@ class ApiService {
   }
 
   Future usersGet() async {
-    await UsersRepository().fetchAll().then((data) async {
-      if (data != null) {
-        if (data.usersList != null) {
-          var _data = data.usersList;
-          for (var e in _data!) {
+    await UsersRepository().fetchAll().then((_data) async {
+      if (_data != null) {
+        if (_data.usersList != null) {
+          var data = _data.usersList;
+          for (var e in data!) {
             var data = UsersList();
             data.idUser = e.idUser;
             data.username = e.username;
@@ -232,12 +232,12 @@ class ApiService {
   }
 
   Future deviceUpdateGet(idDevice) async {
-    await DeviceUpdateRepository().getDeviceBy(idDevice).then((data) async {
-      print("data $data");
-      if (data != null) {
-        if (data.deviceUpdate != null) {
-          var _data = data.deviceUpdate;
-          for (var e in _data!) {
+    await DeviceUpdateRepository().getDeviceBy(idDevice).then((_data) async {
+      print("data $_data");
+      if (_data != null) {
+        if (_data.deviceUpdate != null) {
+          var data = _data.deviceUpdate;
+          for (var e in data!) {
             var data = DeviceUpdate();
             data.idDevice = idDevice;
             data.idUpdate = e.idUpdate;
@@ -254,11 +254,11 @@ class ApiService {
   }
 
   Future deviceInit() async {
-    await DeviceUpdateRepository().fetchAll().then((data) async {
-      if (data != null) {
-        if (data.deviceUpdate != null) {
-          var _data = data.deviceUpdate;
-          for (var e in _data!) {
+    await DeviceUpdateRepository().fetchAll().then((_data) async {
+      if (_data != null) {
+        if (_data.deviceUpdate != null) {
+          var data = _data.deviceUpdate;
+          for (var e in data!) {
             var data = DeviceUpdate();
             data.idUpdate = e.idUpdate;
             data.idDevice = e.idDevice;

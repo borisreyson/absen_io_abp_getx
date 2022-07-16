@@ -40,6 +40,15 @@ abstract class Routes {
   static const RUBAH_STATUS = _Paths.RUBAH_STATUS;
   static const RUBAH_BAHAYA = _Paths.RUBAH_BAHAYA;
   static const RUBAH_K_T_A = _Paths.RUBAH_K_T_A;
+  static const DETAIL_ABSENSI = _Paths.DETAIL_ABSENSI;
+  static const RKB = _Paths.RKB;
+  static const RKB_DETAIL = _Paths.RKB_DETAIL;
+  static const RKB_PURCHASING = _Paths.RKB_PURCHASING;
+  static const RKB_ADMIN = _Paths.RKB_ADMIN;
+  static const RKB_KABAG = _Paths.RKB_KABAG;
+  static const RKB_SECTION = _Paths.RKB_SECTION;
+  static const RKB_KTT = _Paths.RKB_KTT;
+  static const RKB_MENU = _Paths.RKB_MENU;
 }
 
 abstract class _Paths {
@@ -83,4 +92,14 @@ abstract class _Paths {
   static const RUBAH_STATUS = '/rubah-status';
   static const RUBAH_BAHAYA = '/rubah-bahaya';
   static const RUBAH_K_T_A = '/rubah-k-t-a';
+  static const DETAIL_ABSENSI = '/detail-absensi';
+  static const HGE = '/hge';
+  static const RKB = '/rkb';
+  static const RKB_DETAIL = '/rkb-detail';
+  static const RKB_PURCHASING = '/rkb-purchasing';
+  static const RKB_ADMIN = '/rkb-admin';
+  static const RKB_KABAG = '/rkb-kabag';
+  static const RKB_SECTION = '/rkb-section';
+  static const RKB_KTT = '/rkb-ktt';
+  static const RKB_MENU = '/rkb-menu';
 }

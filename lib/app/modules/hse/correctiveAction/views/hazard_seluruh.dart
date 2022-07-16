@@ -13,6 +13,7 @@ class HazardSeluruh extends GetView {
       required this.data})
       : super(key: key);
 
+  @override
   final CorrectiveActionController controller;
   final DataUser profile;
   final CounterHazard data;

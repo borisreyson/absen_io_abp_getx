@@ -12,6 +12,7 @@ class LastAbsen {
   Presensi? presensiPulang;
   List<MapArea?>? mapArea;
   JamServer? jamServer;
+  String? absensi;
 
   LastAbsen(
       {this.idRoster,
@@ -26,7 +27,8 @@ class LastAbsen {
       this.presensiMasuk,
       this.presensiPulang,
       this.mapArea,
-      this.jamServer});
+      this.jamServer,
+      this.absensi});
 
   LastAbsen.fromJson(Map<String, dynamic> json) {
     idRoster = json['idRoster'];
@@ -53,6 +55,7 @@ class LastAbsen {
     jamServer = json['jam_server'] != null
         ? JamServer?.fromJson(json['jam_server'])
         : null;
+    absensi = json['absensi'];
   }
 }
 
@@ -78,6 +81,8 @@ class Presensi {
   String? timeIn;
   String? checkin;
   String? checkout;
+  String? faceIn;
+  String? faceOut;
   String? tanggalJam;
 
   Presensi(
@@ -102,7 +107,9 @@ class Presensi {
       this.timeIn,
       this.checkin,
       this.checkout,
-      this.tanggalJam});
+      this.tanggalJam,
+      this.faceIn,
+      this.faceOut});
 
   Presensi.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -127,6 +134,8 @@ class Presensi {
     checkin = json['checkin'];
     checkout = json['checkout'];
     tanggalJam = json['tanggal_jam'];
+    faceIn = json['faceIn'];
+    faceOut = json['faceOut'];
   }
 
   Map<String, dynamic> toJson() {
@@ -153,6 +162,8 @@ class Presensi {
     data['checkin'] = checkin;
     data['checkout'] = checkout;
     data['tanggal_jam'] = tanggalJam;
+    data['faceIn'] = faceIn;
+    data['faceOut'] = faceOut;
     return data;
   }
 }

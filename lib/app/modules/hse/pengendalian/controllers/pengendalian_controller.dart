@@ -15,12 +15,10 @@ class PengendalianController extends GetxController {
   @override
   void onInit() async {
     await repository.getAll(table: Constants.pengendalianTb).then((value) {
-      if (value != null) {
-        for (var e in value) {
-          idHirarki.add(e.idHirarki);
-          print("value ${e.idHirarki}");
-          data.add(e);
-        }
+      for (var e in value) {
+        idHirarki.add(e.idHirarki);
+        print("value ${e.idHirarki}");
+        data.add(e);
       }
     }).whenComplete(() {
       loadPegendalian(idHirarki);
@@ -29,10 +27,6 @@ class PengendalianController extends GetxController {
     super.onInit();
   }
 
-  @override
-  void onReady() {
-    super.onReady();
-  }
 
   @override
   void onClose() {}

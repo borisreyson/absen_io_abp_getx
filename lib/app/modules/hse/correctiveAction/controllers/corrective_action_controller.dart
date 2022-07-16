@@ -16,7 +16,7 @@ class CorrectiveActionController extends GetxController {
       company = ''.obs,
       profile = UserProfileModel().obs,
       username = ''.obs,
-      rule = ''.obs,
+      rule = [].obs,
       tglSekarang = ''.obs;
   final isLoading = true.obs;
   String? fotoProfile;
@@ -41,17 +41,12 @@ class CorrectiveActionController extends GetxController {
   }
 
   @override
-  void onReady() {
-    super.onReady();
-  }
-
-  @override
   void onClose() {}
 
   getPref() async {
     var pref = await SharedPreferences.getInstance();
     username.value = "${pref.getString(Constants.username)}";
-    rule.value = "${pref.getString(Constants.rule)}";
+    rule.value = "${pref.getString(Constants.rule)}".split(",");
     nik.value = "${pref.getString(Constants.nik)}";
     fotoProfile = "${pref.getString(Constants.fotoProfile)}";
     getRepository();

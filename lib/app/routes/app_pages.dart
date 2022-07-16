@@ -2,6 +2,22 @@ import 'package:get/get.dart';
 
 import '../modules/buletin/bindings/buletin_binding.dart';
 import '../modules/buletin/views/buletin_view.dart';
+import '../modules/hge/rkb/bindings/rkb_binding.dart';
+import '../modules/hge/rkb/views/rkb_view.dart';
+import '../modules/hge/rkb_admin/bindings/rkb_admin_binding.dart';
+import '../modules/hge/rkb_admin/views/rkb_admin_view.dart';
+import '../modules/hge/rkb_detail/bindings/rkb_detail_binding.dart';
+import '../modules/hge/rkb_detail/views/rkb_detail_view.dart';
+import '../modules/hge/rkb_kabag/bindings/rkb_kabag_binding.dart';
+import '../modules/hge/rkb_kabag/views/rkb_kabag_view.dart';
+import '../modules/hge/rkb_ktt/bindings/rkb_ktt_binding.dart';
+import '../modules/hge/rkb_ktt/views/rkb_ktt_view.dart';
+import '../modules/hge/rkb_menu/bindings/rkb_menu_binding.dart';
+import '../modules/hge/rkb_menu/views/rkb_menu_view.dart';
+import '../modules/hge/rkb_purchasing/bindings/rkb_purchasing_binding.dart';
+import '../modules/hge/rkb_purchasing/views/rkb_purchasing_view.dart';
+import '../modules/hge/rkb_section/bindings/rkb_section_binding.dart';
+import '../modules/hge/rkb_section/views/rkb_section_view.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/hse/correctiveAction/bindings/corrective_action_binding.dart';
@@ -62,6 +78,8 @@ import '../modules/presensi/absensi/bindings/absensi_binding.dart';
 import '../modules/presensi/absensi/views/absensi_view.dart';
 import '../modules/presensi/absensiVPS/bindings/absensi_v_p_s_binding.dart';
 import '../modules/presensi/absensiVPS/views/absensi_v_p_s_view.dart';
+import '../modules/presensi/detail_absensi/bindings/detail_absensi_binding.dart';
+import '../modules/presensi/detail_absensi/views/detail_absensi_view.dart';
 import '../modules/presensi/grafikKehadiran/bindings/grafik_kehadiran_binding.dart';
 import '../modules/presensi/grafikKehadiran/views/grafik_kehadiran_view.dart';
 import '../modules/presensi/listAbsen/bindings/list_absen_binding.dart';
@@ -169,7 +187,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.ABSENSI_V_P_S,
-      page: () => AbsensiVPSView(),
+      page: () => const AbsensiVPSView(),
       binding: AbsensiVPSBinding(),
     ),
     GetPage(
@@ -194,12 +212,12 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.ABSEN_PULANG,
-      page: () => AbsenPulangView(),
+      page: () => const AbsenPulangView(),
       binding: AbsenPulangBinding(),
     ),
     GetPage(
       name: _Paths.CORRECTIVE_ACTION,
-      page: () => CorrectiveActionView(),
+      page: () => const CorrectiveActionView(),
       binding: CorrectiveActionBinding(),
     ),
     GetPage(
@@ -209,12 +227,12 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.HAZARD_LIST,
-      page: () => HazardListView(),
+      page: () => const HazardListView(),
       binding: HazardListBinding(),
     ),
     GetPage(
       name: _Paths.DETAIL_HAZARD,
-      page: () => DetailHazardView(),
+      page: () => const DetailHazardView(),
       binding: DetailHazardBinding(),
     ),
     GetPage(
@@ -286,6 +304,51 @@ class AppPages {
       name: _Paths.RUBAH_K_T_A,
       page: () => RubahKTAView(),
       binding: RubahKTABinding(),
+    ),
+    GetPage(
+      name: _Paths.DETAIL_ABSENSI,
+      page: () => const DetailAbsensiView(),
+      binding: DetailAbsensiBinding(),
+    ),
+    GetPage(
+      name: _Paths.RKB,
+      page: () => const RkbView(),
+      binding: RkbBinding(),
+    ),
+    GetPage(
+      name: _Paths.RKB_DETAIL,
+      page: () => const RkbDetailView(),
+      binding: RkbDetailBinding(),
+    ),
+    GetPage(
+      name: _Paths.RKB_PURCHASING,
+      page: () => const RkbPurchasingView(),
+      binding: RkbPurchasingBinding(),
+    ),
+    GetPage(
+      name: _Paths.RKB_ADMIN,
+      page: () => const RkbAdminView(),
+      binding: RkbAdminBinding(),
+    ),
+    GetPage(
+      name: _Paths.RKB_KABAG,
+      page: () => const RkbKabagView(),
+      binding: RkbKabagBinding(),
+    ),
+    GetPage(
+      name: _Paths.RKB_SECTION,
+      page: () => const RkbSectionView(),
+      binding: RkbSectionBinding(),
+    ),
+    GetPage(
+      name: _Paths.RKB_KTT,
+      page: () => const RkbKttView(),
+      binding: RkbKttBinding(),
+    ),
+    GetPage(
+      name: _Paths.RKB_MENU,
+      page: () => const RkbMenuView(),
+      binding: RkbMenuBinding(),
     ),
   ];
 }
