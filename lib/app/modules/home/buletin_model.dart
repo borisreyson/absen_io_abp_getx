@@ -23,7 +23,7 @@ class Buletin {
       this.total});
 
   Buletin.fromJson(Map<String, dynamic> json) {
-    currentPage = json['current_page'];
+    currentPage = json["current_page"];
     if (json['data'] != null) {
       data = <Data>[];
       json['data'].forEach((v) {

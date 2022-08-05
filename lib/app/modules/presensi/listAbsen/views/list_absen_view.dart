@@ -40,10 +40,10 @@ class ListAbsenView extends GetView<ListAbsenController> {
     return Column(
       children: [
         Card(
-          margin: EdgeInsets.only(bottom: 20),
+          margin: const EdgeInsets.only(bottom: 20),
           elevation: 10,
           shadowColor: Colors.black87,
-          color: Color.fromARGB(255, 203, 199, 199),
+          color: const Color.fromARGB(255, 203, 199, 199),
           child: InkWell(
             onTap: () {
               Get.toNamed(Routes.DETAIL_ABSENSI, arguments: {"detail": absen});
@@ -65,7 +65,7 @@ class ListAbsenView extends GetView<ListAbsenController> {
                             borderRadius: BorderRadius.circular(100),
                             child: Container(
                               color: Colors.white,
-                              child: Icon(
+                              child: const Icon(
                                 Icons.person,
                                 size: 100,
                               ),
@@ -80,7 +80,7 @@ class ListAbsenView extends GetView<ListAbsenController> {
                             borderRadius: BorderRadius.circular(100),
                             child: Container(
                               color: Colors.white,
-                              child: Icon(
+                              child: const Icon(
                                 Icons.person,
                                 size: 100,
                               ),
@@ -90,19 +90,20 @@ class ListAbsenView extends GetView<ListAbsenController> {
                 ),
                 Text(
                   fmt.format(tgl),
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 16),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
                 Text(
                   controller.nama.value,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     decoration: TextDecoration.underline,
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 5,
                 ),
                 Text(
