@@ -1,8 +1,8 @@
 import 'package:face_id_plus/app/modules/home/buletin_model.dart';
 import 'package:get/get.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-
 import '../providers/buletin_provider.dart';
+import 'package:permission_handler/permission_handler.dart' as handler;
 
 class HomeController extends GetxController {
   final _provider = BuletinProvider();
@@ -19,7 +19,6 @@ class HomeController extends GetxController {
     });
     super.onInit();
   }
-
 
   @override
   void onClose() {}
@@ -41,5 +40,8 @@ class HomeController extends GetxController {
         .then((value) => buletin?.value = value!);
     pullRefresh.loadComplete();
     pullRefresh.refreshCompleted();
+  }
+  internetPermission()async{
+    // var permission = handler.Permission.
   }
 }

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:typed_data';
 import 'package:face_id_plus/app/data/providers/last_absen_provider.dart';
+import 'package:face_id_plus/app/routes/app_pages.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -27,17 +28,17 @@ class AbsensiController extends GetxController {
   final lastAbsen = LastAbsenModels().obs;
   final presensi = Presensi().obs;
   final isLogin = false.obs;
-  final nik = ''.obs;
+  final nik = RxnString('');
   final jamS = 00.obs;
   final menitS = 00.obs;
   final detikS = 00.obs;
-  final startClock = "".obs;
-  final nama = ''.obs;
-  final tanggal = ''.obs;
+  final startClock = RxnString('');
+  final nama = RxnString('');
+  final tanggal = RxnString('');
   final fmt = DateFormat("dd MMMM yyyy");
-  final rosterKerja = ''.obs;
-  final jamKerja = ''.obs;
-  final perusahaan = ''.obs;
+  final rosterKerja = RxnString('');
+  final jamKerja = RxnString('');
+  final perusahaan = RxnString('');
   final serverJam = JamServer().obs;
   final absenTerakhir = 'Masuk'.obs;
 
@@ -73,7 +74,9 @@ class AbsensiController extends GetxController {
   void onClose() {}
 
   loadLastAbsen(nik, company) async {
+    print("Lokasi $nik $company");
     await _provider.getLastAbsen(nik, company).then((LastAbsenModels? value) {
+      print("Lokasi ${value?.mapArea}");
       if (value != null) {
         setCustomMapPin();
         lastAbsen.value = value;
@@ -122,13 +125,13 @@ class AbsensiController extends GetxController {
     var pref = await SharedPreferences.getInstance();
     if (pref.getBool(Constants.isLogin) != null) {
       isLogin.value = pref.getBool(Constants.isLogin)!;
-      nama.value = pref.getString("nama")!;
-      perusahaan.value = pref.getString("perusahaan")!;
+      nama.value = pref.getString(Constants.namaAbsen);
+      perusahaan.value = pref.getString(Constants.perusahaanAbsen);
 
-      nik.value = pref.getString(Constants.nik)!;
+      nik.value = pref.getString(Constants.nikAbsen);
       loadLastAbsen(nik.value, perusahaan.value);
     } else {
-      Get.offAllNamed('/login-absen');
+      Get.offAllNamed(Routes.LOGIN_ABSEN);
     }
   }
 
@@ -219,7 +222,7 @@ class AbsensiController extends GetxController {
       if (e) {
         if (lokasiPalsu == true) {
           closeStream();
-          Get.offAllNamed('/lokasi-palsu');
+          Get.offAllNamed(Routes.LOKASI_PALSU);
         } else {
           if (serviceEnable) {
             if (myLocation != null) {
@@ -309,5 +312,10 @@ class AbsensiController extends GetxController {
     googleMapController = c;
     mapController.complete(c);
     streamLokasi();
+  }
+
+  Future<bool> onPop() async {
+    return true;
+    // await closeStream();
   }
 }

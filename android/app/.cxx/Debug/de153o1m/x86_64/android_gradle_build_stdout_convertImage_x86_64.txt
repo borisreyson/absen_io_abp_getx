@@ -1,0 +1,2 @@
+ninja: Entering directory `/Users/borisreyson/StudioProjects/absen_io_abp_getx copy/android/app/.cxx/Debug/de153o1m/x86_64'
+[1/1] Linking C shared library "/Users/borisreyson/StudioProjects/absen_io_abp_getx copy/build/app/intermediates/cxx/Debug/de153o1m/obj/x86_64/libconvertImage.so"

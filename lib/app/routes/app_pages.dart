@@ -2,18 +2,26 @@ import 'package:get/get.dart';
 
 import '../modules/buletin/bindings/buletin_binding.dart';
 import '../modules/buletin/views/buletin_view.dart';
+import '../modules/hge/detail_kabag/bindings/detail_kabag_binding.dart';
+import '../modules/hge/detail_kabag/views/detail_kabag_view.dart';
 import '../modules/hge/rkb/bindings/rkb_binding.dart';
 import '../modules/hge/rkb/views/rkb_view.dart';
 import '../modules/hge/rkb_admin/bindings/rkb_admin_binding.dart';
 import '../modules/hge/rkb_admin/views/rkb_admin_view.dart';
+import '../modules/hge/rkb_dept/bindings/rkb_dept_binding.dart';
+import '../modules/hge/rkb_dept/views/rkb_dept_view.dart';
 import '../modules/hge/rkb_detail/bindings/rkb_detail_binding.dart';
 import '../modules/hge/rkb_detail/views/rkb_detail_view.dart';
 import '../modules/hge/rkb_kabag/bindings/rkb_kabag_binding.dart';
 import '../modules/hge/rkb_kabag/views/rkb_kabag_view.dart';
 import '../modules/hge/rkb_ktt/bindings/rkb_ktt_binding.dart';
 import '../modules/hge/rkb_ktt/views/rkb_ktt_view.dart';
+import '../modules/hge/rkb_lampiran/bindings/rkb_lampiran_binding.dart';
+import '../modules/hge/rkb_lampiran/views/rkb_lampiran_view.dart';
 import '../modules/hge/rkb_menu/bindings/rkb_menu_binding.dart';
 import '../modules/hge/rkb_menu/views/rkb_menu_view.dart';
+import '../modules/hge/rkb_pdf/bindings/rkb_pdf_binding.dart';
+import '../modules/hge/rkb_pdf/views/rkb_pdf_view.dart';
 import '../modules/hge/rkb_purchasing/bindings/rkb_purchasing_binding.dart';
 import '../modules/hge/rkb_purchasing/views/rkb_purchasing_view.dart';
 import '../modules/hge/rkb_section/bindings/rkb_section_binding.dart';
@@ -70,6 +78,8 @@ import '../modules/permission/notifikasi/bindings/notifikasi_binding.dart';
 import '../modules/permission/notifikasi/views/notifikasi_view.dart';
 import '../modules/permission/penimpanan/bindings/penimpanan_binding.dart';
 import '../modules/permission/penimpanan/views/penimpanan_view.dart';
+import '../modules/pesan/bindings/pesan_binding.dart';
+import '../modules/pesan/views/pesan_view.dart';
 import '../modules/presensi/absenMasuk/bindings/absen_masuk_binding.dart';
 import '../modules/presensi/absenMasuk/views/absen_masuk_view.dart';
 import '../modules/presensi/absenPulang/bindings/absen_pulang_binding.dart';
@@ -86,12 +96,50 @@ import '../modules/presensi/listAbsen/bindings/list_absen_binding.dart';
 import '../modules/presensi/listAbsen/views/list_absen_view.dart';
 import '../modules/presensi/loginAbsen/bindings/login_absen_binding.dart';
 import '../modules/presensi/loginAbsen/views/login_absen_view.dart';
+import '../modules/presensi/lokasi_palsu/bindings/lokasi_palsu_binding.dart';
+import '../modules/presensi/lokasi_palsu/views/lokasi_palsu_view.dart';
 import '../modules/presensi/mainAbsen/bindings/main_absen_binding.dart';
 import '../modules/presensi/mainAbsen/views/main_absen_view.dart';
 import '../modules/presensi/profile/bindings/profile_binding.dart';
 import '../modules/presensi/profile/views/profile_view.dart';
 import '../modules/presensi/rosterKerja/bindings/roster_kerja_binding.dart';
 import '../modules/presensi/rosterKerja/views/roster_kerja_view.dart';
+import '../modules/sarpras/barcode_security/bindings/barcode_security_binding.dart';
+import '../modules/sarpras/barcode_security/views/barcode_security_view.dart';
+import '../modules/sarpras/bukti_dilokasi/bindings/bukti_dilokasi_binding.dart';
+import '../modules/sarpras/bukti_dilokasi/views/bukti_dilokasi_view.dart';
+import '../modules/sarpras/form_izin_keluar/bindings/form_izin_keluar_binding.dart';
+import '../modules/sarpras/form_izin_keluar/views/form_izin_keluar_view.dart';
+import '../modules/sarpras/form_sarana/bindings/form_sarana_binding.dart';
+import '../modules/sarpras/form_sarana/views/form_sarana_view.dart';
+import '../modules/sarpras/menu_sarpras/bindings/menu_sarpras_binding.dart';
+import '../modules/sarpras/menu_sarpras/views/menu_sarpras_view.dart';
+import '../modules/sarpras/nomor_lambung/bindings/nomor_lambung_binding.dart';
+import '../modules/sarpras/nomor_lambung/views/nomor_lambung_view.dart';
+import '../modules/sarpras/penumpang/bindings/penumpang_binding.dart';
+import '../modules/sarpras/penumpang/views/penumpang_view.dart';
+import '../modules/sarpras/sarpras_admin/bindings/sarpras_admin_binding.dart';
+import '../modules/sarpras/sarpras_admin/views/sarpras_admin_view.dart';
+import '../modules/sarpras/sarpras_detail/bindings/sarpras_detail_binding.dart';
+import '../modules/sarpras/sarpras_detail/views/sarpras_detail_view.dart';
+import '../modules/sarpras/sarpras_hc/bindings/sarpras_hc_binding.dart';
+import '../modules/sarpras/sarpras_hc/views/sarpras_hc_view.dart';
+import '../modules/sarpras/sarpras_it/bindings/sarpras_it_binding.dart';
+import '../modules/sarpras/sarpras_it/views/sarpras_it_view.dart';
+import '../modules/sarpras/sarpras_kabag/bindings/sarpras_kabag_binding.dart';
+import '../modules/sarpras/sarpras_kabag/views/sarpras_kabag_view.dart';
+import '../modules/sarpras/sarpras_kordinator/bindings/sarpras_kordinator_binding.dart';
+import '../modules/sarpras/sarpras_kordinator/views/sarpras_kordinator_view.dart';
+import '../modules/sarpras/sarpras_ktt/bindings/sarpras_ktt_binding.dart';
+import '../modules/sarpras/sarpras_ktt/views/sarpras_ktt_view.dart';
+import '../modules/sarpras/sarpras_pdf/bindings/sarpras_pdf_binding.dart';
+import '../modules/sarpras/sarpras_pdf/views/sarpras_pdf_view.dart';
+import '../modules/sarpras/sarpras_section/bindings/sarpras_section_binding.dart';
+import '../modules/sarpras/sarpras_section/views/sarpras_section_view.dart';
+import '../modules/sarpras/sarpras_security/bindings/sarpras_security_binding.dart';
+import '../modules/sarpras/sarpras_security/views/sarpras_security_view.dart';
+import '../modules/sarpras/sarpras_user/bindings/sarpras_user_binding.dart';
+import '../modules/sarpras/sarpras_user/views/sarpras_user_view.dart';
 import '../modules/splash/bindings/splash_binding.dart';
 import '../modules/splash/views/splash_view.dart';
 
@@ -207,7 +255,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.ABSEN_MASUK,
-      page: () => const AbsenMasukView(),
+      page: () =>  AbsenMasukView(),
       binding: AbsenMasukBinding(),
     ),
     GetPage(
@@ -332,7 +380,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.RKB_KABAG,
-      page: () => const RkbKabagView(),
+      page: () => RkbKabagView(),
       binding: RkbKabagBinding(),
     ),
     GetPage(
@@ -349,6 +397,126 @@ class AppPages {
       name: _Paths.RKB_MENU,
       page: () => const RkbMenuView(),
       binding: RkbMenuBinding(),
+    ),
+    GetPage(
+      name: _Paths.RKB_LAMPIRAN,
+      page: () => const RkbLampiranView(),
+      binding: RkbLampiranBinding(),
+    ),
+    GetPage(
+      name: _Paths.RKB_DEPT,
+      page: () => const RkbDeptView(),
+      binding: RkbDeptBinding(),
+    ),
+    GetPage(
+      name: _Paths.DETAIL_KABAG,
+      page: () => const DetailKabagView(),
+      binding: DetailKabagBinding(),
+    ),
+    GetPage(
+      name: _Paths.PESAN,
+      page: () => const PesanView(),
+      binding: PesanBinding(),
+    ),
+    GetPage(
+      name: _Paths.RKB_PDF,
+      page: () => const RkbPdfView(),
+      binding: RkbPdfBinding(),
+    ),
+    GetPage(
+      name: _Paths.LOKASI_PALSU,
+      page: () => const LokasiPalsuView(),
+      binding: LokasiPalsuBinding(),
+    ),
+    GetPage(
+      name: _Paths.MENU_SARPRAS,
+      page: () => const MenuSarprasView(),
+      binding: MenuSarprasBinding(),
+    ),
+    GetPage(
+      name: _Paths.SARPRAS_USER,
+      page: () => const SarprasUserView(),
+      binding: SarprasUserBinding(),
+    ),
+    GetPage(
+      name: _Paths.SARPRAS_KABAG,
+      page: () => const SarprasKabagView(),
+      binding: SarprasKabagBinding(),
+    ),
+    GetPage(
+      name: _Paths.SARPRAS_KTT,
+      page: () => const SarprasKttView(),
+      binding: SarprasKttBinding(),
+    ),
+    GetPage(
+      name: _Paths.SARPRAS_HC,
+      page: () => const SarprasHcView(),
+      binding: SarprasHcBinding(),
+    ),
+    GetPage(
+      name: _Paths.SARPRAS_SECTION,
+      page: () => const SarprasSectionView(),
+      binding: SarprasSectionBinding(),
+    ),
+    GetPage(
+      name: _Paths.SARPRAS_ADMIN,
+      page: () => const SarprasAdminView(),
+      binding: SarprasAdminBinding(),
+    ),
+    GetPage(
+      name: _Paths.SARPRAS_KORDINATOR,
+      page: () => const SarprasKordinatorView(),
+      binding: SarprasKordinatorBinding(),
+    ),
+    GetPage(
+      name: _Paths.SARPRAS_SECURITY,
+      page: () => const SarprasSecurityView(),
+      binding: SarprasSecurityBinding(),
+    ),
+    GetPage(
+      name: _Paths.SARPRAS_IT,
+      page: () => const SarprasItView(),
+      binding: SarprasItBinding(),
+    ),
+    GetPage(
+      name: _Paths.SARPRAS_DETAIL,
+      page: () => const SarprasDetailView(),
+      binding: SarprasDetailBinding(),
+    ),
+    GetPage(
+      name: _Paths.SARPRAS_PDF,
+      page: () => const SarprasPdfView(),
+      binding: SarprasPdfBinding(),
+    ),
+    GetPage(
+      name: _Paths.FORM_SARANA,
+      page: () => const FormSaranaView(),
+      binding: FormSaranaBinding(),
+    ),
+    GetPage(
+      name: _Paths.FORM_IZIN_KELUAR,
+      page: () => const FormIzinKeluarView(),
+      binding: FormIzinKeluarBinding(),
+    ),
+    GetPage(
+      name: _Paths.NOMOR_LAMBUNG,
+      page: () => const NomorLambungView(),
+      binding: NomorLambungBinding(),
+    ),
+    GetPage(
+      name: _Paths.PENUMPANG,
+      page: () => PenumpangView(),
+      binding: PenumpangBinding(),
+    ),
+    GetPage(
+      name: _Paths.BUKTI_DILOKASI,
+      page: () => const BuktiDilokasiView(),
+      binding: BuktiDilokasiBinding(),
+    ),
+    GetPage(
+      name: _Paths.BARCODE_SECURITY,
+      page: () => const BarcodeSecurityView(),
+      binding: BarcodeSecurityBinding(),
     ),
   ];
 }

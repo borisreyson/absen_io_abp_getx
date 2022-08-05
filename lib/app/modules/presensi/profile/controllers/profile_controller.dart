@@ -3,9 +3,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../data/utils/constants.dart';
 
 class ProfileController extends GetxController {
-  final nama = ''.obs;
-  final nik = ''.obs;
-  final foto = ''.obs;
+  final nama = RxnString('');
+  final nik = RxnString('');
+  final foto = RxnString('');
   @override
   void onInit() {
     getPref();
@@ -17,9 +17,9 @@ class ProfileController extends GetxController {
   void onClose() {}
   getPref() async {
     var pref = await SharedPreferences.getInstance();
-    nama.value = pref.getString("nama")!;
-    nik.value = pref.getString("nik")!;
-    foto.value = pref.getString(Constants.fotoProfile)!;
+    nama.value = pref.getString(Constants.namaAbsen);
+    nik.value = pref.getString(Constants.nikAbsen);
+    foto.value = pref.getString(Constants.fotoProfile);
   }
 
   logOut() async {

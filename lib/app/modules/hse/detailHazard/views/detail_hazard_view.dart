@@ -93,7 +93,7 @@ class DetailHazardView extends GetView<DetailHazardController> {
         child: InkWell(
           onTap: () {
             Get.toNamed(Routes.IMAGE_HAZARD_VIEW,
-                arguments: {"image": controller.bukti.value});
+                arguments: {"image": controller.bukti.value, "loaded": true});
           },
           child: (controller.bukti.value != null
               ? CachedNetworkImage(

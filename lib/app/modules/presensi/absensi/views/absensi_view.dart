@@ -16,44 +16,54 @@ class AbsensiView extends GetView<AbsensiController> {
   @override
   Widget build(BuildContext context) {
     return Obx(
-      () => Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-            onPressed: () {
-              Get.back(result: false);
-            },
-            icon: const Icon(
-              Icons.arrow_back_ios_new_rounded,
-              color: Colors.black,
+      () => WillPopScope(
+        onWillPop: () async {
+          Future.delayed(Duration(seconds: 1), () async {
+            await controller.closeStream();
+          });
+          return true;
+        },
+        child: Scaffold(
+          appBar: AppBar(
+            leading: IconButton(
+              onPressed: () {
+                Get.back(result: false);
+              },
+              icon: const Icon(
+                Icons.arrow_back_ios_new_rounded,
+                color: Colors.black,
+              ),
             ),
+            elevation: 0,
+            backgroundColor: Colors.white,
+            actions: [
+              IconButton(
+                  onPressed: () async {
+                    var res = await Get.toNamed(Routes.PROFILE);
+                    if (res != null) {
+                      if (res) {
+                        Get.offAllNamed('/login-absen');
+                      }
+                    }
+                  },
+                  icon: const Icon(
+                    Icons.menu,
+                    color: Colors.black,
+                  ))
+            ],
+            title: Text(
+              "${controller.nama.value}",
+              style: const TextStyle(color: Colors.black),
+            ),
+            centerTitle: false,
           ),
-          elevation: 0,
           backgroundColor: Colors.white,
-          actions: [
-            IconButton(
-                onPressed: () async {
-                  bool res = await Get.toNamed('/profile');
-                  if (res) {
-                    Get.offAllNamed('/login-absen');
-                  }
-                },
-                icon: const Icon(
-                  Icons.menu,
-                  color: Colors.black,
-                ))
-          ],
-          title: Text(
-            controller.nama.value,
-            style: const TextStyle(color: Colors.black),
+          body: Stack(
+            children: [
+              contentBody(context),
+              absenImage(context),
+            ],
           ),
-          centerTitle: false,
-        ),
-        backgroundColor: Colors.white,
-        body: Stack(
-          children: [
-            contentBody(context),
-            absenImage(context),
-          ],
         ),
       ),
     );
@@ -89,15 +99,15 @@ class AbsensiView extends GetView<AbsensiController> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                controller.rosterKerja.value,
+                "${controller.rosterKerja.value}",
                 style: const TextStyle(fontWeight: FontWeight.bold),
               ),
-              Text(controller.tanggal.value),
+              Text("${controller.tanggal.value}"),
             ],
           ),
         ),
         Text(
-          controller.startClock.value,
+          "${controller.startClock.value}",
           style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
         ),
         Container(
@@ -106,7 +116,7 @@ class AbsensiView extends GetView<AbsensiController> {
         ),
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Text(controller.jamKerja.value),
+          child: Text("${controller.jamKerja.value}"),
         ),
         Container(
           height: 0.2,
@@ -146,7 +156,7 @@ class AbsensiView extends GetView<AbsensiController> {
                             primary: const Color.fromARGB(255, 190, 36, 25)),
                         onPressed: (controller.absenTerakhir.value == "Pulang")
                             ? () async {
-                                var res = await Get.toNamed(Routes.ABSEN_PULANG,
+                                var res = await Get.toNamed(Routes.ABSEN_MASUK,
                                     arguments: {
                                       "jam": controller.serverJam.value,
                                       "lokasi": controller.myLocation
@@ -465,7 +475,7 @@ class AbsensiView extends GetView<AbsensiController> {
                   height: 10,
                 ),
                 Text(
-                  controller.nama.value,
+                  "${controller.nama.value}",
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     decoration: TextDecoration.underline,

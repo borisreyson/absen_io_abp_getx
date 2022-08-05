@@ -108,8 +108,8 @@ class ProfileView extends GetView<ProfileController> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(controller.nama.value),
-                Text(controller.nik.value),
+                Text("${controller.nama.value}"),
+                Text("${controller.nik.value}"),
               ],
             ),
           )

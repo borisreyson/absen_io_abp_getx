@@ -1,9 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
-
 import '../controllers/detail_absensi_controller.dart';
 
 class DetailAbsensiView extends GetView<DetailAbsensiController> {
@@ -12,7 +9,6 @@ class DetailAbsensiView extends GetView<DetailAbsensiController> {
   Widget build(BuildContext context) {
     var style = const TextStyle(color: Colors.white);
 
-    DateFormat fmt = DateFormat("dd MMMM yyyy");
     return Obx(
       () => Scaffold(
         appBar: AppBar(
@@ -27,9 +23,11 @@ class DetailAbsensiView extends GetView<DetailAbsensiController> {
           elevation: 0,
           backgroundColor: Colors.white,
           title: Text(
-            fmt.format(
-              DateTime.parse("${controller.detail.value.tanggal}"),
-            ),
+            (controller.detail.value.tanggal != null)
+                ? controller.fmt.format(
+                    DateTime.parse("${controller.detail.value.tanggal}"),
+                  )
+                : "-",
             style: const TextStyle(
                 fontWeight: FontWeight.bold, fontSize: 20, color: Colors.black),
           ),

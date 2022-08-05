@@ -1,11 +1,20 @@
+import 'package:face_id_plus/app/data/models/rkb_models.dart';
 import 'package:get/get.dart';
 
-class RkbDetailController extends GetxController {
-  //TODO: Implement RkbDetailController
+import '../../../../data/models/rkb_detail_models.dart';
+import '../../../../data/providers/provider.dart';
 
-  final count = 0.obs;
+class RkbDetailController extends GetxController {
+  final provider = Provider();
+  final idHeader = RxnString();
+  final noRkb = RxnString();
+  final data = <RkbDetail>[].obs;
   @override
   void onInit() {
+    idHeader.value = Get.arguments['idHeader'];
+    noRkb.value = Get.arguments['noRkb'];
+
+    getDetail();
     super.onInit();
   }
 
@@ -19,5 +28,13 @@ class RkbDetailController extends GetxController {
     super.onClose();
   }
 
-  void increment() => count.value++;
+  getDetail() async {
+    await provider.getRkbDetail(idHeader.value).then((value) {
+      if (value != null) {
+        if (value.rkbDetail != null) {
+          data.addAll(value.rkbDetail!);
+        }
+      }
+    });
+  }
 }

@@ -1,16 +1,10 @@
-import 'dart:io';
-
 import 'package:camera/camera.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
-
+import 'package:flutter/cupertino.dart';
 import '../controllers/absen_masuk_controller.dart';
 
 class AbsenMasukView extends GetView<AbsenMasukController> {
-  const AbsenMasukView({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Obx(
@@ -25,12 +19,6 @@ class AbsenMasukView extends GetView<AbsenMasukController> {
         appBar: AppBar(
           title: const Text('Absen Masuk'),
           centerTitle: true,
-          leading: IconButton(
-            onPressed: () {
-              Get.back(result: false);
-            },
-            icon: const Icon(Icons.arrow_back_ios_new_rounded),
-          ),
         ),
         body: cameraWidget(context),
       ),
@@ -40,25 +28,17 @@ class AbsenMasukView extends GetView<AbsenMasukController> {
   Widget cameraWidget(context) {
     return Stack(
       children: [
-        Positioned(
-          top: 0,
-          bottom: 0,
-          left: 0,
-          right: 0,
-          child: (controller.cameraInitialized.value)
-              ? Container(
-                  child: (controller.absenSukses.value)
-                      ? imagePreview()
-                      : cameraPreview(),
-                )
-              : const Center(
-                  child: SizedBox(
-                    height: 20,
-                    width: 20,
-                    child: CircularProgressIndicator(),
-                  ),
-                ),
-        ),
+        (controller.cameraInitialized.value)
+            ? Container(
+                child: cameraPreview(context),
+              )
+            : const Positioned(
+                bottom: 0,
+                top: 0,
+                right: 0,
+                left: 0,
+                child: CupertinoActivityIndicator(),
+              ),
         Align(
           alignment: Alignment.topCenter,
           child: Card(
@@ -75,10 +55,13 @@ class AbsenMasukView extends GetView<AbsenMasukController> {
           left: 0,
           child: captureButton(),
         ),
-        Positioned(
-          bottom: 10,
-          left: 10,
-          child: (controller.absenSukses.value) ? focusButton() : Container(),
+        Visibility(
+          visible: controller.gagal.value,
+          child: Positioned(
+            bottom: 10,
+            left: 10,
+            child: (controller.absenSukses.value) ? focusButton() : Container(),
+          ),
         ),
         Visibility(
           visible: controller.gagal.value,
@@ -105,41 +88,30 @@ class AbsenMasukView extends GetView<AbsenMasukController> {
                   ),
                 ),
               )
-            : Container()
+            : Container(),
       ],
     );
   }
 
-  Widget imagePreview() {
+  Widget cameraPreview(context) {
     return SizedBox(
         width: Get.width,
-        height: Get.height,
-        child: (controller.savFile != null)
-            ? Image.file(
-                File(
-                  controller.savFile!.path,
-                ),
-                fit: BoxFit.cover,
-              )
-            : const CupertinoActivityIndicator());
-  }
-
-  Widget cameraPreview() {
-    return SizedBox(
-        width: Get.width,
-        height: Get.height,
         child: GestureDetector(
-            onTap: () {
-              controller.cameraController?.setFocusMode(FocusMode.auto);
-            },
-            onDoubleTap: () {
-              controller.initCameras();
-            },
-            child: (controller.cameraController != null)
-                ? CameraPreview(controller.cameraController!)
-                : const Center(
-                    child: Text("Camera Tidak Tersedia!"),
-                  )));
+          onDoubleTap: () {
+            controller.initCameras();
+          },
+          child: (controller.cameraController != null)
+              ? (controller.isBusy.value)
+                  ? const SizedBox(
+                      child: CupertinoActivityIndicator(
+                      radius: 40,
+                      color: Color.fromARGB(255, 5, 54, 94),
+                    ))
+                  : CameraPreview(controller.cameraController!)
+              : const Center(
+                  child: Text("Camera Tidak Tersedia!"),
+                ),
+        ));
   }
 
   Widget captureButton() {
@@ -177,7 +149,6 @@ class AbsenMasukView extends GetView<AbsenMasukController> {
           controller.waiting.value = false;
           controller.detect.value = true;
           controller.absenSukses.value = false;
-          controller.gagal.value = false;
           controller.initializeCamera();
           controller.initCameras();
         },

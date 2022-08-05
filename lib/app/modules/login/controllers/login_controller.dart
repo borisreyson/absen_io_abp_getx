@@ -65,11 +65,11 @@ class LoginController extends GetxController {
   _setPref(User user) async {
     var pref = await SharedPreferences.getInstance();
     await pref.setBool(Constants.isLoginAbp, true);
-    await pref.setString(Constants.username, user.username!);
-    await pref.setString(Constants.nik, user.nik!);
-    await pref.setString(Constants.name, user.namaLengkap!);
-    await pref.setString(Constants.rule, user.rule!);
-    await pref.setString(Constants.fotoProfile, user.photoProfile!);
+    await pref.setString(Constants.username, "${user.username}");
+    await pref.setString(Constants.nik, "${user.nik}");
+    await pref.setString(Constants.name, "${user.namaLengkap}");
+    await pref.setString(Constants.rule, "${user.rule}");
+    await pref.setString(Constants.fotoProfile, "${user.photoProfile}");
     await pref.setString(Constants.company, "${user.perusahaan}");
     await pref.setString(Constants.section, "${user.section}");
     await pref.setString(Constants.departement, "${user.department}");

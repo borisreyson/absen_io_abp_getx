@@ -49,6 +49,34 @@ abstract class Routes {
   static const RKB_SECTION = _Paths.RKB_SECTION;
   static const RKB_KTT = _Paths.RKB_KTT;
   static const RKB_MENU = _Paths.RKB_MENU;
+  static const RKB_LAMPIRAN = _Paths.RKB_LAMPIRAN;
+  static const RKB_DEPT = _Paths.RKB_DEPT;
+  static const DETAIL_KABAG = _Paths.DETAIL_KABAG;
+  static const PESAN = _Paths.PESAN;
+  static const RKB_PDF = _Paths.RKB_PDF;
+  static const LOKASI_PALSU = _Paths.LOKASI_PALSU;
+  static const SARPRAS = _Paths.SARPRAS;
+  static const MENU_SARPRAS = _Paths.MENU_SARPRAS;
+  static const SARPRAS_USER = _Paths.SARPRAS_USER;
+  static const SECURITY = _Paths.SECURITY;
+  static const KABAG = _Paths.KABAG;
+  static const KTT = _Paths.KTT;
+  static const SARPRAS_KABAG = _Paths.SARPRAS_KABAG;
+  static const SARPRAS_KTT = _Paths.SARPRAS_KTT;
+  static const SARPRAS_HC = _Paths.SARPRAS_HC;
+  static const SARPRAS_SECTION = _Paths.SARPRAS_SECTION;
+  static const SARPRAS_ADMIN = _Paths.SARPRAS_ADMIN;
+  static const SARPRAS_KORDINATOR = _Paths.SARPRAS_KORDINATOR;
+  static const SARPRAS_SECURITY = _Paths.SARPRAS_SECURITY;
+  static const SARPRAS_IT = _Paths.SARPRAS_IT;
+  static const SARPRAS_DETAIL = _Paths.SARPRAS_DETAIL;
+  static const SARPRAS_PDF = _Paths.SARPRAS_PDF;
+  static const FORM_SARANA = _Paths.FORM_SARANA;
+  static const FORM_IZIN_KELUAR = _Paths.FORM_IZIN_KELUAR;
+  static const NOMOR_LAMBUNG = _Paths.NOMOR_LAMBUNG;
+  static const PENUMPANG = _Paths.PENUMPANG;
+  static const BUKTI_DILOKASI = _Paths.BUKTI_DILOKASI;
+  static const BARCODE_SECURITY = _Paths.BARCODE_SECURITY;
 }
 
 abstract class _Paths {
@@ -102,4 +130,32 @@ abstract class _Paths {
   static const RKB_SECTION = '/rkb-section';
   static const RKB_KTT = '/rkb-ktt';
   static const RKB_MENU = '/rkb-menu';
+  static const RKB_LAMPIRAN = '/rkb-lampiran';
+  static const RKB_DEPT = '/rkb-dept';
+  static const DETAIL_KABAG = '/detail-kabag';
+  static const PESAN = '/pesan';
+  static const RKB_PDF = '/rkb-pdf';
+  static const LOKASI_PALSU = '/lokasi-palsu';
+  static const SARPRAS = '/sarpras';
+  static const MENU_SARPRAS = '/menu-sarpras';
+  static const SARPRAS_USER = '/sarpras-user';
+  static const SECURITY = '/security';
+  static const KABAG = '/kabag';
+  static const KTT = '/ktt';
+  static const SARPRAS_KABAG = '/sarpras-kabag';
+  static const SARPRAS_KTT = '/sarpras-ktt';
+  static const SARPRAS_HC = '/sarpras-hc';
+  static const SARPRAS_SECTION = '/sarpras-section';
+  static const SARPRAS_ADMIN = '/sarpras-admin';
+  static const SARPRAS_KORDINATOR = '/sarpras-kordinator';
+  static const SARPRAS_SECURITY = '/sarpras-security';
+  static const SARPRAS_IT = '/sarpras-it';
+  static const SARPRAS_DETAIL = '/sarpras-detail';
+  static const SARPRAS_PDF = '/sarpras-pdf';
+  static const FORM_SARANA = '/form-sarana';
+  static const FORM_IZIN_KELUAR = '/form-izin-keluar';
+  static const NOMOR_LAMBUNG = '/nomor-lambung';
+  static const PENUMPANG = '/penumpang';
+  static const BUKTI_DILOKASI = '/bukti-dilokasi';
+  static const BARCODE_SECURITY = '/barcode-security';
 }

@@ -1,5 +1,5 @@
 name: face_id_plus
-version: 7.5.0
+version: 7.6.0
 publish_to: none
 description: A new Flutter project.
 environment:
@@ -27,12 +27,15 @@ dependencies:
   flutter_launcher_icons: ^0.9.3
   flutter_lints: ^2.0.1
   flutter_local_notifications: any
+  flutter_pdfview: ^1.2.2
+  flutter_signature_pad: ^3.0.1
   flutter_slidable: any
   geolocator: any
   get: ^4.6.5
   google_maps_flutter: ^2.1.8
   http: ^0.13.4
   image: any
+  image_gallery_saver: ^1.7.1
   image_picker: any
   internet_connection_checker: any
   intl: any
@@ -49,6 +52,7 @@ dependencies:
   shared_preferences: any
   socket_io_client: any
   sqflite: any
+  syncfusion_flutter_pdfviewer: ^20.2.39-beta
   table_calendar: any
   timer_builder: any
   uuid: ^3.0.6
@@ -59,16 +63,17 @@ dev_dependencies:
 
 flutter_icons:
   image_path_android: assets/icabp.png
-  image_path_ios: assets/icabp.png
+  image_path_ios: assets/ic_abp.jpg
   android: true
   ios: true
-  remove_alpha_ios: true
 
 flutter:
   assets:
     - assets/images/abp.png
     - assets/images/dev.png
     - assets/images/ic_abp.png
+    - assets/ic_abp.jpg
+    - assets/ic_abp.ico
     - assets/images/abp_60x60.png
     - assets/images/abp_maps.png
     - assets/images/abp_ic.png

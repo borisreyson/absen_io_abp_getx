@@ -98,7 +98,6 @@ class AbsenPulangView extends GetView<AbsenPulangController> {
   Widget cameraPreview(context) {
     return SizedBox(
         width: Get.width,
-        height: Get.height,
         child: GestureDetector(
           onDoubleTap: () {
             controller.initCameras();

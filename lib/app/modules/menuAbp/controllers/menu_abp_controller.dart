@@ -1,12 +1,10 @@
 import 'package:face_id_plus/app/routes/app_pages.dart';
-import 'package:flutter/animation.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:platform_device_id/platform_device_id.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../../../data/models/device_update_model.dart';
 import '../../../data/providers/provider.dart';
 import '../../../data/services/service.dart';
@@ -35,13 +33,6 @@ class MenuAbpController extends GetxController
   final isLoading = true.obs;
   @override
   void onInit() async {
-    widgetList = [
-      hazard(),
-      rkb(),
-      sarpras(),
-      monitoring(),
-    ];
-
     initIdDevice();
 
     super.onInit();
@@ -56,9 +47,8 @@ class MenuAbpController extends GetxController
     var intro = pref.getBool(Constants.intro);
     rule.value = pref.getString(Constants.rule)!.split(',');
     perusahaan.value = pref.getString(Constants.company);
-    if (perusahaan != "0") {
-      widgetList = [hazard()];
-    }
+    var section = pref.getString(Constants.section);
+
     if (isLogin != null && intro != null) {
       if (!isLogin) {
         Get.offAllNamed(Routes.LOGIN);
@@ -110,6 +100,23 @@ class MenuAbpController extends GetxController
             loadingService();
           }
         });
+      }
+      print("perusahaan ${perusahaan.value}");
+      if (int.parse("${perusahaan.value}") <= 0) {
+        if (section == "SECURITY") {
+          widgetList = [
+            sarpras(),
+          ];
+        } else {
+          widgetList = [
+            hazard(),
+            rkb(),
+            sarpras(),
+            // monitoring(),
+          ];
+        }
+      } else if (perusahaan.value != "0") {
+        widgetList = [hazard()];
       }
     } else {
       Get.offAllNamed(Routes.LOGIN);
@@ -257,7 +264,9 @@ class MenuAbpController extends GetxController
     return Card(
       elevation: 10,
       child: InkWell(
-        onTap: () {},
+        onTap: () {
+          Get.toNamed(Routes.MENU_SARPRAS);
+        },
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(

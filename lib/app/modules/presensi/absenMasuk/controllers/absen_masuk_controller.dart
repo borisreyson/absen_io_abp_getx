@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:camera/camera.dart';
+import 'package:face_id_plus/app/data/models/device_update_model.dart';
+import 'package:face_id_plus/app/data/utils/constants.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,13 +11,10 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:platform_device_id/platform_device_id.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../../../data/models/device_update_model.dart';
 import '../../../../data/models/last_absen_models.dart';
 import '../../../../data/providers/provider.dart';
-import '../../../../data/utils/constants.dart';
 
 class AbsenMasukController extends GetxController {
-  final doAbsen = DoPresensi();
   final cameraInitialized = false.obs;
   late List<CameraDescription> cameras;
   CameraController? cameraController;
@@ -29,6 +28,8 @@ class AbsenMasukController extends GetxController {
   final visible = true.obs;
   final detect = false.obs;
   XFile? savFile;
+  final doAbsen = DoPresensi();
+  // ignore: prefer_typing_uninitialized_variables
   var externalDirectory;
   final waiting = false.obs;
   final nik = RxnString(null);
@@ -38,11 +39,11 @@ class AbsenMasukController extends GetxController {
   final gagal = false.obs;
   @override
   void onInit() async {
-    var data = await Get.arguments;
+    initializeCamera();
 
-    serverJam.value = data['jam'] as JamServer;
-    lokasi = data['lokasi'] as LatLng;
-    getPref();
+    var data = await Get.arguments;
+    serverJam.value = data['jam'];
+    lokasi = data['lokasi'];
 
     super.onInit();
   }
@@ -67,11 +68,11 @@ class AbsenMasukController extends GetxController {
       await cameraController?.initialize().then((_) async {
         cameraController?.buildPreview();
         cameraController?.setFlashMode(FlashMode.off);
-        cameraController?.setFocusMode(FocusMode.auto);
         cameraInitialized.value = true;
+        cameraController?.setFocusMode(FocusMode.auto);
       });
     }
-    initCameras();
+    getPref();
   }
 
   Future<void> initCameras() async {
@@ -132,7 +133,6 @@ class AbsenMasukController extends GetxController {
     visible.value = false;
     detect.value = true;
     waiting.value = false;
-    isBusy.value = false;
     PostAbsen data = PostAbsen();
     data.fileToUpload = files;
     data.nik = nik.value;
@@ -141,6 +141,7 @@ class AbsenMasukController extends GetxController {
     data.status = "Masuk";
     await doAbsen.takePresensi(data, "${idDevice.value}").then((value) {
       if (value != null) {
+        print(" absensiStatus ${value.absensi}");
         if (value.absensi) {
           Get.snackbar(
             "Success",
@@ -150,17 +151,12 @@ class AbsenMasukController extends GetxController {
             colorText: Colors.white,
           );
           absenSukses.value = value.absensi;
-          gagal.value = false;
         } else {
-          gagal.value = true;
           absenSukses.value = value.absensi;
         }
-      } else {
-        gagal.value = true;
-        absenSukses.value = value.absensi;
       }
+      isBusy.value = false;
     }).onError((error, stackTrace) {
-      gagal.value = true;
       absenSukses.value = false;
     });
     print("absenSukses ${absenSukses.value}");
@@ -177,7 +173,7 @@ class AbsenMasukController extends GetxController {
       var id = await PlatformDeviceId.getDeviceId;
       idDevice.value = "$id";
       print("idDevice ${idDevice}");
-      initializeCamera();
+      initCameras();
     } on PlatformException {
       if (kDebugMode) {
         print("ERROR");

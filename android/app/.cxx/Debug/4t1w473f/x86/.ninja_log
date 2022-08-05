@@ -1,0 +1,9 @@
+# ninja log v5
+0	545	1658845502	CMakeFiles/convertImage.dir/Users/borisreyson/StudioProjects/absen_io_abp_getx_copy/ios/Classes/converter.c.o	1a5701323e836846
+545	676	1658845503	/Users/borisreyson/StudioProjects/absen_io_abp_getx copy/build/app/intermediates/cxx/Debug/4t1w473f/obj/x86/libconvertImage.so	204fdab89909f798
+0	12	0	clean	6ecdec57a23950a6
+0	14	0	clean	6ecdec57a23950a6
+0	16	0	clean	6ecdec57a23950a6
+0	15	0	clean	6ecdec57a23950a6
+3	139	1658846548	CMakeFiles/convertImage.dir/Users/borisreyson/StudioProjects/absen_io_abp_getx_copy/ios/Classes/converter.c.o	1a5701323e836846
+139	256	1658846548	/Users/borisreyson/StudioProjects/absen_io_abp_getx copy/build/app/intermediates/cxx/Debug/4t1w473f/obj/x86/libconvertImage.so	204fdab89909f798

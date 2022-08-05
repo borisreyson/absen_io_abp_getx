@@ -9,7 +9,6 @@ class UserViewView extends GetView {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.only(bottom: 10),
-      color: Colors.blue[100],
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -24,73 +23,135 @@ class UserViewView extends GetView {
               textAlign: TextAlign.left,
             ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Card(
-                color: Colors.amber,
-                elevation: 10,
-                child: InkWell(
-                  onTap: () async {
-                    await Get.toNamed(Routes.RKB,
-                        arguments: {"status": "waiting"});
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: Column(
-                      children: const [
-                        Icon(Icons.refresh_rounded),
-                        Text("Rkb Waiting"),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              Card(
-                color: Colors.green,
-                elevation: 10,
-                child: InkWell(
-                  onTap: () async {
-                    await Get.toNamed(Routes.RKB,
-                        arguments: {"status": "approve"});
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: Column(
-                      children: const [
-                        Icon(Icons.refresh_rounded),
-                        Text("Rkb Approve"),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              Card(
-                color: Colors.red,
-                elevation: 10,
-                child: InkWell(
-                  onTap: () async {
-                    await Get.toNamed(Routes.RKB,
-                        arguments: {"status": "cancel"});
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: Column(
-                      children: const [
-                        Icon(
-                          Icons.refresh_rounded,
-                          color: Colors.white,
+          SizedBox(
+            height: 75,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              children: [
+                Card(
+                  color: Colors.white,
+                  elevation: 10,
+                  child: InkWell(
+                    onTap: () async {
+                      await Get.toNamed(Routes.RKB,
+                          arguments: {"status": "ALL", "index": 0});
+                    },
+                    child: SizedBox(
+                      width: 100,
+                      child: Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Column(
+                          children: const [
+                            Icon(Icons.list_alt_outlined),
+                            Text("ALL"),
+                          ],
                         ),
-                        Text(
-                          "Rkb Cancel",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
+                Card(
+                  color: Colors.amber,
+                  elevation: 10,
+                  child: InkWell(
+                    onTap: () async {
+                      await Get.toNamed(Routes.RKB,
+                          arguments: {"status": "Waiting", "index": 1});
+                    },
+                    child: SizedBox(
+                      width: 100,
+                      child: Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Column(
+                          children: const [
+                            Icon(Icons.refresh_rounded),
+                            Text("WAITING"),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Card(
+                  color: Colors.green,
+                  elevation: 10,
+                  child: InkWell(
+                    onTap: () async {
+                      await Get.toNamed(Routes.RKB,
+                          arguments: {"status": "Approved", "index": 2});
+                    },
+                    child: SizedBox(
+                      width: 100,
+                      child: Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Column(
+                          children: const [
+                            Icon(Icons.approval_outlined),
+                            Text("APPROVED"),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Card(
+                  color: Colors.red,
+                  elevation: 10,
+                  child: InkWell(
+                    onTap: () async {
+                      await Get.toNamed(Routes.RKB,
+                          arguments: {"status": "Canceled", "index": 3});
+                    },
+                    child: SizedBox(
+                      width: 100,
+                      child: Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Column(
+                          children: const [
+                            Icon(
+                              Icons.cancel_outlined,
+                              color: Colors.white,
+                            ),
+                            Text(
+                              "CANCELED",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Card(
+                  color: Colors.red,
+                  elevation: 10,
+                  child: InkWell(
+                    onTap: () async {
+                      await Get.toNamed(Routes.RKB,
+                          arguments: {"status": "CLosed", "index": 4});
+                    },
+                    child: SizedBox(
+                      width: 100,
+                      child: Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Column(
+                          children: const [
+                            Icon(
+                              Icons.delete_forever_outlined,
+                              color: Colors.white,
+                            ),
+                            Text(
+                              "CLOSED",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),

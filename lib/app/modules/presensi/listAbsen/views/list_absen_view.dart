@@ -61,13 +61,31 @@ class ListAbsenView extends GetView<ListAbsenController> {
                             borderRadius: BorderRadius.circular(100),
                             child: imageResolve("${absen.faceIn}"),
                           )
-                        : Container(),
-                    (absen.faceIn != null)
+                        : ClipRRect(
+                            borderRadius: BorderRadius.circular(100),
+                            child: Container(
+                              color: Colors.white,
+                              child: Icon(
+                                Icons.person,
+                                size: 100,
+                              ),
+                            ),
+                          ),
+                    (absen.faceOut != null)
                         ? ClipRRect(
                             borderRadius: BorderRadius.circular(100),
                             child: imageResolve("${absen.faceOut}"),
                           )
-                        : Container(),
+                        : ClipRRect(
+                            borderRadius: BorderRadius.circular(100),
+                            child: Container(
+                              color: Colors.white,
+                              child: Icon(
+                                Icons.person,
+                                size: 100,
+                              ),
+                            ),
+                          ),
                   ],
                 ),
                 Text(
@@ -112,7 +130,9 @@ class ListAbsenView extends GetView<ListAbsenController> {
                                   style: style,
                                 ),
                                 Text(
-                                  "${absen.checkin}",
+                                  (absen.checkin != null)
+                                      ? "${absen.checkin}"
+                                      : "-",
                                   style: style,
                                 ),
                               ],
@@ -137,7 +157,9 @@ class ListAbsenView extends GetView<ListAbsenController> {
                                   style: style,
                                 ),
                                 Text(
-                                  "${absen.checkout}",
+                                  (absen.checkout != null)
+                                      ? "${absen.checkout}"
+                                      : '-',
                                   style: style,
                                 ),
                               ],
