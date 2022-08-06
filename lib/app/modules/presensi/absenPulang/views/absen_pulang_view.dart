@@ -11,12 +11,6 @@ class AbsenPulangView extends GetView<AbsenPulangController> {
   Widget build(BuildContext context) {
     return Obx(
       () => Scaffold(
-        // floatingActionButton: Visibility(
-        //   visible: (controller.visible.value)
-        //       ? controller.visible.value
-        //       : (controller.cameraInitialized.value),
-        //   child: captureButton(),
-        // ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         appBar: AppBar(
           title: const Text('Absen Pulang'),
@@ -57,14 +51,15 @@ class AbsenPulangView extends GetView<AbsenPulangController> {
           left: 0,
           child: captureButton(),
         ),
-        Visibility(
-          visible: controller.gagal.value,
-          child: Positioned(
-            bottom: 10,
-            left: 10,
-            child: (controller.absenSukses.value) ? focusButton() : Container(),
+        if (!controller.absenSukses.value)
+          Visibility(
+            visible: !controller.gagal.value,
+            child: Positioned(
+              bottom: 10,
+              left: 10,
+              child: focusButton(),
+            ),
           ),
-        ),
         Visibility(
           visible: controller.gagal.value,
           child: Positioned(

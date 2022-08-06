@@ -46,7 +46,7 @@ class ListAbsenView extends GetView<ListAbsenController> {
           color: const Color.fromARGB(255, 203, 199, 199),
           child: InkWell(
             onTap: () {
-              Get.toNamed(Routes.DETAIL_ABSENSI, arguments: {"detail": absen});
+              Get.toNamed(Routes.DETAIL_ABSENSI, arguments: {"detail": absen,"fromList":true});
             },
             child: Column(
               children: [

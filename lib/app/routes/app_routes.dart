@@ -77,6 +77,7 @@ abstract class Routes {
   static const PENUMPANG = _Paths.PENUMPANG;
   static const BUKTI_DILOKASI = _Paths.BUKTI_DILOKASI;
   static const BARCODE_SECURITY = _Paths.BARCODE_SECURITY;
+  static const LOKASI_MATI =  _Paths.LOKASI_MATI;
 }
 
 abstract class _Paths {
@@ -158,4 +159,5 @@ abstract class _Paths {
   static const PENUMPANG = '/penumpang';
   static const BUKTI_DILOKASI = '/bukti-dilokasi';
   static const BARCODE_SECURITY = '/barcode-security';
+  static const LOKASI_MATI = '/lokasi-mati';
 }

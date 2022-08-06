@@ -58,7 +58,10 @@ class AbsenPulangController extends GetxController {
   }
 
   @override
-  void onClose() {}
+  void onClose() {
+    cameraController?.dispose();
+  }
+
   void initializeCamera() async {
     cameras = await availableCameras();
     if (cameras.isNotEmpty) {
@@ -120,7 +123,6 @@ class AbsenPulangController extends GetxController {
       startClock.value = jam;
     });
   }
-
   saveImage() async {
     externalDirectory = await getApplicationDocumentsDirectory();
     String directoryPath = '${externalDirectory.path}/FaceIdPlus';

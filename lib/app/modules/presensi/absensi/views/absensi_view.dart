@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:face_id_plus/app/data/models/last_absen_model.dart';
 import 'package:face_id_plus/app/data/models/list_presensi_models.dart';
 import 'package:face_id_plus/app/routes/app_pages.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -18,7 +20,7 @@ class AbsensiView extends GetView<AbsensiController> {
     return Obx(
       () => WillPopScope(
         onWillPop: () async {
-          Future.delayed(Duration(seconds: 1), () async {
+          Future.delayed(const Duration(seconds: 1), () async {
             await controller.closeStream();
           });
           return true;
@@ -134,11 +136,6 @@ class AbsensiView extends GetView<AbsensiController> {
                             primary: const Color.fromARGB(255, 11, 143, 22)),
                         onPressed: (controller.absenTerakhir.value == "Masuk")
                             ? () async {
-                                var res = await Get.toNamed(Routes.ABSEN_MASUK,
-                                    arguments: {
-                                      "jam": controller.serverJam.value,
-                                      "lokasi": controller.myLocation
-                                    });
                                 controller.closeStream();
                                 controller.getPref();
                                 controller.streamLokasi();
@@ -156,7 +153,7 @@ class AbsensiView extends GetView<AbsensiController> {
                             primary: const Color.fromARGB(255, 190, 36, 25)),
                         onPressed: (controller.absenTerakhir.value == "Pulang")
                             ? () async {
-                                var res = await Get.toNamed(Routes.ABSEN_MASUK,
+                                var res = await Get.toNamed(Routes.ABSEN_PULANG,
                                     arguments: {
                                       "jam": controller.serverJam.value,
                                       "lokasi": controller.myLocation
@@ -292,7 +289,7 @@ class AbsensiView extends GetView<AbsensiController> {
                 child: Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadiusDirectional.circular(20),
-                    color: Color.fromARGB(255, 120, 8, 8),
+                    color: const Color.fromARGB(255, 120, 8, 8),
                   ),
                   padding: const EdgeInsets.all(6),
                   child: Row(
@@ -376,51 +373,48 @@ class AbsensiView extends GetView<AbsensiController> {
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.hasData) {
           ListPresensiModels absensi = snapshot.data;
-          if (absensi != null) {
-            List<ListPresensi>? presensi = absensi.listPresensi;
-            if (presensi!.isNotEmpty) {
-              print("presensi ${presensi}");
+          List<Presensi>? presensi = absensi.listPresensi;
+          if (presensi!.isNotEmpty) {
+            print("presensi $presensi");
 
-              return Stack(
-                children: [
-                  Card(
-                    margin: const EdgeInsets.only(top: 40),
-                    color: Colors.white,
-                    child: Padding(
-                      padding:
-                          const EdgeInsets.only(top: 20, left: 8, right: 8),
-                      child: ListView(
-                          children: presensi
-                              .map((ab) => _cardAbsen(ab, context))
-                              .toList()),
-                    ),
+            return Stack(
+              children: [
+                Card(
+                  margin: const EdgeInsets.only(top: 40),
+                  color: Colors.white,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 20, left: 8, right: 8),
+                    child: ListView(
+                        children: presensi
+                            .map((ab) => _cardAbsen(ab, context))
+                            .toList()),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 15.0, right: 8.0),
-                    child: Align(
-                      alignment: Alignment.topCenter,
-                      child: Card(
-                          elevation: 20,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(150),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 15.0, right: 8.0),
+                  child: Align(
+                    alignment: Alignment.topCenter,
+                    child: Card(
+                        elevation: 20,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(150),
+                        ),
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          customBorder: const CircleBorder(),
+                          child: const Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Icon(Icons.keyboard_arrow_down),
                           ),
-                          child: InkWell(
-                            onTap: () {
-                              Navigator.pop(context);
-                            },
-                            customBorder: const CircleBorder(),
-                            child: const Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Icon(Icons.keyboard_arrow_down),
-                            ),
-                          )),
-                    ),
-                  )
-                ],
-              );
-            } else {
-              return Container();
-            }
+                        )),
+                  ),
+                )
+              ],
+            );
+          } else {
+            return Container();
           }
         }
         return Card(
@@ -432,20 +426,23 @@ class AbsensiView extends GetView<AbsensiController> {
     );
   }
 
-  Widget _cardAbsen(ListPresensi absen, context) {
+  Widget _cardAbsen(Presensi absen, context) {
+    Presensi presensi = absen;
+
     DateFormat fmt = DateFormat("dd MMMM yyyy");
     var tgl = DateTime.parse("${absen.tanggal}");
     TextStyle style = const TextStyle(fontSize: 12, color: Colors.white);
     return Column(
       children: [
         Card(
-          margin: EdgeInsets.only(bottom: 20),
+          margin: const EdgeInsets.only(bottom: 20),
           elevation: 10,
           shadowColor: Colors.black87,
-          color: Color.fromARGB(255, 203, 199, 199),
+          color: const Color.fromARGB(255, 203, 199, 199),
           child: InkWell(
             onTap: () {
-              Get.toNamed(Routes.DETAIL_ABSENSI, arguments: {"detail": absen});
+              Get.toNamed(Routes.DETAIL_ABSENSI,
+                  arguments: {"detail": presensi});
             },
             child: Column(
               children: [
@@ -469,19 +466,20 @@ class AbsensiView extends GetView<AbsensiController> {
                 ),
                 Text(
                   fmt.format(tgl),
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 16),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
                 Text(
                   "${controller.nama.value}",
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     decoration: TextDecoration.underline,
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 5,
                 ),
                 Text(
@@ -509,7 +507,9 @@ class AbsensiView extends GetView<AbsensiController> {
                                   style: style,
                                 ),
                                 Text(
-                                  "${absen.checkin}",
+                                  (absen.checkin != null)
+                                      ? "${absen.checkin}"
+                                      : "-",
                                   style: style,
                                 ),
                               ],
@@ -534,7 +534,9 @@ class AbsensiView extends GetView<AbsensiController> {
                                   style: style,
                                 ),
                                 Text(
-                                  "${absen.checkout}",
+                                  (absen.checkout != null)
+                                      ? "${absen.checkout}"
+                                      : "-",
                                   style: style,
                                 ),
                               ],
@@ -563,7 +565,7 @@ class AbsensiView extends GetView<AbsensiController> {
       errorWidget: (context, url, error) {
         return const Center(
           child: Icon(
-            Icons.broken_image_rounded,
+            CupertinoIcons.person_alt_circle,
             size: 95,
             color: Color.fromARGB(255, 235, 104, 95),
           ),

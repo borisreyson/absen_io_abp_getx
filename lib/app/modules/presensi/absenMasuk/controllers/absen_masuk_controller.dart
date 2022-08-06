@@ -58,7 +58,10 @@ class AbsenMasukController extends GetxController {
   }
 
   @override
-  void onClose() {}
+  void onClose() {
+    cameraController?.dispose();
+  }
+
   void initializeCamera() async {
     cameras = await availableCameras();
     if (cameras.isNotEmpty) {

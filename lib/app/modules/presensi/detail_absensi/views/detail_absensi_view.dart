@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/detail_absensi_controller.dart';
@@ -40,47 +41,15 @@ class DetailAbsensiView extends GetView<DetailAbsensiController> {
               children: [
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: CachedNetworkImage(
-                      placeholder: (contex, url) {
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      },
-                      errorWidget: (context, url, error) {
-                        return const Center(
-                          child: Icon(
-                            Icons.broken_image_rounded,
-                            size: 150,
-                            color: Color.fromARGB(255, 235, 104, 95),
-                          ),
-                        );
-                      },
-                      fit: BoxFit.contain,
-                      width: Get.width / 2.2,
-                      imageUrl:
-                          "https://abpjobsite.com/face_id/${controller.detail.value.nik}/${controller.detail.value.faceIn}"),
+                  child: imageResolve((controller.fromList.value)
+                      ? "${controller.detail.value.faceIn}"
+                      : "https://abpjobsite.com/face_id/${controller.detail.value.nik}/${controller.detail.value.faceIn}"),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: CachedNetworkImage(
-                      placeholder: (contex, url) {
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      },
-                      errorWidget: (context, url, error) {
-                        return const Center(
-                          child: Icon(
-                            Icons.broken_image_rounded,
-                            size: 150,
-                            color: Color.fromARGB(255, 235, 104, 95),
-                          ),
-                        );
-                      },
-                      width: Get.width / 2.2,
-                      fit: BoxFit.contain,
-                      imageUrl:
-                          "https://abpjobsite.com/face_id/${controller.detail.value.nik}/${controller.detail.value.faceIn}"),
+                  child: imageResolve((controller.fromList.value)
+                      ? "${controller.detail.value.faceOut}"
+                      : "https://abpjobsite.com/face_id/${controller.detail.value.nik}/${controller.detail.value.faceOut}"),
                 ),
               ],
             ),
@@ -166,5 +135,26 @@ class DetailAbsensiView extends GetView<DetailAbsensiController> {
         ),
       ),
     );
+  }
+
+  Widget imageResolve(String gambar) {
+    return CachedNetworkImage(
+        placeholder: (contex, url) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        },
+        errorWidget: (context, url, error) {
+          return const Center(
+            child: Icon(
+              CupertinoIcons.person_alt_circle,
+              size: 150,
+              color: Color.fromARGB(255, 235, 104, 95),
+            ),
+          );
+        },
+        width: Get.width / 2.2,
+        fit: BoxFit.contain,
+        imageUrl: gambar);
   }
 }

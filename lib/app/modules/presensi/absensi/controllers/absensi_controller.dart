@@ -123,6 +123,7 @@ class AbsensiController extends GetxController {
 
   getPref() async {
     var pref = await SharedPreferences.getInstance();
+    locatePosition();
     if (pref.getBool(Constants.isLogin) != null) {
       isLogin.value = pref.getBool(Constants.isLogin)!;
       nama.value = pref.getString(Constants.namaAbsen);
@@ -224,6 +225,7 @@ class AbsensiController extends GetxController {
           closeStream();
           Get.offAllNamed(Routes.LOKASI_PALSU);
         } else {
+          print("serviceEnable $serviceEnable");
           if (serviceEnable) {
             if (myLocation != null) {
               CameraPosition cameraPosition =
@@ -235,6 +237,8 @@ class AbsensiController extends GetxController {
                 print("Error ${e.toString()}");
               }
             }
+          } else {
+            Get.toNamed(Routes.LOKASI_MATI);
           }
         }
       }
@@ -271,6 +275,8 @@ class AbsensiController extends GetxController {
     } else {
       outside.value = false;
       _diluarAbp.value = 1.0;
+      Get.toNamed(Routes.LOKASI_MATI);
+
       return false;
     }
   }

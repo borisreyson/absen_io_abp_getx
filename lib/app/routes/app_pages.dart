@@ -96,6 +96,8 @@ import '../modules/presensi/listAbsen/bindings/list_absen_binding.dart';
 import '../modules/presensi/listAbsen/views/list_absen_view.dart';
 import '../modules/presensi/loginAbsen/bindings/login_absen_binding.dart';
 import '../modules/presensi/loginAbsen/views/login_absen_view.dart';
+import '../modules/presensi/lokasi_mati/bindings/lokasi_mati_binding.dart';
+import '../modules/presensi/lokasi_mati/views/lokasi_mati_view.dart';
 import '../modules/presensi/lokasi_palsu/bindings/lokasi_palsu_binding.dart';
 import '../modules/presensi/lokasi_palsu/views/lokasi_palsu_view.dart';
 import '../modules/presensi/mainAbsen/bindings/main_absen_binding.dart';
@@ -255,7 +257,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.ABSEN_MASUK,
-      page: () =>  AbsenMasukView(),
+      page: () => AbsenMasukView(),
       binding: AbsenMasukBinding(),
     ),
     GetPage(
@@ -517,6 +519,11 @@ class AppPages {
       name: _Paths.BARCODE_SECURITY,
       page: () => const BarcodeSecurityView(),
       binding: BarcodeSecurityBinding(),
+    ),
+    GetPage(
+      name: _Paths.LOKASI_MATI,
+      page: () => const LokasiMatiView(),
+      binding: LokasiMatiBinding(),
     ),
   ];
 }
