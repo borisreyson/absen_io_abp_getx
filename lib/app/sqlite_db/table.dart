@@ -2,49 +2,49 @@ import 'package:sqflite/sqlite_api.dart';
 import '../data/utils/constants.dart';
 
 class Table {
-  kemungkinan(Batch _db) {
+  kemungkinan(Batch db) {
     var sql =
         "CREATE TABLE ${Constants.kemungkinanTb} (idKemungkinan INTEGER, kemungkinan TEXT,keterangan TEXT,nilai INTEGER,flag INTEGER,kemungkinan_update TEXT)";
-    _db.execute(sql);
+    db.execute(sql);
   }
 
-  keparahan(Batch _db) {
+  keparahan(Batch db) {
     var sql =
         "CREATE TABLE ${Constants.keparahanTb} (idKeparahan INTEGER, keparahan TEXT,nilai INTEGER,flag INTEGER,keparahan_update TEXT)";
-    _db.execute(sql);
+    db.execute(sql);
   }
 
-  resiko(Batch _db) {
+  resiko(Batch db) {
     var sql =
         "CREATE TABLE ${Constants.metrikTb} (idResiko INTEGER, kodeBahaya	 TEXT,min INTEGER,max INTEGER,flag INTEGER,kategori TEXT,tindakan TEXT,bgColor TEXT,txtColor TEXT,batas TEXT,resiko_update TEXT)";
-    _db.execute(sql);
+    db.execute(sql);
   }
 
-  perusahaan(Batch _db) {
+  perusahaan(Batch db) {
     var sql =
         "CREATE TABLE ${Constants.perusahaanTb} (id_perusahaan INTEGER, nama_perusahaan	 TEXT,flag INTEGER,time_in TEXT)";
-    _db.execute(sql);
+    db.execute(sql);
   }
 
-  lokasi(Batch _db) {
+  lokasi(Batch db) {
     var sql =
         "CREATE TABLE ${Constants.lokasiTb} (idLok INTEGER, lokasi TEXT, des_lokasi TEXT, userInput TEXT, tgl_input TEXT)";
-    _db.execute(sql);
+    db.execute(sql);
   }
 
-  detKeparahan(Batch _db) {
+  detKeparahan(Batch db) {
     var sql =
         "CREATE TABLE ${Constants.detKeparahanTb} (id_det INTEGER, idKeparahan INTEGER, keterangan TEXT, ket_input TEXT, time_input  TEXT)";
-    _db.execute(sql);
+    db.execute(sql);
   }
 
-  pengendalian(Batch _db) {
+  pengendalian(Batch db) {
     var sql =
         "CREATE TABLE ${Constants.pengendalianTb} (idHirarki INTEGER, id_ket INTEGER, namaPengendalian TEXT, userInput TEXT,  tgl_input TEXT, flag INTEGER)";
-    _db.execute(sql);
+    db.execute(sql);
   }
 
-  detPengendalian(Batch _db) {
+  detPengendalian(Batch db) {
     var sql = """
               CREATE TABLE ${Constants.detPengendalianTb} 
               (id_hirarki INTEGER, 
@@ -53,10 +53,10 @@ class Table {
               ket_input  TEXT, 
               time_input TEXT)
               """;
-    _db.execute(sql);
+    db.execute(sql);
   }
 
-  users(Batch _db) {
+  users(Batch db) {
     var sql = """
               CREATE TABLE ${Constants.usersTb} 
               (id_user INTEGER, 
@@ -81,10 +81,10 @@ class Table {
               sect  TEXT,
               nama_perusahaan TEXT)
               """;
-    _db.execute(sql);
+    db.execute(sql);
   }
 
-  deviceUpdate(Batch _db) {
+  deviceUpdate(Batch db) {
     var sql = """
               CREATE TABLE ${Constants.deviceUpdatTb} 
               (idUpdate INTEGER, 
@@ -92,6 +92,6 @@ class Table {
               tipe  TEXT,
               timeUpdate  TEXT)
               """;
-    _db.execute(sql);
+    db.execute(sql);
   }
 }

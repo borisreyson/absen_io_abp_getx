@@ -29,16 +29,14 @@ class ListAbsenController extends GetxController {
   void onClose() {}
   loadListAbsen(int hal) async {
     await _provider
-        .listAbsensiUser(nik: nik.value, status: status.value, page: hal)
+        .apiListAbsenUser(nik: nik.value, page: hal)
         .then((AbsenList? result) {
       if (result != null) {
         var presensi = result.listAbsen;
         if (presensi != null && presensi.data != null) {
           lastPage.value = presensi.lastPage!;
           presensi.data?.forEach((element) {
-            // ignore: invalid_use_of_protected_member
             listAbsen.add(element);
-            print("Loop ${element.status}");
           });
           pullRefresh.loadComplete();
         }

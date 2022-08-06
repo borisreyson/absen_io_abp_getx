@@ -1,6 +1,5 @@
 import 'package:face_id_plus/app/modules/hse/hazardList/views/widget_hazard_view.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 
 import 'package:get/get.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -155,7 +154,6 @@ class HazardUserView extends GetView<HazardUserController> {
           backgroundColor: Colors.white,
           onPressed: (() async {
             bool res = await Get.toNamed(Routes.FORM_HAZARD);
-            ;
             if (res) {
               controller.onItemTapped(0);
             }

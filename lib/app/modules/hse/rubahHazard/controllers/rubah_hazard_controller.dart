@@ -46,20 +46,18 @@ class RubahHazardController extends GetxController {
     perbaikan = null;
     imgPj = null;
     data.value = Get.arguments['detail'];
-    updateBukti.value = baseImage + "update/${data.value.updateBukti}";
-    if (data.value != null) {
-      var uid = data.value.uid;
-      _getResikoSebelum(data: data.value);
-      _getResikoSesudah(data: data.value);
-    }
+    updateBukti.value = "${baseImage}update/${data.value.updateBukti}";
+    var uid = data.value.uid;
+    _getResikoSebelum(data: data.value);
+    _getResikoSesudah(data: data.value);
     super.onInit();
   }
 
   initIdDevice() async {
-    String? _idDevice;
+    String? idDevice;
     try {
-      _idDevice = await PlatformDeviceId.getDeviceId;
-      idDevice = _idDevice;
+      idDevice = await PlatformDeviceId.getDeviceId;
+      idDevice = idDevice;
     } on PlatformException {
       if (kDebugMode) {
         print("ERROR");
@@ -70,9 +68,9 @@ class RubahHazardController extends GetxController {
   @override
   void onReady() {
     print("bukti ${data.value.bukti}");
-    bukti.value = baseImage + "${data.value.bukti}";
+    bukti.value = "$baseImage${data.value.bukti}";
 
-    updateBukti.value = baseImage + "update/${data.value.updateBukti}";
+    updateBukti.value = "${baseImage}update/${data.value.updateBukti}";
     super.onReady();
   }
 
@@ -101,19 +99,17 @@ class RubahHazardController extends GetxController {
       loading: true,
       enBtn: false,
     );
-    if (data.value != null) {
-      var uid = data.value.uid;
-      await repository.getHazardDetail(uid).then((res) {
-        if (res != null) {
-          data.value = res;
-          _getResikoSebelum(data: data.value);
-          _getResikoSesudah(data: data.value);
-          Get.back(result: true);
-        } else {
-          Get.back(result: false);
-        }
-      });
-    }
+    var uid = data.value.uid;
+    await repository.getHazardDetail(uid).then((res) {
+      if (res != null) {
+        data.value = res;
+        _getResikoSebelum(data: data.value);
+        _getResikoSesudah(data: data.value);
+        Get.back(result: true);
+      } else {
+        Get.back(result: false);
+      }
+    });
   }
 
   buktiPicker(context) async {
@@ -139,10 +135,10 @@ class RubahHazardController extends GetxController {
               print("uid : ${result.uid}");
             }
             await repository.getHazardDetail(data.value.uid).then((res) {
-              print("idDevice ${res}");
+              print("idDevice $res");
 
               if (res != null) {
-                bukti.value = baseImage + "${res.bukti}";
+                bukti.value = "$baseImage${res.bukti}";
                 if (kDebugMode) {
                   print("data");
                 }
@@ -206,7 +202,7 @@ class RubahHazardController extends GetxController {
             }
             await repository.getHazardDetail(postData.uid).then((res) {
               if (res != null) {
-                updateBukti.value = baseImage + "update/${res.updateBukti}";
+                updateBukti.value = "${baseImage}update/${res.updateBukti}";
 
                 if (kDebugMode) {
                   print("data ${res.updateBukti}");
@@ -358,104 +354,96 @@ class RubahHazardController extends GetxController {
     );
     Kemungkinan kemungkinan = await Get.toNamed(Routes.KEMUNGKINAN);
 
-    if (kemungkinan != null) {
-      await repository
-          .postUpdateResiko(
-              data.value.uid, tipeKemungkinan, "${kemungkinan.idKemungkinan}")
-          .then((result) {
-        if (result != null) {
-          Get.back();
-          if (result.success) {
-            reload();
-          } else {
-            Constants().showAlert(
-              judul: "Error",
-              msg: "Gagal Mengupdate Resiko Kemungkinan!",
-            );
-          }
+    await repository
+        .postUpdateResiko(
+            data.value.uid, tipeKemungkinan, "${kemungkinan.idKemungkinan}")
+        .then((result) {
+      if (result != null) {
+        Get.back();
+        if (result.success) {
+          reload();
         } else {
           Constants().showAlert(
             judul: "Error",
             msg: "Gagal Mengupdate Resiko Kemungkinan!",
           );
         }
-      });
-    }
+      } else {
+        Constants().showAlert(
+          judul: "Error",
+          msg: "Gagal Mengupdate Resiko Kemungkinan!",
+        );
+      }
+    });
   }
 
   void ubahKeparahan(String tipeKeparahan) async {
     Keparahan keparahan = await Get.toNamed(Routes.KEPARAHAN);
-    if (keparahan != null) {
-      await repository
-          .postUpdateResiko(
-              data.value.uid, tipeKeparahan, "${keparahan.idKeparahan}")
-          .then((result) {
-        if (result != null) {
-          if (result.success) {
-            reload();
-          } else {
-            Constants().showAlert(
-              judul: "Error",
-              msg: "Gagal Mengupdate Resiko Kemungkinan!",
-            );
-          }
+    await repository
+        .postUpdateResiko(
+            data.value.uid, tipeKeparahan, "${keparahan.idKeparahan}")
+        .then((result) {
+      if (result != null) {
+        if (result.success) {
+          reload();
         } else {
           Constants().showAlert(
             judul: "Error",
             msg: "Gagal Mengupdate Resiko Kemungkinan!",
           );
         }
-      });
-    }
+      } else {
+        Constants().showAlert(
+          judul: "Error",
+          msg: "Gagal Mengupdate Resiko Kemungkinan!",
+        );
+      }
+    });
   }
 
   ubahKategoriBahaya() async {
     String katBahaya = await Get.toNamed(Routes.RUBAH_K_T_A);
-    if (katBahaya != null) {
-      await repository
-          .postUpdateKatBahaya(data.value.uid, katBahaya)
-          .then((result) {
-        if (result != null) {
-          if (result.success) {
-            reload();
-          } else {
-            Constants().showAlert(
-              judul: "Error",
-              msg: "Gagal Mengupdate Kategori Bahaya!",
-            );
-          }
+    await repository
+        .postUpdateKatBahaya(data.value.uid, katBahaya)
+        .then((result) {
+      if (result != null) {
+        if (result.success) {
+          reload();
         } else {
           Constants().showAlert(
             judul: "Error",
             msg: "Gagal Mengupdate Kategori Bahaya!",
           );
         }
-      });
-    }
+      } else {
+        Constants().showAlert(
+          judul: "Error",
+          msg: "Gagal Mengupdate Kategori Bahaya!",
+        );
+      }
+    });
   }
 
   ubahPengendalian() async {
     Hirarki pengendalian = await Get.toNamed(Routes.PENGENDALIAN);
-    if (pengendalian != null) {
-      await repository
-          .postUpdatePengendalian(data.value.uid, "${pengendalian.idHirarki}")
-          .then((result) {
-        if (result != null) {
-          if (result.success) {
-            reload();
-          } else {
-            Constants().showAlert(
-              judul: "Error",
-              msg: "Gagal Mengupdate Resiko Pengendalian!",
-            );
-          }
+    await repository
+        .postUpdatePengendalian(data.value.uid, "${pengendalian.idHirarki}")
+        .then((result) {
+      if (result != null) {
+        if (result.success) {
+          reload();
         } else {
           Constants().showAlert(
             judul: "Error",
             msg: "Gagal Mengupdate Resiko Pengendalian!",
           );
         }
-      });
-    }
+      } else {
+        Constants().showAlert(
+          judul: "Error",
+          msg: "Gagal Mengupdate Resiko Pengendalian!",
+        );
+      }
+    });
   }
 }

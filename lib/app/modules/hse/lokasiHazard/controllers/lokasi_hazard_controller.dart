@@ -12,20 +12,14 @@ class LokasiHazardController extends GetxController {
   @override
   void onInit() async {
     await repository.getAll(table: Constants.lokasiTb).then((result) {
-      if (result != null) {
-        for (var element in result) {
-          print("element ${element.desLokasi}");
-          data.add(element);
-        }
+      for (var element in result) {
+        print("element ${element.desLokasi}");
+        data.add(element);
       }
     }).whenComplete(() => isLoading.value = false);
     super.onInit();
   }
 
-  @override
-  void onReady() {
-    super.onReady();
-  }
 
   @override
   void onClose() {}

@@ -1,9 +1,18 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:camera/camera.dart';
+import 'package:face_id_plus/app/data/models/device_update_model.dart';
+import 'package:face_id_plus/app/data/utils/constants.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:path_provider/path_provider.dart';
-import '../../../../data/models/last_absen_model.dart';
+import 'package:platform_device_id/platform_device_id.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../../../../data/models/last_absen_models.dart';
+import '../../../../data/providers/provider.dart';
 
 class AbsenMasukController extends GetxController {
   final cameraInitialized = false.obs;
@@ -11,7 +20,7 @@ class AbsenMasukController extends GetxController {
   CameraController? cameraController;
   int cameraPick = 1;
   int jamS = 0, menitS = 0, detikS = 0;
-  JamServer? serverJam;
+  final serverJam = JamServer().obs;
   final startClock = ''.obs;
   final StreamController<String> _streamClock = StreamController.broadcast();
   Timer? _timerClock;
@@ -19,28 +28,40 @@ class AbsenMasukController extends GetxController {
   final visible = true.obs;
   final detect = false.obs;
   XFile? savFile;
+  final doAbsen = DoPresensi();
+  // ignore: prefer_typing_uninitialized_variables
   var externalDirectory;
   final waiting = false.obs;
-
+  final nik = RxnString(null);
+  late LatLng lokasi;
+  final idDevice = RxnString(null);
+  final absenSukses = false.obs;
+  final gagal = false.obs;
   @override
-  void onInit() {
-    var data = Get.arguments;
-    serverJam = data;
+  void onInit() async {
+    initializeCamera();
+
+    var data = await Get.arguments;
+    serverJam.value = data['jam'];
+    lokasi = data['lokasi'];
+
     super.onInit();
   }
 
   @override
   void onReady() {
-    jamS = int.parse("${serverJam?.jam}");
-    menitS = int.parse("${serverJam?.menit}");
-    detikS = int.parse("${serverJam?.detik}");
+    jamS = int.parse("${serverJam.value.jam}");
+    menitS = int.parse("${serverJam.value.menit}");
+    detikS = int.parse("${serverJam.value.detik}");
     streamJam();
-    initializeCamera();
     super.onReady();
   }
 
   @override
-  void onClose() {}
+  void onClose() {
+    cameraController?.dispose();
+  }
+
   void initializeCamera() async {
     cameras = await availableCameras();
     if (cameras.isNotEmpty) {
@@ -51,8 +72,10 @@ class AbsenMasukController extends GetxController {
         cameraController?.buildPreview();
         cameraController?.setFlashMode(FlashMode.off);
         cameraInitialized.value = true;
+        cameraController?.setFocusMode(FocusMode.auto);
       });
     }
+    getPref();
   }
 
   Future<void> initCameras() async {
@@ -105,15 +128,59 @@ class AbsenMasukController extends GetxController {
     externalDirectory = await getApplicationDocumentsDirectory();
     String directoryPath = '${externalDirectory.path}/FaceIdPlus';
     await Directory(directoryPath).create(recursive: true);
-    File _files = File(savFile!.path);
-    absensiMasuk(_files);
+    File files = File(savFile!.path);
+    absensiMasuk(files);
   }
 
   absensiMasuk(File files) async {
-    Get.snackbar("Success", "Absen Di Daftar!");
     visible.value = false;
     detect.value = true;
     waiting.value = false;
-    isBusy.value = false;
+    PostAbsen data = PostAbsen();
+    data.fileToUpload = files;
+    data.nik = nik.value;
+    data.lat = "${lokasi.latitude}";
+    data.lng = "${lokasi.longitude}";
+    data.status = "Masuk";
+    await doAbsen.takePresensi(data, "${idDevice.value}").then((value) {
+      if (value != null) {
+        print(" absensiStatus ${value.absensi}");
+        if (value.absensi) {
+          Get.snackbar(
+            "Success",
+            "Absen Di Daftar!",
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Colors.green,
+            colorText: Colors.white,
+          );
+          absenSukses.value = value.absensi;
+        } else {
+          absenSukses.value = value.absensi;
+        }
+      }
+      isBusy.value = false;
+    }).onError((error, stackTrace) {
+      absenSukses.value = false;
+    });
+    print("absenSukses ${absenSukses.value}");
+  }
+
+  getPref() async {
+    var pref = await SharedPreferences.getInstance();
+    nik.value = pref.getString(Constants.nik);
+    initIdDevice();
+  }
+
+  initIdDevice() async {
+    try {
+      var id = await PlatformDeviceId.getDeviceId;
+      idDevice.value = "$id";
+      print("idDevice ${idDevice}");
+      initCameras();
+    } on PlatformException {
+      if (kDebugMode) {
+        print("ERROR");
+      }
+    }
   }
 }

@@ -1,4 +1,3 @@
-import 'package:face_id_plus/app/sqlite_db/table.dart';
 import 'package:get/get.dart';
 
 import '../../../../data/models/perusahaan_model.dart';
@@ -12,21 +11,15 @@ class PerusahaanController extends GetxController {
   @override
   void onInit() async {
     await repository.getAll(table: Constants.perusahaanTb).then((result) {
-      if (result != null) {
-        for (var element in result) {
-          print("result ${element.namaPerusahaan}");
+      for (var element in result) {
+        print("result ${element.namaPerusahaan}");
 
-          data.add(element);
-        }
+        data.add(element);
       }
     }).whenComplete(() => isLoading.value = false);
     super.onInit();
   }
 
-  @override
-  void onReady() {
-    super.onReady();
-  }
 
   @override
   void onClose() {}

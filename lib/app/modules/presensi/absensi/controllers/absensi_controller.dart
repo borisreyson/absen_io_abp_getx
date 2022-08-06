@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:typed_data';
 import 'package:face_id_plus/app/data/providers/last_absen_provider.dart';
+import 'package:face_id_plus/app/routes/app_pages.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -10,9 +11,9 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:ui' as ui;
-
 import '../../../../data/models/absentigahari_model.dart';
-import '../../../../data/models/last_absen_model.dart';
+import '../../../../data/models/last_absen_models.dart';
+import '../../../../data/models/list_presensi_models.dart';
 import '../../../../data/utils/constants.dart';
 
 class AbsensiController extends GetxController {
@@ -24,24 +25,24 @@ class AbsensiController extends GetxController {
   var mapController = Completer();
   final StreamController<String> _streamClock = StreamController.broadcast();
   Timer? _timer, _timerClock;
-  final lastAbsen = LastAbsen().obs;
-  final masuk = Presensi().obs;
-  final pulang = Presensi().obs;
+  final lastAbsen = LastAbsenModels().obs;
+  final presensi = Presensi().obs;
   final isLogin = false.obs;
-  final nik = ''.obs;
+  final nik = RxnString('');
   final jamS = 00.obs;
   final menitS = 00.obs;
   final detikS = 00.obs;
-  final startClock = "".obs;
-  final nama = ''.obs;
-  final tanggal = ''.obs;
+  final startClock = RxnString('');
+  final nama = RxnString('');
+  final tanggal = RxnString('');
   final fmt = DateFormat("dd MMMM yyyy");
-  final rosterKerja = ''.obs;
-  final jamKerja = ''.obs;
-  final perusahaan = ''.obs;
+  final rosterKerja = RxnString('');
+  final jamKerja = RxnString('');
+  final perusahaan = RxnString('');
   final serverJam = JamServer().obs;
+  final absenTerakhir = 'Masuk'.obs;
 
-  final StreamController<bool> _getLokasi = StreamController.broadcast();
+  late StreamController<bool> _getLokasi;
   late bool serviceEnable = false;
   Position? position;
   late Position currentPosition;
@@ -62,7 +63,7 @@ class AbsensiController extends GetxController {
   @override
   void onReady() {
     getPref();
-    setCustomMapPin();
+
     if (kDebugMode) {
       print("Ready");
     }
@@ -73,9 +74,18 @@ class AbsensiController extends GetxController {
   void onClose() {}
 
   loadLastAbsen(nik, company) async {
-    await _provider.getLastAbsen(nik, company).then((LastAbsen? value) {
+    print("Lokasi $nik $company");
+    await _provider.getLastAbsen(nik, company).then((LastAbsenModels? value) {
+      print("Lokasi ${value?.mapArea}");
       if (value != null) {
+        setCustomMapPin();
         lastAbsen.value = value;
+        if (kDebugMode) {
+          print("lastAbsen = ${value.absensi}");
+        }
+        if (value.absensi != null) {
+          absenTerakhir.value = "${value.absensi}";
+        }
         tanggal.value = (value.tanggal != null)
             ? fmt.format(DateTime.parse("${value.tanggal}"))
             : "";
@@ -84,7 +94,7 @@ class AbsensiController extends GetxController {
 
         if (value.mapArea != null) {
           for (var element in value.mapArea!) {
-            pointABP.add(LatLng(element!.lat!, element.lng!));
+            pointABP.add(LatLng(element.lat!, element.lng!));
           }
           // ignore: unused_local_variable
           for (var element in pointABP) {
@@ -97,11 +107,8 @@ class AbsensiController extends GetxController {
           }
         }
 
-        if (value.presensiMasuk != null) {
-          masuk.value = value.presensiMasuk!;
-        }
-        if (value.presensiPulang != null) {
-          pulang.value = value.presensiPulang!;
+        if (value.presensi != null) {
+          presensi.value = value.presensi!;
         }
         if (value.jamServer != null) {
           serverJam.value = value.jamServer!;
@@ -116,19 +123,20 @@ class AbsensiController extends GetxController {
 
   getPref() async {
     var pref = await SharedPreferences.getInstance();
+    locatePosition();
     if (pref.getBool(Constants.isLogin) != null) {
       isLogin.value = pref.getBool(Constants.isLogin)!;
-      nama.value = pref.getString("nama")!;
-      perusahaan.value = pref.getString("perusahaan")!;
+      nama.value = pref.getString(Constants.namaAbsen);
+      perusahaan.value = pref.getString(Constants.perusahaanAbsen);
 
-      nik.value = pref.getString(Constants.nik)!;
+      nik.value = pref.getString(Constants.nikAbsen);
       loadLastAbsen(nik.value, perusahaan.value);
     } else {
-      Get.offAllNamed('/login-absen');
+      Get.offAllNamed(Routes.LOGIN_ABSEN);
     }
   }
 
-  Future<List<AbsenTigaHariModel>> loadTigaHari(String? nik) async {
+  Future<ListPresensiModels> loadTigaHari(String? nik) async {
     var absensi = await AbsenTigaHariModel.apiAbsenTigaHari(nik);
     return absensi;
   }
@@ -210,17 +218,27 @@ class AbsensiController extends GetxController {
   }
 
   createStream() {
+    _getLokasi = StreamController.broadcast();
     _getLokasi.stream.listen((bool e) async {
       if (e) {
         if (lokasiPalsu == true) {
           closeStream();
-          Get.offAllNamed('/lokasi-palsu');
+          Get.offAllNamed(Routes.LOKASI_PALSU);
         } else {
+          print("serviceEnable $serviceEnable");
           if (serviceEnable) {
-            CameraPosition cameraPosition =
-                CameraPosition(target: myLocation!, zoom: 17.5756);
-            await googleMapController
-                .animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
+            if (myLocation != null) {
+              CameraPosition cameraPosition =
+                  CameraPosition(target: myLocation!, zoom: 17.5756);
+              try {
+                await googleMapController.animateCamera(
+                    CameraUpdate.newCameraPosition(cameraPosition));
+              } catch (e) {
+                print("Error ${e.toString()}");
+              }
+            }
+          } else {
+            Get.toNamed(Routes.LOKASI_MATI);
           }
         }
       }
@@ -241,8 +259,8 @@ class AbsensiController extends GetxController {
           iosMapLocation = true;
         }
         if (myLocation != null) {
-          bool _insideAbp = _checkIfValidMarker(myLocation!, pointABP);
-          if (_insideAbp) {
+          bool insideAbp = _checkIfValidMarker(myLocation!, pointABP);
+          if (insideAbp) {
             _diluarAbp.value = 0.0;
             outside.value = true;
           } else {
@@ -257,6 +275,8 @@ class AbsensiController extends GetxController {
     } else {
       outside.value = false;
       _diluarAbp.value = 1.0;
+      Get.toNamed(Routes.LOKASI_MATI);
+
       return false;
     }
   }
@@ -265,6 +285,9 @@ class AbsensiController extends GetxController {
     googleMapController.dispose();
     _getLokasi.close();
     _timer?.cancel();
+    markers.clear();
+    polygons.clear();
+    pointABP.clear();
   }
 
   void setCustomMapPin() async {
@@ -289,5 +312,16 @@ class AbsensiController extends GetxController {
     return (await fi.image.toByteData(format: ui.ImageByteFormat.png))!
         .buffer
         .asUint8List();
+  }
+
+  void onMapCreated(GoogleMapController c) async {
+    googleMapController = c;
+    mapController.complete(c);
+    streamLokasi();
+  }
+
+  Future<bool> onPop() async {
+    return true;
+    // await closeStream();
   }
 }

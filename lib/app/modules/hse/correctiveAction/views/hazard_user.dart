@@ -11,6 +11,7 @@ class HazardUser extends GetView {
     required this.data,
   }) : super(key: key);
 
+  @override
   final CorrectiveActionController controller;
   final CounterHazard data;
 

@@ -1,12 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../data/utils/constants.dart';
 
 class NavigasiController extends GetxController {
   final indexSelect = 0.obs;
-
+  var constants = Constants();
   @override
   void onClose() {}
   void tapNavigasi(index) async {

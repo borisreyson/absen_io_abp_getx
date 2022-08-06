@@ -1,10 +1,11 @@
+import 'package:face_id_plus/app/data/models/last_absen_models.dart';
 import 'package:get/get.dart';
-import '../models/last_absen_model.dart';
 
 class LastAbsenProvider extends GetConnect {
-  Future<LastAbsen?> getLastAbsen(String nik, String company) async {
+  Future<LastAbsenModels?> getLastAbsen(String nik, String company) async {
+    print(nik);
     final response = await get(
         'https://lp.abpjobsite.com/api/v1/presensi/lastAbsen?nik=$nik&company=$company');
-    return LastAbsen.fromJson(response.body);
+    return LastAbsenModels.fromJson(response.body);
   }
 }

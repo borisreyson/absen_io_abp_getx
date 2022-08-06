@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../../../../data/models/face_model.dart';
 import '../../../../data/utils/constants.dart';
 
@@ -26,11 +25,6 @@ class LoginAbsenController extends GetxController {
   void onInit() {
     checkAkunAbp();
     super.onInit();
-  }
-
-  @override
-  void onReady() {
-    super.onReady();
   }
 
   @override
@@ -70,9 +64,9 @@ class LoginAbsenController extends GetxController {
           Datalogin datalogin = faceModel!.datalogin!;
           await setPref(
               true,
-              datalogin.nik!,
-              datalogin.nama!,
-              datalogin.departemen!,
+              datalogin.nik,
+              datalogin.nama,
+              datalogin.departemen,
               datalogin.devisi,
               datalogin.jabatan,
               datalogin.flag.toString(),
@@ -108,14 +102,15 @@ class LoginAbsenController extends GetxController {
       String? perusahaan) async {
     var sharedPref = await SharedPreferences.getInstance();
     await sharedPref.setBool(Constants.isLogin, login);
-    await sharedPref.setString("nik", nik!);
-    await sharedPref.setString("nama", nama!);
-    await sharedPref.setString("departemen", departemen!);
-    await sharedPref.setString("devisi", devisi!);
-    await sharedPref.setString("jabatan", jabatan!);
-    await sharedPref.setString("flag", flag!);
-    await sharedPref.setInt("show_absen", showAbsen!);
-    await sharedPref.setString("perusahaan", perusahaan!);
+    await sharedPref.setString(Constants.nikAbsen, "$nik");
+    await sharedPref.setString(Constants.namaAbsen, "$nama");
+    await sharedPref.setString(Constants.departemenAbsen, "$departemen");
+    await sharedPref.setString(Constants.devisiAbsen, "$devisi");
+    await sharedPref.setString(Constants.jabatanAbsen, "$jabatan");
+    await sharedPref.setString(Constants.flagAbsen, "$flag");
+    await sharedPref.setInt(
+        Constants.showAbsen, (showAbsen != null) ? showAbsen : 0);
+    await sharedPref.setString(Constants.perusahaanAbsen, "$perusahaan");
   }
 
   toggleVisible() {

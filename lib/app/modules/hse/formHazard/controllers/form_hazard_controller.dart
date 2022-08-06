@@ -91,18 +91,12 @@ class FormHazardController extends GetxController {
   }
 
   @override
-  void onReady() {
-    super.onReady();
-  }
-
-  @override
   void onClose() {}
 
   initIdDevice() async {
-    String? _idDevice;
     try {
-      _idDevice = await PlatformDeviceId.getDeviceId;
-      idDevice.value = "$_idDevice";
+      var id = await PlatformDeviceId.getDeviceId;
+      idDevice.value = "$id";
     } on PlatformException {
       if (kDebugMode) {
         print("ERROR");
@@ -228,9 +222,7 @@ class FormHazardController extends GetxController {
   loadMetrik(nilaiKM, nilaiKP) async {
     var total = nilaiKM * nilaiKP;
     await metrikResiko.getBy(nilai: total).then((value) {
-      if (value != null) {
-        resikoSebelum.value = value;
-      }
+      resikoSebelum.value = value;
     }).whenComplete(() {
       var date = DateTime.now();
       if (int.parse(resikoSebelum.value.batas!) > 0) {
@@ -246,9 +238,7 @@ class FormHazardController extends GetxController {
   loadMetrikSesudah(nilaiKM, nilaiKP) async {
     var total = nilaiKM * nilaiKP;
     await metrikResiko.getBy(nilai: total).then((value) {
-      if (value != null) {
-        resikoSesudah.value = value;
-      }
+      resikoSesudah.value = value;
     });
   }
 
@@ -361,7 +351,7 @@ class FormHazardController extends GetxController {
     data.nikPJ = nikPJ.text;
     data.status = pcikPerbaikan.elementAt(perbaikanInt.value - 1);
     data.tglTenggat = tenggat.text;
-    data.userInput = "${username.value}";
+    data.userInput = username.value;
     try {
       await repository.postHazard(data, idDevice.value).then((res) {
         if (res != null) {

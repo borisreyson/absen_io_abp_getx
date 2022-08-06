@@ -90,16 +90,16 @@ class ProfileView extends GetView<ProfileController> {
             child: Container(
               width: 100,
               height: 100,
-              child: (controller.foto != null && controller.foto != '')
+              color: Colors.grey.shade200,
+              child: (controller.foto != '')
                   ? Image.network(
                       "${controller.foto}",
                       fit: BoxFit.fitWidth,
                     )
-                  : Icon(
+                  : const Icon(
                       Icons.person,
                       size: 70,
                     ),
-              color: Colors.grey.shade200,
             ),
           ),
           Container(
@@ -108,8 +108,8 @@ class ProfileView extends GetView<ProfileController> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(controller.nama.value),
-                Text(controller.nik.value),
+                Text("${controller.nama.value}"),
+                Text("${controller.nik.value}"),
               ],
             ),
           )

@@ -16,11 +16,9 @@ class KeparahanController extends GetxController {
   @override
   void onInit() async {
     await repository.getAll(table: Constants.keparahanTb).then((value) async {
-      if (value != null) {
-        for (var element in value) {
-          idKeparahan.add(element.idKeparahan);
-          data.add(element);
-        }
+      for (var element in value) {
+        idKeparahan.add(element.idKeparahan);
+        data.add(element);
       }
     }).whenComplete(() {
       loadDetKeparahan(idKeparahan);
@@ -30,10 +28,6 @@ class KeparahanController extends GetxController {
     super.onInit();
   }
 
-  @override
-  void onReady() {
-    super.onReady();
-  }
 
   @override
   void onClose() {}

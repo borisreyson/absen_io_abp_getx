@@ -21,16 +21,6 @@ class LoginController extends GetxController {
   RoundedLoadingButtonController roundBtn = RoundedLoadingButtonController();
 
   @override
-  void onInit() {
-    super.onInit();
-  }
-
-  @override
-  void onReady() {
-    super.onReady();
-  }
-
-  @override
   void onClose() {}
   toggleVisible() {
     passwordVisible.value = !passwordVisible.value;
@@ -45,8 +35,8 @@ class LoginController extends GetxController {
         AuthModel authModel = AuthModel.fromJson(value.body);
         if (authModel.login != null) {
           if (authModel.login!.success!) {
-            var _user = authModel.login!.user;
-            _setPref(_user!);
+            var user = authModel.login!.user;
+            _setPref(user!);
           } else {
             Get.snackbar(
                 "Error Login", "Username Dan Password Salah, Coba Lagi");
@@ -72,14 +62,17 @@ class LoginController extends GetxController {
     }
   }
 
-  _setPref(User _user) async {
+  _setPref(User user) async {
     var pref = await SharedPreferences.getInstance();
     await pref.setBool(Constants.isLoginAbp, true);
-    await pref.setString(Constants.username, _user.username!);
-    await pref.setString(Constants.nik, _user.nik!);
-    await pref.setString(Constants.name, _user.namaLengkap!);
-    await pref.setString(Constants.rule, _user.rule!);
-    await pref.setString(Constants.fotoProfile, _user.photoProfile!);
+    await pref.setString(Constants.username, "${user.username}");
+    await pref.setString(Constants.nik, "${user.nik}");
+    await pref.setString(Constants.name, "${user.namaLengkap}");
+    await pref.setString(Constants.rule, "${user.rule}");
+    await pref.setString(Constants.fotoProfile, "${user.photoProfile}");
+    await pref.setString(Constants.company, "${user.perusahaan}");
+    await pref.setString(Constants.section, "${user.section}");
+    await pref.setString(Constants.departement, "${user.department}");
     Get.offAllNamed('/menu-abp');
   }
 }

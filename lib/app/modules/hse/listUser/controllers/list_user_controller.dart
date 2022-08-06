@@ -15,17 +15,11 @@ class ListUserController extends GetxController {
   @override
   void onInit() async {
     await repository.getAll(table: Constants.usersTb).then((value) {
-      if (value != null) {
-        data.addAll(value);
-      }
+      data.addAll(value);
     });
     super.onInit();
   }
 
-  @override
-  void onReady() {
-    super.onReady();
-  }
 
   @override
   void onClose() {}
@@ -35,15 +29,11 @@ class ListUserController extends GetxController {
       await repository
           .cariNama(table: Constants.usersTb, nama: cari)
           .then((value) {
-        if (value != null) {
-          data.addAll(value);
-        }
+        data.addAll(value);
       });
     } else {
       await repository.getAll(table: Constants.usersTb).then((value) {
-        if (value != null) {
-          data.addAll(value);
-        }
+        data.addAll(value);
       });
     }
   }

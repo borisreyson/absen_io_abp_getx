@@ -568,7 +568,7 @@ class RepositoryUsers {
     var conn = await db;
     List<UsersList> data = [];
     var res = await conn!.rawQuery(
-        "SELECT * FROM $table WHERE nama_lengkap LIKE '%" + nama + "%'");
+        "${"SELECT * FROM $table WHERE nama_lengkap LIKE '%" + nama}%'");
     for (var e in res) {
       data.add(UsersList.fromJson(e));
     }
@@ -664,7 +664,7 @@ class RepositoryDeviceUpdate {
     var conn = await db;
     List<DeviceUpdate> data = [];
     var res = await conn!.rawQuery(
-        "SELECT * FROM $table WHERE idDevice LIKE '%" + idDevice + "%'");
+        "${"SELECT * FROM $table WHERE idDevice LIKE '%" + idDevice}%'");
     for (var e in res) {
       data.add(DeviceUpdate.fromJson(e));
     }

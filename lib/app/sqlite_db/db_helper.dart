@@ -27,25 +27,25 @@ class DbHelper {
     await _tbExecute(db);
   }
 
-  Future<void> _tbExecute(Database db) async {
-    var _db = db.batch();
-    _dropTable(_db);
-    Table().kemungkinan(_db);
-    Table().keparahan(_db);
-    Table().resiko(_db);
-    Table().perusahaan(_db);
-    Table().lokasi(_db);
-    Table().detKeparahan(_db);
-    Table().pengendalian(_db);
-    Table().detPengendalian(_db);
-    Table().users(_db);
-    Table().deviceUpdate(_db);
+  Future<void> _tbExecute(Database _db) async {
+    var db = _db.batch();
+    _dropTable(db);
+    Table().kemungkinan(db);
+    Table().keparahan(db);
+    Table().resiko(db);
+    Table().perusahaan(db);
+    Table().lokasi(db);
+    Table().detKeparahan(db);
+    Table().pengendalian(db);
+    Table().detPengendalian(db);
+    Table().users(db);
+    Table().deviceUpdate(db);
 
-    await _db.commit();
+    await db.commit();
   }
 
-  _dropTable(Batch _db) {
-    List<String> _tb = [
+  _dropTable(Batch db) {
+    List<String> tb = [
       Constants.kemungkinanTb,
       Constants.metrikTb,
       Constants.perusahaanTb,
@@ -57,9 +57,9 @@ class DbHelper {
       Constants.usersTb,
       Constants.deviceUpdatTb,
     ];
-    for (var e in _tb) {
+    for (var e in tb) {
       var sql = "DROP TABLE IF EXISTS $e";
-      _db.execute(sql);
+      db.execute(sql);
     }
   }
 }

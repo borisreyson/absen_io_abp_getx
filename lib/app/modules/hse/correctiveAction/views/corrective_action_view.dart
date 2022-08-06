@@ -190,17 +190,20 @@ class CorrectiveActionView extends GetView<CorrectiveActionController> {
                     ),
                   ),
                 ),
-          (controller.profile.value.dataUser != null)
-              ? _hazardSeluruh(controller.profile.value.dataUser!, data)
-              : const Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Center(
-                    child: CupertinoActivityIndicator(
-                      color: Colors.white,
-                      radius: 30,
+          Visibility(
+            visible: (controller.rule.value.contains("admin_hse")),
+            child: (controller.profile.value.dataUser != null)
+                ? _hazardSeluruh(controller.profile.value.dataUser!, data)
+                : const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Center(
+                      child: CupertinoActivityIndicator(
+                        color: Colors.white,
+                        radius: 30,
+                      ),
                     ),
                   ),
-                ),
+          ),
         ],
       ),
     );

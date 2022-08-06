@@ -38,8 +38,8 @@ class DetailHazardController extends GetxController {
 
   @override
   void onReady() {
-    bukti.value = baseImage+"${data.value.bukti}";
-    updateBukti.value = baseImage + "update/${data.value.updateBukti}";
+    bukti.value = "$baseImage${data.value.bukti}";
+    updateBukti.value = "${baseImage}update/${data.value.updateBukti}";
     super.onReady();
   }
 

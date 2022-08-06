@@ -1,9 +1,21 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 import 'package:face_id_plus/app/data/models/device_update_model.dart';
+import 'package:face_id_plus/app/data/models/lampiran_rkb.dart';
+import 'package:face_id_plus/app/data/models/pesan_models.dart';
+import 'package:face_id_plus/app/data/models/rkb_detail_models.dart';
+import 'package:face_id_plus/app/data/models/rkb_models.dart' as rkb;
+import 'package:face_id_plus/app/data/models/sarana_models.dart';
+import 'package:face_id_plus/app/data/models/sarpras_detail.dart';
+import 'package:face_id_plus/app/data/models/sarpras_list.dart' as sarpras;
+import 'package:face_id_plus/app/data/models/sarpras_penumpang.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get_connect.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:uuid/uuid.dart';
 import '../models/all_hazard_model.dart';
+import '../models/approve_models.dart';
 import '../models/counter_hazard.dart';
 import '../models/data_hazard.dart';
 import '../models/detail_keparahan_model.dart';
@@ -28,6 +40,16 @@ import '../models/users_model.dart';
 import '../utils/constants.dart';
 
 class Provider extends GetConnect {
+  Future<AbsenList> apiListAbsenUser({String? nik, page}) async {
+    String apiUrl =
+        "https://lp.abpjobsite.com/api/v1/presensi/get/list/user?nik=$nik&page=$page";
+    var apiResult = await http.get(Uri.parse(apiUrl));
+    var jsonObject = json.decode(apiResult.body);
+    var absenList = AbsenList.fromJson(jsonObject);
+    absenList.listAbsen?.data?.forEach((element) {});
+    return absenList;
+  }
+
   Future<FaceModel?> loginApiFace(LoginABP loginABP) async {
     String apiUrl = "https://lp.abpjobsite.com/api/login/face";
     var apiResult = await http.post(Uri.parse(apiUrl), body: loginABP.toJson());
@@ -62,8 +84,200 @@ class Provider extends GetConnect {
     var objekJson = json.decode(apiWeb.body);
     return ApiRoster.fromJson(objekJson);
   }
-}
 
+  Future<rkb.RkbModels> getRkbUser(
+      String? username, String page, String status) async {
+    var url = Uri.parse(
+        "https://lp.abpjobsite.com/api/v1/rkb/user?username=$username&page=$page&status=$status");
+    var apiWeb = await http.get(url);
+    var objekJson = json.decode(apiWeb.body);
+    return rkb.RkbModels.fromJson(objekJson);
+  }
+
+  Future<rkb.RkbModels> getRkbDept(
+      String? idDept, String page, String status) async {
+    var url = Uri.parse(
+        "https://lp.abpjobsite.com/api/v1/rkb/dept?dept=$idDept&page=$page&status=$status");
+    var apiWeb = await http.get(url);
+    var objekJson = json.decode(apiWeb.body);
+    return rkb.RkbModels.fromJson(objekJson);
+  }
+
+  Future<rkb.RkbModels> getRkbKtt(String page, String status) async {
+    var url = Uri.parse(
+        "https://lp.abpjobsite.com/api/v1/rkb/ktt?page=$page&status=$status");
+    var apiWeb = await http.get(url);
+    var objekJson = json.decode(apiWeb.body);
+    return rkb.RkbModels.fromJson(objekJson);
+  }
+
+  Future<RkbDetailModels> getRkbDetail(String? idHeader) async {
+    var url = Uri.parse(
+        "https://lp.abpjobsite.com/api/v1/rkb/detail?idHeader=$idHeader");
+    var apiWeb = await http.get(url);
+    var objekJson = json.decode(apiWeb.body);
+    return RkbDetailModels.fromJson(objekJson);
+  }
+
+  Future<ApproveModels> approveRkbKabag(ApprovePost body) async {
+    String apiUrl = "https://lp.abpjobsite.com/api/v1/rkb/approve/kabag";
+    var apiResult = await http.post(Uri.parse(apiUrl), body: body.toJson());
+    var jsonObject = json.decode(apiResult.body);
+    return ApproveModels.fromJson(jsonObject);
+  }
+
+  Future<ApproveModels> approveRkbSection(ApprovePost body) async {
+    String apiUrl = "https://lp.abpjobsite.com/api/v1/rkb/approve/section";
+    var apiResult = await http.post(Uri.parse(apiUrl), body: body.toJson());
+    var jsonObject = json.decode(apiResult.body);
+    return ApproveModels.fromJson(jsonObject);
+  }
+
+  Future<ApproveModels> approveRkbKTT(ApprovePost body) async {
+    String apiUrl = "https://lp.abpjobsite.com/api/v1/rkb/approve/ktt";
+    var apiResult = await http.post(Uri.parse(apiUrl), body: body.toJson());
+    var jsonObject = json.decode(apiResult.body);
+    return ApproveModels.fromJson(jsonObject);
+  }
+
+  Future<ApproveModels> cancelRKB(CancelRKB body) async {
+    String apiUrl = "https://lp.abpjobsite.com/api/v1/rkb/cancel";
+    var apiResult = await http.post(Uri.parse(apiUrl), body: body.toJson());
+    var jsonObject = json.decode(apiResult.body);
+    return ApproveModels.fromJson(jsonObject);
+  }
+
+  Future<ApproveModels> tanyakanRKB(PesanModels body) async {
+    String apiUrl = "https://lp.abpjobsite.com/api/v1/rkb/tanyakan";
+    var apiResult = await http.post(Uri.parse(apiUrl), body: body.toJson());
+    var jsonObject = json.decode(apiResult.body);
+    return ApproveModels.fromJson(jsonObject);
+  }
+
+  Future<File> getPdfRkb(String noRkb, String fileName) async {
+    try {
+      var url = Uri.parse(
+          "https://lp.abpjobsite.com/api/v1/rkb/print/pdf?fName=$noRkb");
+      var apiWeb = await http.get(url);
+      var bytes = apiWeb.bodyBytes;
+      var dir = await getApplicationDocumentsDirectory();
+      File file = File("${dir.path}/$fileName.pdf");
+      File urlFile = await file.writeAsBytes(bytes);
+      return urlFile;
+    } catch (e) {
+      throw Exception("Error opening url file");
+    }
+  }
+
+  Future<File> getPdfSarpras(String noSarpras, String fileName) async {
+    try {
+      var url = Uri.parse(
+          "https://lp.abpjobsite.com/api/v1/sarpras/pdf/open/$noSarpras");
+      var apiWeb = await http.get(url);
+      var bytes = apiWeb.bodyBytes;
+      var dir = await getApplicationDocumentsDirectory();
+      File file = File("${dir.path}/$fileName.pdf");
+      File urlFile = await file.writeAsBytes(bytes);
+      return urlFile;
+    } catch (e) {
+      throw Exception("Error opening url file");
+    }
+  }
+
+  Future<LampiranRKBModels> getLampiranRKB(String? noRkb) async {
+    var url =
+        Uri.parse("https://lp.abpjobsite.com/api/v1/rkb/lampiran?noRKB=$noRkb");
+    var apiWeb = await http.get(url);
+    var objekJson = json.decode(apiWeb.body);
+    return LampiranRKBModels.fromJson(objekJson);
+  }
+
+  Future<sarpras.SarprasListModels> getSarprasIT(String? page) async {
+    var url =
+        Uri.parse("https://lp.abpjobsite.com/api/v1/sarpras/it?page=$page");
+    var apiWeb = await http.get(url);
+    var objekJson = json.decode(apiWeb.body);
+    return sarpras.SarprasListModels.fromJson(objekJson);
+  }
+
+  Future<sarpras.SarprasListModels> getSarprasKabagSect(
+      String? page, String? dept) async {
+    var url = Uri.parse(
+        "https://lp.abpjobsite.com/api/v1/sarpras/kabag?dept=$dept&page=$page");
+    var apiWeb = await http.get(url);
+    var objekJson = json.decode(apiWeb.body);
+    return sarpras.SarprasListModels.fromJson(objekJson);
+  }
+
+  Future<sarpras.SarprasListModels> getSarprasUser(
+      String? page, String? nik) async {
+    var url = Uri.parse(
+        "https://lp.abpjobsite.com/api/v1/sarpras/user?nik=$nik&page=$page");
+    var apiWeb = await http.get(url);
+    var objekJson = json.decode(apiWeb.body);
+    return sarpras.SarprasListModels.fromJson(objekJson);
+  }
+
+  Future<SarprasDetail> getSarprasDetail(String? noidOut, String? page) async {
+    var url = Uri.parse(
+        "https://lp.abpjobsite.com/api/v1/sarpras/detail?page=$page&noidOut=$noidOut");
+    var apiWeb = await http.get(url);
+    var objekJson = json.decode(apiWeb.body);
+    return SarprasDetail.fromJson(objekJson);
+  }
+
+  Future<SarprasPenumpang> getSarprasPenumpang(String? nik) async {
+    var url = Uri.parse(
+        "https://lp.abpjobsite.com/api/v1/sarpras/penumpang?nik=$nik");
+    var apiWeb = await http.get(url);
+    var objekJson = json.decode(apiWeb.body);
+    return SarprasPenumpang.fromJson(objekJson);
+  }
+
+  Future<SaranaModels> getSarana(String? cari) async {
+    var url =
+        Uri.parse("https://lp.abpjobsite.com/api/v1/sarpras/sarana?cari=$cari");
+    var apiWeb = await http.get(url);
+    var objekJson = json.decode(apiWeb.body);
+    return SaranaModels.fromJson(objekJson);
+  }
+
+  Future<ResultPostSarana> postSarana(body) async {
+    var url = Uri.parse("https://lp.abpjobsite.com/api/v1/sarpras/sarana");
+    var apiWeb = await http.post(
+      url,
+      body: json.encode(body.toJson()),
+      headers: {"Content-Type": "application/json"},
+    );
+    var objekJson = json.decode(apiWeb.body);
+    return ResultPostSarana.fromJson(objekJson);
+  }
+
+  Future<ResultPostSarana> approveSarana(body) async {
+    var url = Uri.parse("https://lp.abpjobsite.com/api/v1/sarpras/approve");
+    var apiWeb = await http.post(
+      url,
+      body: json.encode(body.toJson()),
+      headers: {"Content-Type": "application/json"},
+    );
+    var objekJson = json.decode(apiWeb.body);
+    return ResultPostSarana.fromJson(objekJson);
+  }
+
+  Future<ResultPostSarana> cancelSarana(body) async {
+    var url = Uri.parse("https://lp.abpjobsite.com/api/v1/sarpras/cancel");
+    var apiWeb = await http.post(
+      url,
+      body: json.encode(body.toJson()),
+      headers: {"Content-Type": "application/json"},
+    );
+    var objekJson = json.decode(apiWeb.body);
+    return ResultPostSarana.fromJson(objekJson);
+  }
+}
+//Provider
+
+//AllHazardProvider
 class AllHazardProvider {
   Future<AllHazard?> getAllHazard(
       int disetujui, int page, String dari, String sampai) async {
@@ -181,18 +395,14 @@ class HazardProvider {
   String baseUrl = "https://lp.abpjobsite.com/api/v1/hazard/";
 
   Future<ResultHazardPost?> postHazard(HazardPostModel data, idDevice) async {
-    Map<String, dynamic>? _res;
+    Map<String, dynamic>? res;
 
-    DateTime _dt = DateTime.now();
+    DateTime dt = DateTime.now();
 
-    String _filename = "${_dt.hour}".padLeft(2, "0") +
-        "${_dt.minute}".padLeft(2, "0") +
-        "${_dt.second}".padLeft(2, "0") +
-        "_${idDevice}_sebelum.jpg";
-    String _pjFoto = "${_dt.hour}".padLeft(2, "0") +
-        "${_dt.minute}".padLeft(2, "0") +
-        "${_dt.second}".padLeft(2, "0") +
-        "_${idDevice}_penanggung_jawab.jpg";
+    String filename =
+        "${"${dt.hour}".padLeft(2, "0")}${"${dt.minute}".padLeft(2, "0")}${"${dt.second}".padLeft(2, "0")}_${idDevice}_sebelum.jpg";
+    String pjFoto =
+        "${"${dt.hour}".padLeft(2, "0")}${"${dt.minute}".padLeft(2, "0")}${"${dt.second}".padLeft(2, "0")}_${idDevice}_penanggung_jawab.jpg";
 
     Uri uri = Uri.parse("https://lp.abpjobsite.com/api/v1/hazard");
 
@@ -200,10 +410,10 @@ class HazardProvider {
 
     request.files.add(http.MultipartFile.fromBytes(
         'fileToUpload', await data.fileToUpload!.readAsBytes(),
-        filename: _filename));
+        filename: filename));
     request.files.add(http.MultipartFile.fromBytes(
         'fileToUploadPJ', await data.fileToUploadPJ!.readAsBytes(),
-        filename: _pjFoto));
+        filename: pjFoto));
 
     request.fields['perusahaan'] = "${data.perusahaan}";
     request.fields['tgl_hazard'] = "${data.tglHazard}";
@@ -224,8 +434,8 @@ class HazardProvider {
 
     log("res ${data.fileToUpload}");
     log("res ${data.fileToUploadPJ}");
-    log("res ${_filename}");
-    log("res ${_pjFoto}");
+    log("res $filename");
+    log("res $pjFoto");
     log("res ${data.perusahaan}");
     log("res ${data.tglHazard}");
     log("res ${data.jamHazard}");
@@ -248,34 +458,28 @@ class HazardProvider {
 
     await for (String s in response.stream.transform(utf8.decoder)) {
       print("errorPost ${s.toString()}");
-      _res = jsonDecode(s);
+      res = jsonDecode(s);
     }
 
     return ResultHazardPost.fromJson(
-      _res!,
+      res!,
     );
   }
 
   Future<ResultHazardPost?> postHazardSelesai(
       HazardPostSelesaiModel data, idDevice) async {
-    Map<String, dynamic>? _res;
+    Map<String, dynamic>? res;
 
-    DateTime _dt = DateTime.now();
+    DateTime dt = DateTime.now();
 
-    String _filename = "${_dt.hour}".padLeft(2, "0") +
-        "${_dt.minute}".padLeft(2, "0") +
-        "${_dt.second}".padLeft(2, "0") +
-        "_${idDevice}_sebelum.jpg";
+    String filename =
+        "${"${dt.hour}".padLeft(2, "0")}${"${dt.minute}".padLeft(2, "0")}${"${dt.second}".padLeft(2, "0")}_${idDevice}_sebelum.jpg";
 
-    String _pjFoto = "${_dt.hour}".padLeft(2, "0") +
-        "${_dt.minute}".padLeft(2, "0") +
-        "${_dt.second}".padLeft(2, "0") +
-        "_${idDevice}_penanggung_jawab.jpg";
+    String pjFoto =
+        "${"${dt.hour}".padLeft(2, "0")}${"${dt.minute}".padLeft(2, "0")}${"${dt.second}".padLeft(2, "0")}_${idDevice}_penanggung_jawab.jpg";
 
-    String _fNameSelesai = "${_dt.hour}".padLeft(2, "0") +
-        "${_dt.minute}".padLeft(2, "0") +
-        "${_dt.second}".padLeft(2, "0") +
-        "_${idDevice}_selesai.jpg";
+    String fNameSelesai =
+        "${"${dt.hour}".padLeft(2, "0")}${"${dt.minute}".padLeft(2, "0")}${"${dt.second}".padLeft(2, "0")}_${idDevice}_selesai.jpg";
 
     Uri uri = Uri.parse("${baseUrl}selesai");
 
@@ -283,15 +487,15 @@ class HazardProvider {
 
     request.files.add(http.MultipartFile.fromBytes(
         'fileToUpload', await data.fileToUpload!.readAsBytes(),
-        filename: _filename));
+        filename: filename));
 
     request.files.add(http.MultipartFile.fromBytes(
         'fileToUploadPJ', await data.fileToUploadPJ!.readAsBytes(),
-        filename: _pjFoto));
+        filename: pjFoto));
 
     request.files.add(http.MultipartFile.fromBytes(
         'fileToUploadSelesai', await data.fileToUploadSelesai!.readAsBytes(),
-        filename: _fNameSelesai));
+        filename: fNameSelesai));
 
     request.fields['perusahaan'] = "${data.perusahaan}";
     request.fields['tgl_hazard'] = "${data.tglHazard}";
@@ -317,21 +521,19 @@ class HazardProvider {
     var response = await request.send();
 
     await for (String s in response.stream.transform(utf8.decoder)) {
-      _res = jsonDecode(s);
+      res = jsonDecode(s);
     }
-    return ResultHazardPost.fromJson(_res!);
+    return ResultHazardPost.fromJson(res!);
   }
 
   Future<ResultHazardPost?> postUpdateHazard(
       HazardUpdate data, idDevice) async {
-    Map<String, dynamic>? _res;
+    Map<String, dynamic>? res;
 
-    DateTime _dt = DateTime.now();
+    DateTime dt = DateTime.now();
 
-    String _filename = "${_dt.hour}".padLeft(2, "0") +
-        "${_dt.minute}".padLeft(2, "0") +
-        "${_dt.second}".padLeft(2, "0") +
-        "_${idDevice}_selesai.jpg";
+    String filename =
+        "${"${dt.hour}".padLeft(2, "0")}${"${dt.minute}".padLeft(2, "0")}${"${dt.second}".padLeft(2, "0")}_${idDevice}_selesai.jpg";
 
     Uri uri = Uri.parse("https://lp.abpjobsite.com/api/v1/hazard/update");
 
@@ -339,7 +541,7 @@ class HazardProvider {
 
     request.files.add(http.MultipartFile.fromBytes(
         'fileToUpload', await data.fileToUpload!.readAsBytes(),
-        filename: _filename));
+        filename: filename));
 
     request.fields['uid'] = "${data.uid}";
     request.fields['tgl_selesai'] = "${data.tglSelesai}";
@@ -351,9 +553,9 @@ class HazardProvider {
     var response = await request.send();
 
     await for (String s in response.stream.transform(utf8.decoder)) {
-      _res = jsonDecode(s);
+      res = jsonDecode(s);
     }
-    return ResultHazardPost.fromJson(_res!);
+    return ResultHazardPost.fromJson(res!);
   }
 
   Future<ResultHazardPost?> deleteHazard(uid) async {
@@ -433,14 +635,12 @@ class HazardProvider {
 
   Future<ResultHazardPost?> postGambarBukti(
       HazardGambarBukti data, idDevice) async {
-    Map<String, dynamic>? _res;
+    Map<String, dynamic>? res;
 
-    DateTime _dt = DateTime.now();
+    DateTime dt = DateTime.now();
 
-    String _filename = "${_dt.hour}".padLeft(2, "0") +
-        "${_dt.minute}".padLeft(2, "0") +
-        "${_dt.second}".padLeft(2, "0") +
-        "_${idDevice}_sebelum.jpg";
+    String filename =
+        "${"${dt.hour}".padLeft(2, "0")}${"${dt.minute}".padLeft(2, "0")}${"${dt.second}".padLeft(2, "0")}_${idDevice}_sebelum.jpg";
 
     Uri uri = Uri.parse("${baseUrl}rubah/gambar/temuan");
 
@@ -448,28 +648,26 @@ class HazardProvider {
 
     request.files.add(http.MultipartFile.fromBytes(
         'bukti_sebelum', await data.buktiSebelum!.readAsBytes(),
-        filename: _filename));
+        filename: filename));
 
     request.fields['uid'] = "${data.uid}";
 
     var response = await request.send();
 
     await for (String s in response.stream.transform(utf8.decoder)) {
-      _res = jsonDecode(s);
+      res = jsonDecode(s);
     }
-    return ResultHazardPost.fromJson(_res!);
+    return ResultHazardPost.fromJson(res!);
   }
 
   Future<ResultHazardPost?> postGambarPerbaikan(
       HazardGambarPerbaikan data, idDevice) async {
-    Map<String, dynamic>? _res;
+    Map<String, dynamic>? res;
 
-    DateTime _dt = DateTime.now();
+    DateTime dt = DateTime.now();
 
-    String _filename = "${_dt.hour}".padLeft(2, "0") +
-        "${_dt.minute}".padLeft(2, "0") +
-        "${_dt.second}".padLeft(2, "0") +
-        "_${idDevice}_selesai.jpg";
+    String filename =
+        "${"${dt.hour}".padLeft(2, "0")}${"${dt.minute}".padLeft(2, "0")}${"${dt.second}".padLeft(2, "0")}_${idDevice}_selesai.jpg";
 
     Uri uri = Uri.parse("${baseUrl}rubah/gambar/perbaikan");
 
@@ -477,16 +675,16 @@ class HazardProvider {
 
     request.files.add(http.MultipartFile.fromBytes(
         'bukti_selesai', await data.buktiSelesai!.readAsBytes(),
-        filename: _filename));
+        filename: filename));
 
     request.fields['uid'] = "${data.uid}";
 
     var response = await request.send();
 
     await for (String s in response.stream.transform(utf8.decoder)) {
-      _res = jsonDecode(s);
+      res = jsonDecode(s);
     }
-    return ResultHazardPost.fromJson(_res!);
+    return ResultHazardPost.fromJson(res!);
   }
 
   Future<Data?> getHazardDetail(
@@ -584,5 +782,33 @@ class DeviceUpdateProvider {
     var jsonObject = json.decode(api.body);
     var decoJson = DeviceUpdateResult.fromJson(jsonObject);
     return decoJson;
+  }
+}
+
+class DoPresensi {
+  Future<StatusAbsensi> takePresensi(PostAbsen data, String idDevice) async {
+    Map<String, dynamic>? res;
+    var uuid = const Uuid();
+
+    DateTime dt = DateTime.now();
+
+    String filename =
+        "${data.nik}_${"${dt.hour}".padLeft(2, "0")}${"${dt.minute}".padLeft(2, "0")}${"${dt.second}".padLeft(2, "0")}_${idDevice}_${data.status}_${uuid.v1()}.jpg";
+    var uri =
+        Uri.parse("https://lp.abpjobsite.com/api/v1/presensi/upload/absensi");
+    var request = http.MultipartRequest('POST', uri);
+
+    request.files.add(http.MultipartFile.fromBytes(
+        'fileToUpload', await data.fileToUpload!.readAsBytes(),
+        filename: filename));
+    request.fields['nik'] = "${data.nik}";
+    request.fields['lat'] = "${data.lat}";
+    request.fields['lng'] = "${data.lng}";
+
+    var response = await request.send();
+    await for (String s in response.stream.transform(utf8.decoder)) {
+      res = jsonDecode(s);
+    }
+    return StatusAbsensi.fromJson(res!);
   }
 }

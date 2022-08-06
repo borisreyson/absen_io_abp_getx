@@ -155,10 +155,8 @@ class FormHazardView extends GetView<FormHazardController> {
                         onTap: () async {
                           Company company =
                               await Get.toNamed(Routes.PERUSAHAAN);
-                          if (company != null) {
-                            controller.perusahaan.text =
-                                "${company.namaPerusahaan}";
-                          }
+                          controller.perusahaan.text =
+                              "${company.namaPerusahaan}";
                         },
                         autofocus: false,
                         readOnly: true,
@@ -255,10 +253,8 @@ class FormHazardView extends GetView<FormHazardController> {
                         onTap: () async {
                           Lokasi lokasi =
                               await Get.toNamed(Routes.LOKASI_HAZARD);
-                          if (lokasi != null) {
-                            controller.lokasi.text = "${lokasi.lokasi}";
-                            controller.idLokasi.value = lokasi.idLok!;
-                          }
+                          controller.lokasi.text = "${lokasi.lokasi}";
+                          controller.idLokasi.value = lokasi.idLok!;
                         },
                         controller: controller.lokasi,
                         autofocus: false,
@@ -462,16 +458,14 @@ class FormHazardView extends GetView<FormHazardController> {
                         onTap: () async {
                           Kemungkinan data =
                               await Get.toNamed(Routes.KEMUNGKINAN);
-                          if (data != null) {
-                            controller.nilaiKmSebelum.value = data.nilai!;
-                            if (controller.nilaiKpSebelum.value > 0) {
-                              controller.loadMetrik(
-                                  controller.nilaiKmSebelum.value,
-                                  controller.nilaiKpSebelum.value);
-                            }
-                            controller.idKmSebelum.value = data.idKemungkinan!;
-                            controller.kemungkinan.text = "${data.kemungkinan}";
+                          controller.nilaiKmSebelum.value = data.nilai!;
+                          if (controller.nilaiKpSebelum.value > 0) {
+                            controller.loadMetrik(
+                                controller.nilaiKmSebelum.value,
+                                controller.nilaiKpSebelum.value);
                           }
+                          controller.idKmSebelum.value = data.idKemungkinan!;
+                          controller.kemungkinan.text = "${data.kemungkinan}";
                         },
                         controller: controller.kemungkinan,
                         autofocus: false,
@@ -526,16 +520,12 @@ class FormHazardView extends GetView<FormHazardController> {
                         controller: controller.keparahan,
                         onTap: () async {
                           Keparahan data = await Get.toNamed(Routes.KEPARAHAN);
-                          if (data != null) {
-                            controller.nilaiKpSebelum.value = data.nilai!;
-                            if (controller.nilaiKmSebelum.value != null) {
-                              controller.loadMetrik(
-                                  controller.nilaiKmSebelum.value,
-                                  controller.nilaiKpSebelum.value);
-                            }
-                            controller.idKpSebelum.value = data.idKeparahan!;
-                            controller.keparahan.text = "${data.keparahan}";
-                          }
+                          controller.nilaiKpSebelum.value = data.nilai!;
+                          controller.loadMetrik(
+                              controller.nilaiKmSebelum.value,
+                              controller.nilaiKpSebelum.value);
+                          controller.idKpSebelum.value = data.idKeparahan!;
+                          controller.keparahan.text = "${data.keparahan}";
                         },
                         autofocus: false,
                         readOnly: true,
@@ -682,11 +672,9 @@ class FormHazardView extends GetView<FormHazardController> {
                         readOnly: true,
                         onTap: () async {
                           Hirarki data = await Get.toNamed(Routes.PENGENDALIAN);
-                          if (data != null) {
-                            controller.idPengendalian.value = data.idHirarki!;
-                            controller.pengendalian.text =
-                                "${data.namaPengendalian}";
-                          }
+                          controller.idPengendalian.value = data.idHirarki!;
+                          controller.pengendalian.text =
+                              "${data.namaPengendalian}";
                         },
                         controller: controller.pengendalian,
                         textInputAction: TextInputAction.go,
@@ -1009,7 +997,7 @@ class FormHazardView extends GetView<FormHazardController> {
                   ),
                   fit: BoxFit.fitWidth,
                 )
-              : Icon(Icons.image_rounded, size: 100),
+              : const Icon(Icons.image_rounded, size: 100),
         ),
       ),
     );
@@ -1136,17 +1124,15 @@ class FormHazardView extends GetView<FormHazardController> {
                         onTap: () async {
                           Kemungkinan data =
                               await Get.toNamed(Routes.KEMUNGKINAN);
-                          if (data != null) {
-                            controller.nilaiKmSesudah.value = data.nilai!;
-                            if (controller.nilaiKpSesudah.value > 0) {
-                              controller.loadMetrikSesudah(
-                                  controller.nilaiKmSesudah.value,
-                                  controller.nilaiKpSesudah.value);
-                            }
-                            controller.idKmSesudah.value = data.idKemungkinan!;
-                            controller.kemungkinanSesudah.text =
-                                "${data.kemungkinan}";
+                          controller.nilaiKmSesudah.value = data.nilai!;
+                          if (controller.nilaiKpSesudah.value > 0) {
+                            controller.loadMetrikSesudah(
+                                controller.nilaiKmSesudah.value,
+                                controller.nilaiKpSesudah.value);
                           }
+                          controller.idKmSesudah.value = data.idKemungkinan!;
+                          controller.kemungkinanSesudah.text =
+                              "${data.kemungkinan}";
                         },
                         controller: controller.kemungkinanSesudah,
                         autofocus: false,
@@ -1200,17 +1186,15 @@ class FormHazardView extends GetView<FormHazardController> {
                       TextFormField(
                         onTap: () async {
                           Keparahan data = await Get.toNamed(Routes.KEPARAHAN);
-                          if (data != null) {
-                            controller.nilaiKpSesudah.value = data.nilai!;
-                            if (controller.nilaiKmSesudah > 0) {
-                              controller.loadMetrikSesudah(
-                                  controller.nilaiKmSesudah.value,
-                                  controller.nilaiKpSesudah.value);
-                            }
-                            controller.idKpSesudah.value = data.idKeparahan!;
-                            controller.keparahanSesudah.text =
-                                "${data.keparahan}";
+                          controller.nilaiKpSesudah.value = data.nilai!;
+                          if (controller.nilaiKmSesudah > 0) {
+                            controller.loadMetrikSesudah(
+                                controller.nilaiKmSesudah.value,
+                                controller.nilaiKpSesudah.value);
                           }
+                          controller.idKpSesudah.value = data.idKeparahan!;
+                          controller.keparahanSesudah.text =
+                              "${data.keparahan}";
                         },
                         controller: controller.keparahanSesudah,
                         autofocus: false,
@@ -1363,7 +1347,7 @@ class FormHazardView extends GetView<FormHazardController> {
                                     fit: BoxFit.cover,
                                     width: 100,
                                   )
-                                : Icon(Icons.person, size: 100),
+                                : const Icon(Icons.person, size: 100),
                           ))),
                 ),
               ),
@@ -1423,25 +1407,23 @@ class FormHazardView extends GetView<FormHazardController> {
               borderRadius: BorderRadius.circular(100),
               onTap: () async {
                 UsersList data = await Get.toNamed(Routes.LIST_USER);
-                if (data != null) {
-                  var _temp = await getTemporaryDirectory();
-                  var _path = _temp.path;
+                var temp = await getTemporaryDirectory();
+                var path = temp.path;
 
-                  if (data.photoProfile != null) {
-                    var fName =
-                        _path + data.nik! + '_' + data.username! + '.jpg';
-                    File _file = File(fName);
-                    var res = await http.get(Uri.parse(data.photoProfile!));
-                    await _file.writeAsBytes(res.bodyBytes);
-                    controller.imgPj = XFile(_file.path);
-                    controller.urlImgPj.value = _file.path;
-                    controller.namaPj.text = "${data.namaLengkap}";
-                    controller.nikPJ.text = "${data.nik}";
-                  } else {
-                    Constants().showAlert(
-                        judul: "Error",
-                        msg: "Foto Penanggung Jawab Tidak Ada, Input Manual!");
-                  }
+                if (data.photoProfile != null) {
+                  var fName =
+                      '$path${data.nik!}_${data.username!}.jpg';
+                  File file = File(fName);
+                  var res = await http.get(Uri.parse(data.photoProfile!));
+                  await file.writeAsBytes(res.bodyBytes);
+                  controller.imgPj = XFile(file.path);
+                  controller.urlImgPj.value = file.path;
+                  controller.namaPj.text = "${data.namaLengkap}";
+                  controller.nikPJ.text = "${data.nik}";
+                } else {
+                  Constants().showAlert(
+                      judul: "Error",
+                      msg: "Foto Penanggung Jawab Tidak Ada, Input Manual!");
                 }
               },
               child: const Padding(

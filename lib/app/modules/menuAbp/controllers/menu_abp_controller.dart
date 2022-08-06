@@ -1,13 +1,10 @@
-import 'dart:math';
-
 import 'package:face_id_plus/app/routes/app_pages.dart';
-import 'package:flutter/animation.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:platform_device_id/platform_device_id.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../../../data/models/device_update_model.dart';
 import '../../../data/providers/provider.dart';
 import '../../../data/services/service.dart';
@@ -23,12 +20,15 @@ class MenuAbpController extends GetxController
   final _service = ApiService();
   final deviceService = DeviceUpdateService();
   final idDevice = RxnString(null);
+  final rule = RxList.empty();
+  final perusahaan = RxnString(null);
   late final AnimationController animationController =
       AnimationController(duration: const Duration(seconds: 1), vsync: this)
         ..repeat(reverse: true);
 
   late final Animation<double> animationRun =
       CurvedAnimation(parent: animationController, curve: Curves.fastOutSlowIn);
+  List<Widget> widgetList = [];
 
   final isLoading = true.obs;
   @override
@@ -45,6 +45,10 @@ class MenuAbpController extends GetxController
     var pref = await SharedPreferences.getInstance();
     bool? isLogin = pref.getBool(Constants.isLoginAbp);
     var intro = pref.getBool(Constants.intro);
+    rule.value = pref.getString(Constants.rule)!.split(',');
+    perusahaan.value = pref.getString(Constants.company);
+    var section = pref.getString(Constants.section);
+
     if (isLogin != null && intro != null) {
       if (!isLogin) {
         Get.offAllNamed(Routes.LOGIN);
@@ -97,6 +101,23 @@ class MenuAbpController extends GetxController
           }
         });
       }
+      print("perusahaan ${perusahaan.value}");
+      if (int.parse("${perusahaan.value}") <= 0) {
+        if (section == "SECURITY") {
+          widgetList = [
+            sarpras(),
+          ];
+        } else {
+          widgetList = [
+            hazard(),
+            rkb(),
+            sarpras(),
+            // monitoring(),
+          ];
+        }
+      } else if (perusahaan.value != "0") {
+        widgetList = [hazard()];
+      }
     } else {
       Get.offAllNamed(Routes.LOGIN);
     }
@@ -146,7 +167,7 @@ class MenuAbpController extends GetxController
     String? _idDevice;
     try {
       _idDevice = await PlatformDeviceId.getDeviceId;
-      if (_idDevice != null) {
+      if (idDevice != null) {
         idDevice.value = _idDevice;
         getPref();
       } else {
@@ -209,5 +230,143 @@ class MenuAbpController extends GetxController
         print("tipe $tipe 9");
         break;
     }
+  }
+
+  Widget hazard() {
+    return Card(
+      elevation: 10,
+      child: InkWell(
+        onTap: () {
+          Get.toNamed(Routes.CORRECTIVE_ACTION);
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Image.asset(
+                "assets/images/car_ic.png",
+                width: 60,
+              ),
+              const Text(
+                "Corrective Action",
+                textAlign: TextAlign.center,
+                style: TextStyle(fontWeight: FontWeight.bold),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget sarpras() {
+    return Card(
+      elevation: 10,
+      child: InkWell(
+        onTap: () {
+          Get.toNamed(Routes.MENU_SARPRAS);
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Image.asset(
+                "assets/images/sarana_add.png",
+              ),
+              const Text(
+                "Sarpras",
+                textAlign: TextAlign.center,
+                style: TextStyle(fontWeight: FontWeight.bold),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget monitoring() {
+    return Card(
+      elevation: 10,
+      child: InkWell(
+        onTap: () {},
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: const [
+              Icon(
+                Icons.display_settings_sharp,
+                color: Colors.black,
+                size: 30,
+              ),
+              Text(
+                "Monitoring",
+                textAlign: TextAlign.center,
+                style: TextStyle(fontWeight: FontWeight.bold),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget rkb() {
+    return Card(
+      elevation: 10,
+      child: InkWell(
+        onTap: () {
+          Get.toNamed(Routes.RKB_MENU);
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: const [
+              Icon(
+                Icons.content_paste_go_sharp,
+                color: Colors.blue,
+                size: 30,
+              ),
+              Text(
+                "Rencana Kebutuhan Barang",
+                textAlign: TextAlign.center,
+                style: TextStyle(fontWeight: FontWeight.bold),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget menuAbsensi() {
+    return Card(
+      elevation: 10,
+      child: InkWell(
+        onTap: () {},
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: const [
+              Icon(
+                Icons.content_paste_go_sharp,
+                color: Colors.blue,
+                size: 30,
+              ),
+              Text(
+                "Absensi",
+                textAlign: TextAlign.center,
+                style: TextStyle(fontWeight: FontWeight.bold),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

@@ -10,19 +10,13 @@ class KemungkinanController extends GetxController {
   @override
   void onInit() async {
     await repository.getAll(table: Constants.kemungkinanTb).then((value) {
-      if (value != null) {
-        for (var element in value) {
-          data.add(element);
-        }
+      for (var element in value) {
+        data.add(element);
       }
     }).whenComplete(() => isLoading.value = false);
     super.onInit();
   }
 
-  @override
-  void onReady() {
-    super.onReady();
-  }
 
   @override
   void onClose() {}

@@ -1,10 +1,8 @@
 import 'package:face_id_plus/app/modules/home/controllers/home_controller.dart';
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-
 import '../buletin_model.dart';
 
 class BuletinView extends GetView<HomeController> {
@@ -28,9 +26,9 @@ class BuletinView extends GetView<HomeController> {
         : Container());
   }
 
-  Widget _content(Data _list) {
+  Widget _content(Data list) {
     DateFormat fmt = DateFormat("dd MMMM yyyy");
-    var tanggal = DateTime.parse("${_list.tgl}");
+    var tanggal = DateTime.parse("${list.tgl}");
     return Card(
       margin: const EdgeInsets.all(20),
       elevation: 20,
@@ -50,10 +48,10 @@ class BuletinView extends GetView<HomeController> {
               Padding(
                 padding: const EdgeInsets.only(top: 10.0),
                 child: ListTile(
-                  title: Text("${_list.judul}",
+                  title: Text("${list.judul}",
                       style: const TextStyle(
                           fontSize: 18, fontWeight: FontWeight.bold)),
-                  subtitle: Text("\n${_list.pesan}", maxLines: 6),
+                  subtitle: Text("\n${list.pesan}", maxLines: 6),
                 ),
               )
             ],

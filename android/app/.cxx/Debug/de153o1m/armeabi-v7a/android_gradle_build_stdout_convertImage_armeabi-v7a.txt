@@ -1,0 +1,2 @@
+ninja: Entering directory `/Users/borisreyson/StudioProjects/absen_io_abp_getx copy/android/app/.cxx/Debug/de153o1m/armeabi-v7a'
+ninja: no work to do.

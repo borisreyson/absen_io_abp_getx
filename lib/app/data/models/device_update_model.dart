@@ -1,3 +1,5 @@
+import 'dart:io';
+
 class DeviceUpdateModel {
   List<DeviceUpdate>? deviceUpdate;
 
@@ -7,7 +9,7 @@ class DeviceUpdateModel {
     if (json['deviceUpdate'] != null) {
       deviceUpdate = <DeviceUpdate>[];
       json['deviceUpdate'].forEach((v) {
-        deviceUpdate!.add(DeviceUpdate.fromJson(v));
+        deviceUpdate?.add(DeviceUpdate.fromJson(v));
       });
     }
   }
@@ -15,7 +17,7 @@ class DeviceUpdateModel {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     if (deviceUpdate != null) {
-      data['deviceUpdate'] = deviceUpdate!.map((v) => v.toJson()).toList();
+      data['deviceUpdate'] = deviceUpdate?.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -51,5 +53,39 @@ class DeviceUpdateResult {
   DeviceUpdateResult({this.success});
   factory DeviceUpdateResult.fromJson(Map<String, dynamic> json) {
     return DeviceUpdateResult(success: json['success']);
+  }
+}
+
+class PostAbsen {
+  String? nik;
+  String? lat;
+  String? lng;
+  String? status;
+  File? fileToUpload;
+  PostAbsen({this.nik, this.lat, this.lng, this.fileToUpload});
+  PostAbsen.fromJson(Map<String, dynamic> json) {
+    nik = json['nik'];
+    lat = json['lat'];
+    lng = json['lng'];
+    status = json['status'];
+    fileToUpload = json['fileToUpload'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['nik'] = nik;
+    data['lat'] = lat;
+    data['lng'] = lng;
+    data['status'] = status;
+    data['fileToUpload'] = fileToUpload;
+    return data;
+  }
+}
+
+class StatusAbsensi {
+  bool absensi = false;
+  StatusAbsensi({required this.absensi});
+  factory StatusAbsensi.fromJson(Map<String, dynamic> json) {
+    return StatusAbsensi(absensi: json['absensi']);
   }
 }

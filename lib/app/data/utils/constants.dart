@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -5,13 +7,17 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class Constants {
   static const intro = "intro";
-  static const String isLogin = "isLoginAbsen";
   static const String isLoginAbp = "isLoginAbp";
   static const String username = "userName";
   static const String nik = "nik";
   static const String name = "name";
   static const String rule = "rule";
+  static const String departement = "departement";
+  static const String section = "section";
+  static const String jabatan = "jabatan";
+  static const String level = "level";
   static const String fotoProfile = "fotoProfile";
+  static const String company = "company";
   static const String baseUrl = "https://lp.abpjobsite.com/";
   static const String mainUrl = "https://abpjobsite.com/";
   static const String kemungkinanTb = "KEMUNGKINAN";
@@ -25,6 +31,22 @@ class Constants {
   static const String usersTb = "USERS";
   static const String deviceUpdatTb = "DEVICE_UPDATE";
   static const Color green = Color(0xFF488C03);
+
+  late StreamSubscription subscriptionVps;
+  late StreamSubscription subscriptionServer;
+  late StreamSubscription subscriptionLokal;
+  late StreamSubscription subscriptionServerOnline;
+
+//ABSENSi
+  static const String isLogin = "isLoginAbsen";
+  static const String nikAbsen = "nikAbsen";
+  static const String namaAbsen = "namaAbsen";
+  static const String departemenAbsen = "departemenAbsen";
+  static const String devisiAbsen = "devisiAbsen";
+  static const String jabatanAbsen = "jabatanAbsen";
+  static const String flagAbsen = "flagAbsen";
+  static const String showAbsen = "showAbsen";
+  static const String perusahaanAbsen = "perusahaanAbsen";
 
   // ignore: non_constant_identifier_names
   sign_out(context) async {

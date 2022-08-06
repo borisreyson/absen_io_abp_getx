@@ -27,10 +27,6 @@ class RubahBahayaController extends GetxController {
     super.onInit();
   }
 
-  @override
-  void onReady() {
-    super.onReady();
-  }
 
   @override
   void onClose() {}
@@ -45,7 +41,7 @@ class RubahBahayaController extends GetxController {
 
       var uid = data.value.uid;
       var type = tipe.value;
-      print("res ${type}");
+      print("res $type");
 
       var desk = deskripsi.text;
       await repository.postUpdateDeskripsi(uid, type, desk).then((res) {

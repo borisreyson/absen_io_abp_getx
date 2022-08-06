@@ -1,6 +1,7 @@
 // ignore_for_file: non_constant_identifier_names
 
 import 'dart:convert';
+import 'package:face_id_plus/app/data/models/list_presensi_models.dart';
 import 'package:http/http.dart' as http;
 
 class AbsenTigaHariModel {
@@ -43,20 +44,17 @@ class AbsenTigaHariModel {
       tanggal_jam: object['tanggal_jam'],
     );
   }
-  static Future<List<AbsenTigaHariModel>> apiAbsenTigaHari(String? _nik) async {
+  static Future<ListPresensiModels> apiAbsenTigaHari(String? nik) async {
     String apiUrl =
-        "https://abpjobsite.com/absen/get/AbsenTigaHari?nik=" + _nik!;
+        "https://lp.abpjobsite.com/api/v1/presensi/get/list?nik=$nik";
     var apiResult = await http.get(Uri.parse(apiUrl));
     var jsonObject = json.decode(apiResult.body);
-    var absensi = (jsonObject['AbsenTigaHari'] as List)
-        .map((e) => AbsenTigaHariModel.fromJson(e))
-        .toList();
-    return absensi;
+    return ListPresensiModels.fromJson(jsonObject);
   }
 
   static Future<List<AbsenTigaHariModel>> apiAbsenTigaHariOffline(
-      String _nik) async {
-    String apiUrl = "http://10.10.3.13/absen/get/AbsenTigaHari?nik=" + _nik;
+      String nik) async {
+    String apiUrl = "http://10.10.3.13/absen/get/AbsenTigaHari?nik=$nik";
     var apiResult = await http.get(Uri.parse(apiUrl));
     var jsonObject = json.decode(apiResult.body);
     var absensi = (jsonObject['AbsenTigaHari'] as List)

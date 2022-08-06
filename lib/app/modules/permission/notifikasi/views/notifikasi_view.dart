@@ -9,10 +9,10 @@ class NotifikasiView extends GetView<NotifikasiController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('NotifikasiView'),
+        title: const Text('NotifikasiView'),
         centerTitle: true,
       ),
-      body: Center(
+      body: const Center(
         child: Text(
           'NotifikasiView is working',
           style: TextStyle(fontSize: 20),

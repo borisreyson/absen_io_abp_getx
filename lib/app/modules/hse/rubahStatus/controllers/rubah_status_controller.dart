@@ -49,18 +49,14 @@ class RubahStatusController extends GetxController {
     super.onInit();
   }
 
-  @override
-  void onReady() {
-    super.onReady();
-  }
 
   @override
   void onClose() {}
   initIdDevice() async {
-    String? _idDevice;
+    String? idDevice;
     try {
-      _idDevice = await PlatformDeviceId.getDeviceId;
-      idDevice = _idDevice;
+      idDevice = await PlatformDeviceId.getDeviceId;
+      idDevice = idDevice;
     } on PlatformException {
       if (kDebugMode) {
         print("ERROR");
@@ -259,9 +255,7 @@ class RubahStatusController extends GetxController {
     print("resiko = ${total.value}");
 
     await service.getBy(nilai: total.value).then((value) {
-      if (value != null) {
-        resiko.value = value;
-      }
+      resiko.value = value;
     });
   }
 }
