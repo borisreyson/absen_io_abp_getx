@@ -26,7 +26,7 @@ class RosterKerjaController extends GetxController {
   void onClose() {}
   loadRoster() async {
     var pref = await SharedPreferences.getInstance();
-    var nik = pref.getString(Constants.nik);
+    var nik = pref.getString(Constants.nikAbsen);
     var dt = DateTime.now();
     var tahun = dt.year;
     var bulan = dt.month;

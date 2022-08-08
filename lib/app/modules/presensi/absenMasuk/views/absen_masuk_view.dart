@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -9,12 +11,6 @@ class AbsenMasukView extends GetView<AbsenMasukController> {
   Widget build(BuildContext context) {
     return Obx(
       () => Scaffold(
-        // floatingActionButton: Visibility(
-        //   visible: (controller.visible.value)
-        //       ? controller.visible.value
-        //       : (controller.cameraInitialized.value),
-        //   child: captureButton(),
-        // ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         appBar: AppBar(
           title: const Text('Absen Masuk'),
@@ -25,12 +21,24 @@ class AbsenMasukView extends GetView<AbsenMasukController> {
     );
   }
 
+  Widget imagePreview() {
+    return SizedBox(
+      width: Get.width,
+      child: Image.file(
+        File(controller.savFile!.path),
+        fit: BoxFit.fill,
+      ),
+    );
+  }
+
   Widget cameraWidget(context) {
     return Stack(
       children: [
         (controller.cameraInitialized.value)
             ? Container(
-                child: cameraPreview(context),
+                child: (controller.absenSukses.value)
+                    ? imagePreview()
+                    : cameraPreview(context),
               )
             : const Positioned(
                 bottom: 0,

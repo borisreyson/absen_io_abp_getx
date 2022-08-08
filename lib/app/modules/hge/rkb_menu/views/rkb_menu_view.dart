@@ -11,8 +11,19 @@ class RkbMenuView extends GetView<RkbMenuController> {
     return Obx(
       () => Scaffold(
         appBar: AppBar(
+          elevation: 0,
+          backgroundColor: Colors.white,
           centerTitle: true,
+          leading: IconButton(
+              onPressed: () {
+                Get.back();
+              },
+              icon: const Icon(
+                Icons.arrow_back_ios_new_rounded,
+                color: Colors.black,
+              )),
         ),
+        backgroundColor: Colors.white,
         body: Padding(
           padding: const EdgeInsets.only(top: 8.0),
           child: ListView(

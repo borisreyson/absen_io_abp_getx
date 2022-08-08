@@ -1,9 +1,18 @@
 import 'dart:async';
+import 'package:face_id_plus/app/data/utils/constants.dart';
+import 'package:face_id_plus/app/routes/app_pages.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../data/utils/utils.dart';
 
 class MainAbsenController extends GetxController {
+  late StreamSubscription<bool> subs1;
+  late StreamSubscription<bool> subs2;
+  late StreamSubscription<bool> subs3;
+  late StreamSubscription<bool> subs4;
+
   late StreamController<bool> pingVps;
   late StreamController<bool> pingServer;
   late StreamController<bool> pingLokal;
@@ -16,6 +25,7 @@ class MainAbsenController extends GetxController {
   final isRunning = false.obs;
   @override
   void onInit() async {
+    getPref();
     super.onInit();
   }
 
@@ -28,6 +38,8 @@ class MainAbsenController extends GetxController {
   @override
   void onClose() {
     closePing();
+    closeStream();
+
     print("Close");
   }
 
@@ -35,6 +47,7 @@ class MainAbsenController extends GetxController {
   void dispose() {
     print("dispose");
     closePing();
+    closeStream();
   }
 
   serverStream() {
@@ -43,34 +56,33 @@ class MainAbsenController extends GetxController {
     pingLokal = StreamController.broadcast();
     pingServerOnline = StreamController.broadcast();
 
-    pingVps.stream.listen((bool isConnected) {
+    subs1 = pingVps.stream.listen((bool isConnected) {
       serverVps.value = isConnected;
       if (kDebugMode) {
         print("isConnected Vps $isConnected");
       }
     });
 
-    pingServer.stream.listen((bool isConnected) {
+    subs2 = pingServer.stream.listen((bool isConnected) {
       isOnline.value = isConnected;
       if (kDebugMode) {
         print("isConnected $isConnected");
       }
     });
 
-    pingLokal.stream.listen((bool localConnected) {
+    subs3 = pingLokal.stream.listen((bool localConnected) {
       lokalOnline.value = localConnected;
       if (kDebugMode) {
         print("lokalOnline $lokalOnline");
       }
     });
 
-    pingServerOnline.stream.listen((bool onlineServer) {
+    subs4 = pingServerOnline.stream.listen((bool onlineServer) {
       serverOnline.value = onlineServer;
       if (kDebugMode) {
         print("onlineServer $onlineServer");
       }
     });
-    // reloadCekServer();
     pingServerRun();
   }
 
@@ -128,9 +140,22 @@ class MainAbsenController extends GetxController {
   }
 
   closeStream() async {
+    subs1.cancel();
+    subs2.cancel();
+    subs3.cancel();
+    subs4.cancel();
     pingVps.close();
     pingServer.close();
     pingServerOnline.close();
     pingLokal.close();
+  }
+
+  getPref() async {
+    var pref = await SharedPreferences.getInstance();
+    if (pref.getString(Constants.namaAbsen) == null &&
+        pref.getString(Constants.nikAbsen) == null) {
+      await pref.clear();
+      Get.offAllNamed(Routes.LOGIN_ABSEN);
+    }
   }
 }

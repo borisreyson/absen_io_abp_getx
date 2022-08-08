@@ -12,7 +12,6 @@ class ProfileController extends GetxController {
     super.onInit();
   }
 
-
   @override
   void onClose() {}
   getPref() async {
@@ -24,7 +23,10 @@ class ProfileController extends GetxController {
 
   logOut() async {
     var pref = await SharedPreferences.getInstance();
-    if (await pref.remove(Constants.isLogin)) {
+    if (await pref.remove(Constants.isLogin) &&
+        await pref.remove(Constants.nikAbsen) &&
+        await pref.remove(Constants.namaAbsen) &&
+        await pref.remove(Constants.fotoProfile)) {
       Get.back(result: true);
     }
   }

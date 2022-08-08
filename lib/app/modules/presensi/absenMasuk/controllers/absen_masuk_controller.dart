@@ -149,7 +149,7 @@ class AbsenMasukController extends GetxController {
           Get.snackbar(
             "Success",
             "Absen Di Daftar!",
-            snackPosition: SnackPosition.BOTTOM,
+            snackPosition: SnackPosition.TOP,
             backgroundColor: Colors.green,
             colorText: Colors.white,
           );
@@ -167,7 +167,7 @@ class AbsenMasukController extends GetxController {
 
   getPref() async {
     var pref = await SharedPreferences.getInstance();
-    nik.value = pref.getString(Constants.nik);
+    nik.value = pref.getString(Constants.nikAbsen);
     initIdDevice();
   }
 

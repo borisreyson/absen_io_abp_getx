@@ -46,7 +46,8 @@ class ListAbsenView extends GetView<ListAbsenController> {
           color: const Color.fromARGB(255, 203, 199, 199),
           child: InkWell(
             onTap: () {
-              Get.toNamed(Routes.DETAIL_ABSENSI, arguments: {"detail": absen,"fromList":true});
+              Get.toNamed(Routes.DETAIL_ABSENSI,
+                  arguments: {"detail": absen, "fromList": true});
             },
             child: Column(
               children: [
@@ -97,7 +98,7 @@ class ListAbsenView extends GetView<ListAbsenController> {
                   height: 10,
                 ),
                 Text(
-                  controller.nama.value,
+                  "${controller.nama.value}",
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     decoration: TextDecoration.underline,

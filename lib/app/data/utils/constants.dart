@@ -38,7 +38,7 @@ class Constants {
   late StreamSubscription subscriptionServerOnline;
 
 //ABSENSi
-  static const String isLogin = "isLoginAbsen";
+  static const String isLogin = "isLoginAbsensi";
   static const String nikAbsen = "nikAbsen";
   static const String namaAbsen = "namaAbsen";
   static const String departemenAbsen = "departemenAbsen";

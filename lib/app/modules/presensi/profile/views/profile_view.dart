@@ -1,3 +1,5 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -92,9 +94,15 @@ class ProfileView extends GetView<ProfileController> {
               height: 100,
               color: Colors.grey.shade200,
               child: (controller.foto != '')
-                  ? Image.network(
-                      "${controller.foto}",
-                      fit: BoxFit.fitWidth,
+                  ? CachedNetworkImage(
+                      imageUrl: "${controller.foto}",
+                      fit: BoxFit.contain,
+                      placeholder: (context, url) => const Center(
+                        child: CupertinoActivityIndicator(radius: 40),
+                      ),
+                      errorWidget: (context, url, err) => const Center(
+                        child: CupertinoActivityIndicator(radius: 40),
+                      ),
                     )
                   : const Icon(
                       Icons.person,

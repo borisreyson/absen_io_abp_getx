@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:typed_data';
 import 'package:face_id_plus/app/data/providers/last_absen_provider.dart';
 import 'package:face_id_plus/app/routes/app_pages.dart';
 import 'package:flutter/foundation.dart';
@@ -18,6 +17,9 @@ import '../../../../data/utils/constants.dart';
 
 class AbsensiController extends GetxController {
   final _provider = LastAbsenProvider();
+  late StreamSubscription<bool> subs1;
+  late StreamSubscription<String> subsJam;
+
   final kGooglePlex = const CameraPosition(
           target: LatLng(-0.5634222, 117.0139606), zoom: 14.2746)
       .obs;
@@ -71,7 +73,9 @@ class AbsensiController extends GetxController {
   }
 
   @override
-  void onClose() {}
+  void onClose() {
+    closeStream();
+  }
 
   loadLastAbsen(nik, company) async {
     print("Lokasi $nik $company");
@@ -151,7 +155,7 @@ class AbsensiController extends GetxController {
   }
 
   createJamStream() {
-    _streamClock.stream.listen((String clock) {
+    subsJam = _streamClock.stream.listen((String clock) {
       startClock.value = clock;
     });
   }
@@ -219,7 +223,7 @@ class AbsensiController extends GetxController {
 
   createStream() {
     _getLokasi = StreamController.broadcast();
-    _getLokasi.stream.listen((bool e) async {
+    subs1 = _getLokasi.stream.listen((bool e) async {
       if (e) {
         if (lokasiPalsu == true) {
           closeStream();
@@ -282,6 +286,8 @@ class AbsensiController extends GetxController {
   }
 
   closeStream() {
+    subsJam.cancel();
+    subs1.cancel();
     googleMapController.dispose();
     _getLokasi.close();
     _timer?.cancel();

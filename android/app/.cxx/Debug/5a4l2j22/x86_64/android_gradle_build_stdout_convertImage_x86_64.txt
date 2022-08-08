@@ -1,0 +1,2 @@
+ninja: Entering directory `C:\Users\Yoga\AndroidStudioProjects\absen_io_abp_getx\android\app\.cxx\Debug\5a4l2j22\x86_64'
+ninja: no work to do.

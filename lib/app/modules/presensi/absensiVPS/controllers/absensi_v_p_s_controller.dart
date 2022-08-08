@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:face_id_plus/app/data/models/last_absen_models.dart';
+import 'package:face_id_plus/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
@@ -99,13 +100,13 @@ class AbsensiVPSController extends GetxController {
     var pref = await SharedPreferences.getInstance();
     if (pref.getBool(Constants.isLogin) != null) {
       isLogin.value = pref.getBool(Constants.isLogin)!;
-      nama.value = pref.getString("nama")!;
-      perusahaan.value = pref.getString("perusahaan")!;
+      nama.value = pref.getString(Constants.namaAbsen)!;
+      perusahaan.value = pref.getString(Constants.perusahaanAbsen)!;
 
-      nik = pref.getString(Constants.nik);
+      nik = pref.getString(Constants.nikAbsen);
       loadLastAbsen(nik, perusahaan.value);
     } else {
-      Get.offAllNamed('/login-absen');
+      Get.offAllNamed(Routes.LOGIN_ABSEN);
     }
   }
 

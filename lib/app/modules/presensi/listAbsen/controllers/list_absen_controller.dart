@@ -10,8 +10,8 @@ import '../../../../data/utils/constants.dart';
 
 class ListAbsenController extends GetxController {
   final _provider = Provider();
-  final nik = ''.obs;
-  final nama = ''.obs;
+  final nik = RxnString(null);
+  final nama =RxnString(null);
   final status = 'masuk'.obs;
   final listAbsen = <Presensi>[].obs;
   final page = 1.obs;
@@ -47,8 +47,8 @@ class ListAbsenController extends GetxController {
   getpref() async {
     var pref = await SharedPreferences.getInstance();
     if (pref.getBool(Constants.isLogin) != null) {
-      nik.value = pref.getString(Constants.nik)!;
-      nama.value = pref.getString(Constants.name)!;
+      nik.value = pref.getString(Constants.nikAbsen);
+      nama.value = pref.getString(Constants.namaAbsen);
       loadListAbsen(page.value);
     }
   }
