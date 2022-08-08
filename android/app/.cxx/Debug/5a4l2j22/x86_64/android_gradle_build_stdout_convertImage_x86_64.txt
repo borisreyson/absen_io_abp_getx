@@ -1,3 +1,2 @@
 ninja: Entering directory `C:\Users\Yoga\AndroidStudioProjects\absen_io_abp_getx\android\app\.cxx\Debug\5a4l2j22\x86_64'
-[1/2] Building C object CMakeFiles/convertImage.dir/C_/Users/Yoga/AndroidStudioProjects/absen_io_abp_getx/ios/Classes/converter.c.o
-[2/2] Linking C shared library C:\Users\Yoga\AndroidStudioProjects\absen_io_abp_getx\build\app\intermediates\cxx\Debug\5a4l2j22\obj\x86_64\libconvertImage.so
+ninja: no work to do.

@@ -10,6 +10,7 @@ import 'package:face_id_plus/app/data/models/sarana_models.dart';
 import 'package:face_id_plus/app/data/models/sarpras_detail.dart';
 import 'package:face_id_plus/app/data/models/sarpras_list.dart' as sarpras;
 import 'package:face_id_plus/app/data/models/sarpras_penumpang.dart';
+import 'package:face_id_plus/app/modules/home/buletin_model.dart' as buletin;
 import 'package:flutter/foundation.dart';
 import 'package:get/get_connect.dart';
 import 'package:path_provider/path_provider.dart';
@@ -810,5 +811,14 @@ class DoPresensi {
       res = jsonDecode(s);
     }
     return StatusAbsensi.fromJson(res!);
+  }
+}
+
+class BuletinApi {
+  Future<buletin.Buletin?> getBuletinPage(int page) async {
+    var api = await http.get(
+        Uri.parse("https://lp.abpjobsite.com/api/v1/message/info?page=$page"));
+    var jsonObject = json.decode(api.body);
+    return buletin.Buletin.fromJson((jsonObject));
   }
 }

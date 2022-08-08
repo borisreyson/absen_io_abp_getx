@@ -5,14 +5,17 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter/cupertino.dart';
 import '../controllers/absen_masuk_controller.dart';
+import 'dart:math' as math;
 
 class AbsenMasukView extends GetView<AbsenMasukController> {
   @override
   Widget build(BuildContext context) {
     return Obx(
       () => Scaffold(
+        backgroundColor: Colors.transparent,
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         appBar: AppBar(
+          backgroundColor: Colors.transparent,
           title: const Text('Absen Masuk'),
           centerTitle: true,
         ),
@@ -24,9 +27,13 @@ class AbsenMasukView extends GetView<AbsenMasukController> {
   Widget imagePreview() {
     return SizedBox(
       width: Get.width,
-      child: Image.file(
-        File(controller.savFile!.path),
-        fit: BoxFit.fill,
+      child: Transform(
+        alignment: Alignment.center,
+        transform: Matrix4.rotationY(math.pi),
+        child: Image.file(
+          File(controller.savFile!.path),
+          fit: BoxFit.fill,
+        ),
       ),
     );
   }
@@ -57,20 +64,24 @@ class AbsenMasukView extends GetView<AbsenMasukController> {
             ),
           ),
         ),
-        Positioned(
-          bottom: 10,
-          right: 0,
-          left: 0,
-          child: captureButton(),
-        ),
-        Visibility(
-          visible: controller.gagal.value,
-          child: Positioned(
-            bottom: 10,
-            left: 10,
-            child: (controller.absenSukses.value) ? focusButton() : Container(),
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 10.0),
+            child: captureButton(),
           ),
         ),
+        if (!controller.absenSukses.value)
+          Visibility(
+            visible: !controller.gagal.value,
+            child: Align(
+              alignment: Alignment.bottomLeft,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 10.0, bottom: 10),
+                child: focusButton(),
+              ),
+            ),
+          ),
         Visibility(
           visible: controller.gagal.value,
           child: Positioned(

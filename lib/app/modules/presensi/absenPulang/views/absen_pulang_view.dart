@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter/cupertino.dart';
 import '../controllers/absen_pulang_controller.dart';
+import 'dart:math' as math;
 
 class AbsenPulangView extends GetView<AbsenPulangController> {
   const AbsenPulangView({Key? key}) : super(key: key);
@@ -16,6 +17,7 @@ class AbsenPulangView extends GetView<AbsenPulangController> {
         backgroundColor: Colors.transparent,
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         appBar: AppBar(
+          backgroundColor: Colors.transparent,
           title: const Text('Absen Pulang'),
           centerTitle: true,
         ),
@@ -27,9 +29,13 @@ class AbsenPulangView extends GetView<AbsenPulangController> {
   Widget imagePreview() {
     return SizedBox(
       width: Get.width,
-      child: Image.file(
-        File(controller.savFile!.path),
-        fit: BoxFit.fill,
+      child: Transform(
+        alignment: Alignment.center,
+        transform: Matrix4.rotationY(math.pi),
+        child: Image.file(
+          File(controller.savFile!.path),
+          fit: BoxFit.fill,
+        ),
       ),
     );
   }
@@ -85,23 +91,22 @@ class AbsenPulangView extends GetView<AbsenPulangController> {
             ),
           ),
         ),
-        (controller.absenSukses.value)
-            ? const Align(
-                alignment: Alignment.bottomCenter,
-                child: Card(
-                  margin: EdgeInsets.only(bottom: 80),
-                  color: Color.fromARGB(255, 21, 111, 24),
-                  child: Padding(
-                    padding: EdgeInsets.all(10),
-                    child: Text(
-                      "Absen Di Daftar!",
-                      style: TextStyle(color: Colors.white),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
+        if (controller.absenSukses.value)
+          const Align(
+            alignment: Alignment.bottomCenter,
+            child: Card(
+              margin: EdgeInsets.only(bottom: 80),
+              color: Color.fromARGB(255, 21, 111, 24),
+              child: Padding(
+                padding: EdgeInsets.all(10),
+                child: Text(
+                  "Absen Di Daftar!",
+                  style: TextStyle(color: Colors.white),
+                  textAlign: TextAlign.center,
                 ),
-              )
-            : Container(),
+              ),
+            ),
+          )
       ],
     );
   }

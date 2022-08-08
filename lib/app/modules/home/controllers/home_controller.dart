@@ -1,11 +1,11 @@
+import 'package:face_id_plus/app/data/providers/provider.dart';
 import 'package:face_id_plus/app/modules/home/buletin_model.dart';
 import 'package:get/get.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import '../providers/buletin_provider.dart';
 import 'package:permission_handler/permission_handler.dart' as handler;
 
 class HomeController extends GetxController {
-  final _provider = BuletinProvider();
+  final _provider = BuletinApi();
   final count = 0.obs;
   final indexSelect = 0.obs;
   Rx<Buletin>? buletin = Buletin().obs;
@@ -41,7 +41,8 @@ class HomeController extends GetxController {
     pullRefresh.loadComplete();
     pullRefresh.refreshCompleted();
   }
-  internetPermission()async{
+
+  internetPermission() async {
     // var permission = handler.Permission.
   }
 }

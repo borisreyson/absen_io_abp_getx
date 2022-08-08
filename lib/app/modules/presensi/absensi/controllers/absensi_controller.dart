@@ -16,7 +16,7 @@ import '../../../../data/models/list_presensi_models.dart';
 import '../../../../data/utils/constants.dart';
 
 class AbsensiController extends GetxController {
-  final _provider = LastAbsenProvider();
+  final _provider = AbsensiProviders();
   late StreamSubscription<bool> subs1;
   late StreamSubscription<String> subsJam;
 

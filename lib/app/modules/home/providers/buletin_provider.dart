@@ -1,6 +1,7 @@
+import 'dart:convert';
 
 import 'package:get/get.dart';
-
+import 'package:http/http.dart' as http;
 import '../buletin_model.dart';
 
 class BuletinProvider extends GetConnect {
@@ -21,10 +22,10 @@ class BuletinProvider extends GetConnect {
   }
 
   Future<Buletin?> getBuletinPage(int page) async {
-    final response =
-        await get('https://lp.abpjobsite.com/api/v1/message/info?page=$page');
-    // print("response ${json.encode(response.body)}");
-    return Buletin.fromJson((response.body));
+    var api = await http.get(
+        Uri.parse("https://lp.abpjobsite.com/api/v1/message/info?page=$page"));
+    var jsonObject = json.decode(api.body);
+    return Buletin.fromJson((jsonObject));
   }
 
   Future<Response<Buletin>> postBuletin(Buletin buletin) async =>
