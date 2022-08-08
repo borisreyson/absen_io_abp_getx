@@ -4,6 +4,11 @@ import 'package:get/get.dart';
 import '../../../../data/utils/utils.dart';
 
 class MainAbsenController extends GetxController {
+  late StreamSubscription<bool> subs1;
+  late StreamSubscription<bool> subs2;
+  late StreamSubscription<bool> subs3;
+  late StreamSubscription<bool> subs4;
+
   late StreamController<bool> pingVps;
   late StreamController<bool> pingServer;
   late StreamController<bool> pingLokal;
@@ -28,6 +33,8 @@ class MainAbsenController extends GetxController {
   @override
   void onClose() {
     closePing();
+    closeStream();
+
     print("Close");
   }
 
@@ -35,6 +42,7 @@ class MainAbsenController extends GetxController {
   void dispose() {
     print("dispose");
     closePing();
+    closeStream();
   }
 
   serverStream() {
@@ -43,34 +51,33 @@ class MainAbsenController extends GetxController {
     pingLokal = StreamController.broadcast();
     pingServerOnline = StreamController.broadcast();
 
-    pingVps.stream.listen((bool isConnected) {
+    subs1 = pingVps.stream.listen((bool isConnected) {
       serverVps.value = isConnected;
       if (kDebugMode) {
         print("isConnected Vps $isConnected");
       }
     });
 
-    pingServer.stream.listen((bool isConnected) {
+    subs2 = pingServer.stream.listen((bool isConnected) {
       isOnline.value = isConnected;
       if (kDebugMode) {
         print("isConnected $isConnected");
       }
     });
 
-    pingLokal.stream.listen((bool localConnected) {
+    subs3 = pingLokal.stream.listen((bool localConnected) {
       lokalOnline.value = localConnected;
       if (kDebugMode) {
         print("lokalOnline $lokalOnline");
       }
     });
 
-    pingServerOnline.stream.listen((bool onlineServer) {
+    subs4 = pingServerOnline.stream.listen((bool onlineServer) {
       serverOnline.value = onlineServer;
       if (kDebugMode) {
         print("onlineServer $onlineServer");
       }
     });
-    // reloadCekServer();
     pingServerRun();
   }
 
@@ -128,6 +135,10 @@ class MainAbsenController extends GetxController {
   }
 
   closeStream() async {
+    subs1.cancel();
+    subs2.cancel();
+    subs3.cancel();
+    subs4.cancel();
     pingVps.close();
     pingServer.close();
     pingServerOnline.close();

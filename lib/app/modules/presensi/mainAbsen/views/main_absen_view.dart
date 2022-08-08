@@ -112,8 +112,12 @@ class MainAbsenView extends GetView<MainAbsenController> {
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(primary: Colors.blue),
         child: const Text("Lanjut"),
-        onPressed: () {
-          Get.toNamed('/absensi-v-p-s');
+        onPressed: () async {
+          controller.isRunning.value = false;
+          controller.closeStream();
+          controller.closePing();
+          await Get.toNamed('/absensi-v-p-s');
+          controller.serverStream();
         },
       ),
     );
@@ -128,8 +132,10 @@ class MainAbsenView extends GetView<MainAbsenController> {
         child: const Text("Lanjut"),
         onPressed: () async {
           controller.isRunning.value = false;
+          controller.closeStream();
+          controller.closePing();
           await Get.toNamed('/absensi');
-          controller.reloadCekServer();
+          controller.serverStream();
         },
       ),
     );

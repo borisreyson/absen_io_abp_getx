@@ -84,20 +84,24 @@ class ProfileAbpView extends GetView<ProfileAbpController> {
     return Container(
       child: (controller.foto.value != null)
           ? Center(
-              child: Card(
-                elevation: 5,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(100)),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(100),
-                  child: CachedNetworkImage(
-                    imageUrl: "${controller.foto.value}",
-                    fit: BoxFit.contain,
-                    placeholder: (context, url) => const Center(
-                      child: CupertinoActivityIndicator(radius: 40),
-                    ),
-                    errorWidget: (context, url, err) => const Center(
-                      child: CupertinoActivityIndicator(radius: 40),
+              child: SizedBox(
+                width: 100,
+                height: 100,
+                child: Card(
+                  elevation: 5,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(100)),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(100),
+                    child: CachedNetworkImage(
+                      imageUrl: "${controller.foto.value}",
+                      fit: BoxFit.contain,
+                      placeholder: (context, url) => const Center(
+                        child: CupertinoActivityIndicator(radius: 40),
+                      ),
+                      errorWidget: (context, url, err) => const Center(
+                        child: CupertinoActivityIndicator(radius: 40),
+                      ),
                     ),
                   ),
                 ),

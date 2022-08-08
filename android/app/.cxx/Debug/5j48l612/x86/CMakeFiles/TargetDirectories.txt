@@ -1,0 +1,3 @@
+C:/Users/Yoga/AndroidStudioProjects/absen_io_abp_getx/android/app/.cxx/Debug/5j48l612/x86/CMakeFiles/rebuild_cache.dir
+C:/Users/Yoga/AndroidStudioProjects/absen_io_abp_getx/android/app/.cxx/Debug/5j48l612/x86/CMakeFiles/convertImage.dir
+C:/Users/Yoga/AndroidStudioProjects/absen_io_abp_getx/android/app/.cxx/Debug/5j48l612/x86/CMakeFiles/edit_cache.dir

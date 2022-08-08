@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -11,6 +13,7 @@ class AbsenPulangView extends GetView<AbsenPulangController> {
   Widget build(BuildContext context) {
     return Obx(
       () => Scaffold(
+        backgroundColor: Colors.transparent,
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         appBar: AppBar(
           title: const Text('Absen Pulang'),
@@ -21,18 +24,27 @@ class AbsenPulangView extends GetView<AbsenPulangController> {
     );
   }
 
+  Widget imagePreview() {
+    return SizedBox(
+      width: Get.width,
+      child: Image.file(
+        File(controller.savFile!.path),
+        fit: BoxFit.fill,
+      ),
+    );
+  }
+
   Widget cameraWidget(context) {
     return Stack(
       children: [
         (controller.cameraInitialized.value)
             ? Container(
-                child: cameraPreview(context),
+                child: (controller.absenSukses.value)
+                    ? imagePreview()
+                    : cameraPreview(context),
               )
-            : const Positioned(
-                bottom: 0,
-                top: 0,
-                right: 0,
-                left: 0,
+            : const Align(
+                alignment: Alignment.center,
                 child: CupertinoActivityIndicator(),
               ),
         Align(
@@ -45,35 +57,39 @@ class AbsenPulangView extends GetView<AbsenPulangController> {
             ),
           ),
         ),
-        Positioned(
-          bottom: 10,
-          right: 0,
-          left: 0,
-          child: captureButton(),
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 10.0),
+            child: captureButton(),
+          ),
         ),
         if (!controller.absenSukses.value)
           Visibility(
             visible: !controller.gagal.value,
-            child: Positioned(
-              bottom: 10,
-              left: 10,
-              child: focusButton(),
+            child: Align(
+              alignment: Alignment.bottomLeft,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 10.0, bottom: 10),
+                child: focusButton(),
+              ),
             ),
           ),
         Visibility(
           visible: controller.gagal.value,
-          child: Positioned(
-            bottom: 10,
-            right: 10,
-            child: reloadButton(),
+          child: Align(
+            alignment: Alignment.bottomRight,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 10.0, right: 10),
+              child: reloadButton(),
+            ),
           ),
         ),
         (controller.absenSukses.value)
-            ? const Positioned(
-                bottom: 80,
-                left: 0,
-                right: 0,
+            ? const Align(
+                alignment: Alignment.bottomCenter,
                 child: Card(
+                  margin: EdgeInsets.only(bottom: 80),
                   color: Color.fromARGB(255, 21, 111, 24),
                   child: Padding(
                     padding: EdgeInsets.all(10),
@@ -128,8 +144,8 @@ class AbsenPulangView extends GetView<AbsenPulangController> {
                 },
       tooltip: 'Scan Wajah',
       backgroundColor: (controller.absenSukses.value)
-          ? Color.fromARGB(255, 10, 165, 15)
-          : Color.fromARGB(255, 10, 73, 125),
+          ? const Color.fromARGB(255, 10, 165, 15)
+          : const Color.fromARGB(255, 10, 73, 125),
       child: (controller.isBusy.value)
           ? const Center(child: CircularProgressIndicator(color: Colors.white))
           : (controller.absenSukses.value)

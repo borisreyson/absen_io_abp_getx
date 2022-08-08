@@ -123,6 +123,7 @@ class AbsenPulangController extends GetxController {
       startClock.value = jam;
     });
   }
+
   saveImage() async {
     externalDirectory = await getApplicationDocumentsDirectory();
     String directoryPath = '${externalDirectory.path}/FaceIdPlus';
@@ -149,7 +150,7 @@ class AbsenPulangController extends GetxController {
           Get.snackbar(
             "Success",
             "Absen Di Daftar!",
-            snackPosition: SnackPosition.BOTTOM,
+            snackPosition: SnackPosition.TOP,
             backgroundColor: Colors.green,
             colorText: Colors.white,
           );

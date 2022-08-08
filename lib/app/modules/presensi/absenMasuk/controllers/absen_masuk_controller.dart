@@ -149,7 +149,7 @@ class AbsenMasukController extends GetxController {
           Get.snackbar(
             "Success",
             "Absen Di Daftar!",
-            snackPosition: SnackPosition.BOTTOM,
+            snackPosition: SnackPosition.TOP,
             backgroundColor: Colors.green,
             colorText: Colors.white,
           );

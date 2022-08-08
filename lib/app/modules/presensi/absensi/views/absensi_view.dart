@@ -28,7 +28,8 @@ class AbsensiView extends GetView<AbsensiController> {
         child: Scaffold(
           appBar: AppBar(
             leading: IconButton(
-              onPressed: () {
+              onPressed: () async {
+                await controller.closeStream();
                 Get.back(result: false);
               },
               icon: const Icon(
@@ -41,12 +42,17 @@ class AbsensiView extends GetView<AbsensiController> {
             actions: [
               IconButton(
                   onPressed: () async {
+                    await controller.closeStream();
+
                     var res = await Get.toNamed(Routes.PROFILE);
                     if (res != null) {
                       if (res) {
                         Get.offAllNamed('/login-absen');
                       }
                     }
+
+                    controller.getPref();
+                    controller.streamLokasi();
                   },
                   icon: const Icon(
                     Icons.menu,
@@ -137,6 +143,11 @@ class AbsensiView extends GetView<AbsensiController> {
                         onPressed: (controller.absenTerakhir.value == "Masuk")
                             ? () async {
                                 controller.closeStream();
+                                var res = await Get.toNamed(Routes.ABSEN_MASUK,
+                                    arguments: {
+                                      "jam": controller.serverJam.value,
+                                      "lokasi": controller.myLocation
+                                    });
                                 controller.getPref();
                                 controller.streamLokasi();
                               }
@@ -153,12 +164,12 @@ class AbsensiView extends GetView<AbsensiController> {
                             primary: const Color.fromARGB(255, 190, 36, 25)),
                         onPressed: (controller.absenTerakhir.value == "Pulang")
                             ? () async {
+                                controller.closeStream();
                                 var res = await Get.toNamed(Routes.ABSEN_PULANG,
                                     arguments: {
                                       "jam": controller.serverJam.value,
                                       "lokasi": controller.myLocation
                                     });
-                                controller.closeStream();
                                 controller.getPref();
                                 controller.streamLokasi();
                               }
