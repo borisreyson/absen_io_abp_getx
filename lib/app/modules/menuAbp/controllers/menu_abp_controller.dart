@@ -112,7 +112,7 @@ class MenuAbpController extends GetxController
             hazard(),
             rkb(),
             sarpras(),
-            // monitoring(),
+            monitoring(),
           ];
         }
       } else if (perusahaan.value != "0") {
@@ -291,7 +291,9 @@ class MenuAbpController extends GetxController
     return Card(
       elevation: 10,
       child: InkWell(
-        onTap: () {},
+        onTap: () {
+          Get.toNamed(Routes.MONITORING);
+        },
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(

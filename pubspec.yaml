@@ -96,4 +96,8 @@ flutter:
     - assets/images/car_ic.png
     - assets/images/mine_permit.psd
     - assets/images/SIMPER_ABP.psd
+    - assets/images/tugboat.png
+    - assets/images/barging_pln.png
+    - assets/images/barging.png
+
   uses-material-design: true
