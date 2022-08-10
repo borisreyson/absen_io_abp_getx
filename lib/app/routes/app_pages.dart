@@ -1,3 +1,4 @@
+import 'package:face_id_plus/app/modules/monitoring/screens/monitoringBarging/bindings/monitoring_barging_binding.dart';
 import 'package:get/get.dart';
 
 import '../modules/buletin/bindings/buletin_binding.dart';
@@ -68,6 +69,25 @@ import '../modules/login/bindings/login_binding.dart';
 import '../modules/login/views/login_view.dart';
 import '../modules/menuAbp/bindings/menu_abp_binding.dart';
 import '../modules/menuAbp/views/menu_abp_view.dart';
+import '../modules/monitoring/bindings/monitoring_binding.dart';
+import '../modules/monitoring/screens/monitoringBarging/views/monitoring_barging_view.dart';
+import '../modules/monitoring/screens/monitoringCrushing/bindings/monitoring_crushing_binding.dart';
+import '../modules/monitoring/screens/monitoringCrushing/views/monitoring_crushing_view.dart';
+import '../modules/monitoring/screens/monitoringHauling/bindings/monitoring_hauling_binding.dart';
+import '../modules/monitoring/screens/monitoringHauling/views/monitoring_hauling_view.dart';
+import '../modules/monitoring/screens/monitoringHaulingDelay/bindings/monitoring_hauling_delay_binding.dart';
+import '../modules/monitoring/screens/monitoringHaulingDelay/views/monitoring_hauling_delay_view.dart';
+import '../modules/monitoring/screens/monitoringOB/bindings/monitoring_o_b_binding.dart';
+import '../modules/monitoring/screens/monitoringOB/views/monitoring_o_b_view.dart';
+import '../modules/monitoring/screens/monitoringObDlay/bindings/monitoring_ob_dlay_binding.dart';
+import '../modules/monitoring/screens/monitoringObDlay/views/monitoring_ob_dlay_view.dart';
+import '../modules/monitoring/screens/monitoringStockProduct/bindings/monitoring_stock_product_binding.dart';
+import '../modules/monitoring/screens/monitoringStockProduct/views/monitoring_stock_product_view.dart';
+import '../modules/monitoring/screens/monitoringStockRom/bindings/monitoring_stock_rom_binding.dart';
+import '../modules/monitoring/screens/monitoringStockRom/views/monitoring_stock_rom_view.dart';
+import '../modules/monitoring/screens/monitoringTugboat/bindings/monitoring_tugboat_binding.dart';
+import '../modules/monitoring/screens/monitoringTugboat/views/monitoring_tugboat_view.dart';
+import '../modules/monitoring/views/monitoring_view.dart';
 import '../modules/permission/galery/bindings/galery_binding.dart';
 import '../modules/permission/galery/views/galery_view.dart';
 import '../modules/permission/kamera/bindings/kamera_binding.dart';
@@ -524,6 +544,58 @@ class AppPages {
       name: _Paths.LOKASI_MATI,
       page: () => const LokasiMatiView(),
       binding: LokasiMatiBinding(),
+    ),    GetPage(
+      name: _Paths.MONITORING,
+      page: () => MonitoringView(),
+      binding: MonitoringBinding(),
+      children: [
+        GetPage(
+          name: _Paths.MONITORING_OB_DLAY,
+          page: () => MonitoringObDlayView(),
+          binding: MonitoringObDlayBinding(),
+        ),
+        GetPage(
+          name: _Paths.MONITORING_HAULING_DELAY,
+          page: () => MonitoringHaulingDelayView(),
+          binding: MonitoringHaulingDelayBinding(),
+        ),
+        GetPage(
+          name: _Paths.MONITORING_TUGBOAT,
+          page: () => MonitoringTugboatView(),
+          binding: MonitoringTugboatBinding(),
+        ),
+      ],
     ),
+    GetPage(
+        name: _Paths.MONITORING_O_B,
+        page: () => MonitoringOBView(),
+        binding: MonitoringOBBinding(),
+        transition: Transition.fadeIn),
+    GetPage(
+      name: _Paths.MONITORING_HAULING,
+      page: () => MonitoringHaulingView(),
+      binding: MonitoringHaulingBinding(),
+      transition: Transition.fadeIn,
+    ),
+    GetPage(
+        name: _Paths.MONITORING_CRUSHING,
+        page: () => MonitoringCrushingView(),
+        binding: MonitoringCrushingBinding(),
+        transition: Transition.fadeIn),
+    GetPage(
+        name: _Paths.MONITORING_BARGING,
+        page: () => MonitoringBargingView(),
+        binding: MonitoringBargingBinding(),
+        transition: Transition.fadeIn),
+    GetPage(
+        name: _Paths.MONITORING_STOCK_ROM,
+        page: () => MonitoringStockRomView(),
+        binding: MonitoringStockRomBinding(),
+        transition: Transition.fadeIn),
+    GetPage(
+        name: _Paths.MONITORING_STOCK_PRODUCT,
+        page: () => MonitoringStockProductView(),
+        binding: MonitoringStockProductBinding(),
+        transition: Transition.fadeIn),
   ];
 }

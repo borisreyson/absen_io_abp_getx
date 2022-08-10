@@ -78,6 +78,19 @@ abstract class Routes {
   static const BUKTI_DILOKASI = _Paths.BUKTI_DILOKASI;
   static const BARCODE_SECURITY = _Paths.BARCODE_SECURITY;
   static const LOKASI_MATI =  _Paths.LOKASI_MATI;
+    static const MONITORING = _Paths.MONITORING;
+  static const MONITORING_O_B = _Paths.MONITORING_O_B;
+  static const MONITORING_HAULING = _Paths.MONITORING_HAULING;
+  static const MONITORING_CRUSHING = _Paths.MONITORING_CRUSHING;
+  static const MONITORING_BARGING = _Paths.MONITORING_BARGING;
+  static const MONITORING_STOCK_ROM = _Paths.MONITORING_STOCK_ROM;
+  static const MONITORING_STOCK_PRODUCT = _Paths.MONITORING_STOCK_PRODUCT;
+  static const MONITORING_OB_DLAY =
+      _Paths.MONITORING + _Paths.MONITORING_OB_DLAY;
+  static const MONITORING_HAULING_DELAY =
+      _Paths.MONITORING + _Paths.MONITORING_HAULING_DELAY;
+  static const MONITORING_TUGBOAT =
+      _Paths.MONITORING + _Paths.MONITORING_TUGBOAT;
 }
 
 abstract class _Paths {
@@ -160,4 +173,14 @@ abstract class _Paths {
   static const BUKTI_DILOKASI = '/bukti-dilokasi';
   static const BARCODE_SECURITY = '/barcode-security';
   static const LOKASI_MATI = '/lokasi-mati';
+    static const MONITORING = '/monitoring';
+  static const MONITORING_O_B = '/monitoring-o-b';
+  static const MONITORING_HAULING = '/monitoring-hauling';
+  static const MONITORING_CRUSHING = '/monitoring-crushing';
+  static const MONITORING_BARGING = '/monitoring-barging';
+  static const MONITORING_STOCK_ROM = '/monitoring-stock-rom';
+  static const MONITORING_STOCK_PRODUCT = '/monitoring-stock-product';
+  static const MONITORING_OB_DLAY = '/monitoring-ob-dlay';
+  static const MONITORING_HAULING_DELAY = '/monitoring-hauling-delay';
+  static const MONITORING_TUGBOAT = '/monitoring-tugboat';
 }
