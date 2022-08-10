@@ -1,0 +1,3 @@
+ninja: Entering directory `D:\BORIS APP\StudioProjects\absen_io_abp_getx\android\app\.cxx\Debug\b6v6i2t5\x86'
+[1/2] Building C object CMakeFiles/convertImage.dir/D_/BORIS_APP/StudioProjects/absen_io_abp_getx/ios/Classes/converter.c.o
+[2/2] Linking C shared library "D:\BORIS APP\StudioProjects\absen_io_abp_getx\build\app\intermediates\cxx\Debug\b6v6i2t5\obj\x86\libconvertImage.so"
